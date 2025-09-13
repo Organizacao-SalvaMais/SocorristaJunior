@@ -1,0 +1,16 @@
+package com.example.socorristajunior.Data.DAO
+
+import androidx.room.Dao
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+import com.example.socorristajunior.Data.model.Passo
+
+@Dao
+interface PassoDAO {
+    // Ideia: Cada vez que o botão próximo passo for apertado, envia o um sinal, e o back filtra conforme a ordem
+    //Listar passo um por um
+    @Query("SELECT pas.pasnome," +
+            "pas.pasdescricao," +
+            "pas.pasimagem FROM passo pas WHERE pas.pasordem=:id AND pas.pasemercodigo=:emergenciaId limit 1")
+    fun getPassos(id: Int, emergenciaId: Int): Flow<Passo>
+}
