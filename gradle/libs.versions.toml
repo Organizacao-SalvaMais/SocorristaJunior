@@ -13,7 +13,7 @@ roomVersion = "2.6.1"
 hiltVersion = "2.51.1"
 hiltExtVersion = "1.2.0"
 swipeVersion = "1.1.1"
-kspVersion = "1.9.22-1.0.17" # Adicione esta linha para o KSP
+kspVersion = "2.0.21-1.0.27"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
