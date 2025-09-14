@@ -21,5 +21,5 @@ interface EmergenciaDAO {
             "em.emerdesc," +
             "em.emerimagem," +
             "em.emergravidade FROM emergencia em WHERE em.emernome=:nome")
-    fun seletcEmergencia(nome: String): Flow<Emergencia?>
+    fun selectEmergencia(nome: String): Flow<Emergencia?>
 }
