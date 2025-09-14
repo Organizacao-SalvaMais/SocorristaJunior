@@ -1,4 +1,4 @@
-package com.example.socorristajunior.Repositorio
+package com.example.socorristajunior.Domain.Repositorio
 
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
 import com.example.socorristajunior.Data.model.Emergencia
