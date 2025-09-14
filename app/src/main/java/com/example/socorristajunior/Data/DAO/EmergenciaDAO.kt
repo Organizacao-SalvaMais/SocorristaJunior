@@ -9,14 +9,16 @@ import com.example.socorristajunior.Data.model.Emergencia
 interface EmergenciaDAO {
     // Listar emergencia
     @Query("SELECT " +
+            "em.emercodigo," +
             "em.emernome," +
             "em.emerdesc," +
             "em.emerimagem," +
-            "em.emergravidade FROM emergencia em ORDER BY em.emercodigo ASC")
+            "em.emergravidade FROM emergencia em ORDER BY em.emernome ASC")
     fun getAllEmergencias(): Flow<List<Emergencia>> // Flow garante que notificação seja enviada sempre que os dados do banco de dados mudarem
 
     // Encontrar emergencia pelo nome
     @Query("SELECT " +
+            "em.emercodigo," +
             "em.emernome," +
             "em.emerdesc," +
             "em.emerimagem," +
