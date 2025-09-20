@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +46,7 @@ import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.TextStyle
 
 
 class MainActivity : ComponentActivity() {
@@ -131,14 +133,15 @@ fun BarraDePesquisa(modifier: Modifier = Modifier){
             .border(width = 1.dp, color = Color(0xFFA9A9A9), shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 20.dp, bottomEnd = 20.dp))
             .width(428.dp)
             .height(102.dp)
-            .background(color = Color(0xFFF3F2EC), shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 20.dp, bottomEnd = 20.dp))
+            .background(color = Color(0xFFF3F2EC), shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 20.dp, bottomEnd = 20.dp)),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         // Icon da Lupa
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = "Ícone de Pesquisa",
             tint = Color(0xFF008B8B), // Uma cor similar ao da sua imagem
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(42.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         TextField(
@@ -147,14 +150,19 @@ fun BarraDePesquisa(modifier: Modifier = Modifier){
             modifier = Modifier.weight(1f), // Faz o campo de texto ocupartodo o espaço restante
             placeholder = {
                 // O texto que aparece quando o campo está vazio.
-
+                Text("Pesquisar...", fontSize = 28.sp, color = Color(0xFFA9A9A9))
             },
+            textStyle = TextStyle(fontSize = 28.sp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                cursorColor = Color(0xFFA9A9A9),
+                focusedTextColor = Color(0xFFA9A9A9),
+                unfocusedTextColor = Color(0xFFA9A9A9),
+                disabledTextColor = Color(0xFFA9A9A9),
             ),
             singleLine = true
         )
@@ -164,7 +172,7 @@ fun BarraDePesquisa(modifier: Modifier = Modifier){
                 imageVector = Icons.Filled.Menu,
                 contentDescription = "Ícone de Menu",
                 tint = Color(0xFFA9A9A9),
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(42.dp)
             )
         }
     }
