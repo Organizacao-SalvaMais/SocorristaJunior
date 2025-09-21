@@ -1,5 +1,6 @@
 package com.example.socorristajunior
 
+import android.R.color.black
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -68,10 +69,11 @@ class MainActivity : ComponentActivity() {
                     ) {
                         BarraDePesquisa(modifier = Modifier.padding(innerPadding))
                         Greeting(
-                            name = "Android",
                             modifier = Modifier.padding(innerPadding)
                         )
                         BotaoEmergencia(navController = rememberNavController())
+                        Spacer(modifier = Modifier.width(8.dp))
+                        BotaoQuizzes(navController = rememberNavController())
                     }
                 }
             }
@@ -80,10 +82,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(modifier: Modifier = Modifier) {
     Text(
-        text = "Bem vindo ao\n Socorrista Junior\n $name!",
-        modifier = modifier
+        text = "Bem vindo ao\n Salva+\n",
+        modifier = modifier,
+        color = Color(0xFFE62727)
     )
 }
 
@@ -91,7 +94,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     SocorristaJuniorTheme {
-        Greeting("Aluno")
+        Greeting()
     }
 }
 
@@ -115,11 +118,36 @@ fun BotaoEmergencia(navController: NavController, modifier: Modifier = Modifier)
     }
 }
 
+@Composable
+fun BotaoQuizzes(navController: NavController, modifier: Modifier = Modifier){
+    Button(
+        onClick = { /*Vai para area de Emergencia*/ },
+        modifier = Modifier
+            .width(349.dp)
+            .height(114.dp),
+        shape = RoundedCornerShape(size = 10.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF008B8B))
+    ) {
+        Text(text = "QUIZZES",
+            color = Color.White,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 2.sp)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun BotaoEmergenciaFinalPreview() {
     // Para a preview, usamos um NavController "falso".
     BotaoEmergencia(navController = rememberNavController())
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BotaoQuizzesFinalPreview() {
+    // Para a preview, usamos um NavController "falso".
+    BotaoQuizzes(navController = rememberNavController())
 }
 
 @Composable
