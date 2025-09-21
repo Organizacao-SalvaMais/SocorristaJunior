@@ -9,7 +9,7 @@ class GetPassos(
     private val repositorio: PassoRepo
 ) {
     // Invoke serve para chamar a classe como se fosse uma função
-    operator fun invoke(passoId: Int, emergenciaId: Int): Flow<Passo> {
-        return repositorio.getPassos(passoId, emergenciaId)
-    }
+//    operator fun invoke(passoId: Int, emergenciaId: Int): Flow<Passo> {
+//        return repositorio.getPassos(passoId, emergenciaId)
+//    }
 }

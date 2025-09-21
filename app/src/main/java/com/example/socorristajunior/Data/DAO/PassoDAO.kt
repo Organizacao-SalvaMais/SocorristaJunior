@@ -9,11 +9,6 @@ import com.example.socorristajunior.Data.model.Passo
 interface PassoDAO {
     // Ideia: Cada vez que o botão próximo passo for apertado, envia o um sinal, e o back filtra conforme a ordem
     //Listar passo um por um
-    @Query("SELECT pas.pascodigo," +
-            "pas.pasnome," +
-            "pas.pasdescricao," +
-            "pas.pasordem," +
-            "pas.pasemercodigo," +
-            "pas.pasimagem FROM passo pas WHERE pas.pasordem=:id AND pas.pasemercodigo=:emergenciaId limit 1")
-    fun getPassos(id: Int, emergenciaId: Int): Flow<Passo>
+    @Query("SELECT * FROM passo pas WHERE pas.pasemercodigo=:emergenciaId ORDER BY pas.pasordem ASC")
+    fun getPassos(emergenciaId: Int): Flow<Passo>
 }

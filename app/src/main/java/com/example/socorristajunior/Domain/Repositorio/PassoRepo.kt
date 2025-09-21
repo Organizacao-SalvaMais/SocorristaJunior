@@ -8,7 +8,7 @@ import javax.inject.Inject
 class PassoRepo @Inject constructor(
     private val PassoDAO: PassoDAO
 ) {
-    fun getPassos(id: Int, emergenciaId: Int): Flow<Passo>{
-        return PassoDAO.getPassos(id, emergenciaId)
+    fun getPassos(emergenciaId: Int): Flow<Passo>{
+        return PassoDAO.getPassos(emergenciaId)
     }
 }
