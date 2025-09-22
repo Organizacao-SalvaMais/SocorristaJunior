@@ -70,4 +70,7 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
     // Swipe
     implementation(libs.saket.swipe)
+    implementation("androidx.compose.material:material-icons-extended-android:1.6.7")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
 }
