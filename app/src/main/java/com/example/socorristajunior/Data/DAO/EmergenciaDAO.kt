@@ -1,6 +1,8 @@
 package com.example.socorristajunior.Data.DAO
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import com.example.socorristajunior.Data.model.Emergencia
@@ -24,4 +26,7 @@ interface EmergenciaDAO {
             "em.emerimagem," +
             "em.emergravidade FROM emergencia em WHERE em.emernome=:nome")
     fun selectEmergencia(nome: String): Flow<Emergencia?>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(vararg emergencia: Emergencia)
 }
