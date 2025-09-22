@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Surface
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,29 +19,34 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.FeatureCard
 
+// Adicionamos a anotação OptIn para usar a TopAppBar
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FunctionalitiesScreen(
     navController: NavController,
     viewModel: FunctionalitiesViewModel = hiltViewModel()
 ) {
-    Surface(
-        color = Color(0xFFFAF7F2),
-        modifier = Modifier.fillMaxSize()
-    ) {
+    // 1. Usamos o Scaffold como container principal da tela
+    Scaffold(
+        // 2. No slot "topBar", definimos nossa TopAppBar
+        topBar = {
+            TopAppBar(
+                // 3. Aqui você define o título que desejar!
+                title = { Text("Página Inicial") }
+            )
+        }
+    ) { innerPadding ->
+        // O conteúdo da sua tela agora fica dentro do Scaffold
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // 4. Aplicamos o innerPadding para que o conteúdo não fique embaixo da TopAppBar
+                .padding(innerPadding)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "SALVAR+",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF424242)
-            )
-            Spacer(modifier = Modifier.height(32.dp))
+            // O conteúdo com os cards continua o mesmo
             FeatureCard(
                 icon = Icons.Filled.Psychology,
                 iconColor = Color(0xFFE57373),
