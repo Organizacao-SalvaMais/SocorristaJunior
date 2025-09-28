@@ -9,7 +9,7 @@ class GetPassos @Inject constructor(
     private val passoRepo: PassoRepo
 ) {
     // A função agora espera apenas o ID da emergência
-    // e retorna CORRETAMENTE um Flow de uma LISTA de Passos.
+    // e retorna um Flow de uma lista de Passos.
     operator fun invoke(emergenciaId: Int): Flow<List<Passo>> {
         // A chamada ao repositório agora está correta.
         return passoRepo.getPassos(emergenciaId)

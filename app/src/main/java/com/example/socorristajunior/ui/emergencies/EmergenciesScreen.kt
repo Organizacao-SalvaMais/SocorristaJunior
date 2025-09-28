@@ -18,16 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 
-// --- UTIL: map de nome -> ícone ---
-fun mapEmergencyImageToIcon(imageName: String?): ImageVector {
-    return when (imageName) {
-        "fire" -> Icons.Default.LocalFireDepartment
-        "cut"  -> Icons.Default.MedicalServices
-        "choke"-> Icons.Default.ReportProblem
-        else   -> Icons.Default.HelpOutline
-    }
-}
-// -----------------------------------------------------------------------
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,7 +92,6 @@ fun EmergenciesScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    // NAVEGA PARA A ROTA DE DETALHES ENVIANDO O ID
                                     navController.navigate("emergency_detail/${emergencia.emercodigo}")
                                 },
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
