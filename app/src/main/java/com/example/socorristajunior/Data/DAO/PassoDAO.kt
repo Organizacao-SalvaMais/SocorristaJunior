@@ -9,11 +9,35 @@ import com.example.socorristajunior.Data.model.Passo
 
 @Dao
 interface PassoDAO {
-    // Ideia: Cada vez que o botão próximo passo for apertado, envia o um sinal, e o back filtra conforme a ordem
-    //Listar passo um por um
-    @Query("SELECT * FROM passo pas WHERE pas.pasemercodigo=:emergenciaId ORDER BY pas.pasordem ASC")
-    fun getPassos(emergenciaId: Int): Flow<List<Passo>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(vararg passo: Passo)
+    // Buscar passos de uma emergência em ordem
+    @Query("SELECT * FROM passo WHERE pasemercodigo = :emergenciaId ORDER BY pasordem ASC")
+    fun getPassosDaEmergencia(emergenciaId: Int): Flow<List<Passo>>
+
+    // Buscar um passo específico
+    @Query("SELECT * FROM passo WHERE pascodigo = :passoId")
+    suspend fun getPassoById(passoId: Int): Passo?
+
+    // Buscar primeiro passo de uma emergência
+    @Query("SELECT * FROM passo WHERE pasemercodigo = :emergenciaId ORDER BY pasordem ASC LIMIT 1")
+    suspend fun getPrimeiroPasso(emergenciaId: Int): Passo?
+
+    // Inserir passos
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPasso(passo: Passo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllPassos(passos: List<Passo>)
+
+    // Atualizar ordem dos passos
+    @Query("UPDATE passo SET pasordem = :novaOrdem WHERE pascodigo = :passoId")
+    suspend fun atualizarOrdemPasso(passoId: Int, novaOrdem: Int)
+
+    // Deletar todos os passos de uma emergência
+    @Query("DELETE FROM passo WHERE pasemercodigo = :emergenciaId")
+    suspend fun deletePassosDaEmergencia(emergenciaId: Int)
+
+    // Contar passos de uma emergência
+    @Query("SELECT COUNT(*) FROM passo WHERE pasemercodigo = :emergenciaId")
+    suspend fun contarPassosDaEmergencia(emergenciaId: Int): Int
 }

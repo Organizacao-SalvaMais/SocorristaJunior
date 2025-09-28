@@ -2,18 +2,9 @@ package com.example.socorristajunior.Data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "emergencia",
-    indices = [
-
-        Index("emernome", unique = true)
-
-    ]
-)
-
+@Entity(tableName = "emergencia")
 data class Emergencia(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "emercodigo")
@@ -26,8 +17,14 @@ data class Emergencia(
     val emerdesc: String,
 
     @ColumnInfo(name = "emergravidade")
-    val emeremergravidade: String,
+    val emergravidade: String,
 
     @ColumnInfo(name = "emerimagem")
-    val emerimagem: String
+    val emerimagem: String,
+
+    @ColumnInfo(name = "categoria")
+    val categoria: String? = null,
+
+    @ColumnInfo(name = "duracaoEstimada")
+    val duracaoEstimada: Int? = null
 )

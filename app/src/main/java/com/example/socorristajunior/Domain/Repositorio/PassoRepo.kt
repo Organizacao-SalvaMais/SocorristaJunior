@@ -9,6 +9,6 @@ class PassoRepo @Inject constructor(
     private val PassoDAO: PassoDAO
 ) {
     fun getPassos(emergenciaId: Int): Flow<List<Passo>>{
-        return PassoDAO.getPassos(emergenciaId)
+        return PassoDAO.getPassosDaEmergencia(emergenciaId)
     }
 }

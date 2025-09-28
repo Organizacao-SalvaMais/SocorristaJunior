@@ -3,22 +3,23 @@ package com.example.socorristajunior.Data.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "passo",
     foreignKeys = [ForeignKey(
         entity = Emergencia::class,
-        parentColumns = arrayOf("emercodigo"),
-        childColumns = arrayOf("pasemercodigo"),
+        parentColumns = ["emercodigo"],
+        childColumns = ["pasemercodigo"],
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [Index("pasemercodigo")]
 )
-
 data class Passo(
-
     @PrimaryKey(autoGenerate = true)
-    val pascodigo: Int,
+    @ColumnInfo(name = "pascodigo")
+    val pascodigo: Int = 0,
 
     @ColumnInfo(name = "pasnome")
     val pasnome: String,
@@ -32,6 +33,6 @@ data class Passo(
     @ColumnInfo(name = "pasordem")
     val pasordem: Int,
 
-    @ColumnInfo(name = "pasemercodigo", index = true)
+    @ColumnInfo(name = "pasemercodigo")
     val pasemercodigo: Int
-) 
+)

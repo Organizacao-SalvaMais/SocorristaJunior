@@ -1,0 +1,142 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "d0c2ee6c03dd88f80d0160efbd17936f",
+    "entities": [
+      {
+        "tableName": "emergencia",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`emercodigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `emernome` TEXT NOT NULL, `emerdesc` TEXT NOT NULL, `emergravidade` TEXT NOT NULL, `emerimagem` TEXT NOT NULL, `categoria` TEXT, `duracaoEstimada` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "emercodigo",
+            "columnName": "emercodigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emernome",
+            "columnName": "emernome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emerdesc",
+            "columnName": "emerdesc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emergravidade",
+            "columnName": "emergravidade",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emerimagem",
+            "columnName": "emerimagem",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoria",
+            "columnName": "categoria",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "duracaoEstimada",
+            "columnName": "duracaoEstimada",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "emercodigo"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "passo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pascodigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pasnome` TEXT NOT NULL, `pasimagem` TEXT NOT NULL, `pasdescricao` TEXT NOT NULL, `pasordem` INTEGER NOT NULL, `pasemercodigo` INTEGER NOT NULL, FOREIGN KEY(`pasemercodigo`) REFERENCES `emergencia`(`emercodigo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "pascodigo",
+            "columnName": "pascodigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pasnome",
+            "columnName": "pasnome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pasimagem",
+            "columnName": "pasimagem",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pasdescricao",
+            "columnName": "pasdescricao",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pasordem",
+            "columnName": "pasordem",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pasemercodigo",
+            "columnName": "pasemercodigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "pascodigo"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_passo_pasemercodigo",
+            "unique": false,
+            "columnNames": [
+              "pasemercodigo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_passo_pasemercodigo` ON `${TABLE_NAME}` (`pasemercodigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "emergencia",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pasemercodigo"
+            ],
+            "referencedColumns": [
+              "emercodigo"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0c2ee6c03dd88f80d0160efbd17936f')"
+    ]
+  }
+}
