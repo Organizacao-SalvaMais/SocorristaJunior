@@ -7,10 +7,12 @@ import com.example.socorristajunior.Data.DAO.PassoDAO
 import com.example.socorristajunior.Data.model.Emergencia
 import com.example.socorristajunior.Data.model.Passo
 
-// Para adicionar uma nova tabela: adicione a nova classe na lista entities
-@Database(entities = [Emergencia::class, Passo::class], version = 2) // Acrestente 1 no version
-abstract class AppDatabase : RoomDatabase(){
-    // Adicione seguindo o seguinte modelo
-    abstract fun EmergenciaDAO() : EmergenciaDAO
-    abstract fun PassoDAO() : PassoDAO
+@Database(
+    entities = [Emergencia::class, Passo::class],
+    version = 2,
+    exportSchema = true
+)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun emergenciaDAO(): EmergenciaDAO
+    abstract fun passoDAO(): PassoDAO
 }

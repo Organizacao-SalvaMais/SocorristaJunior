@@ -2,60 +2,92 @@ package com.example.socorristajunior.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.socorristajunior.Data.model.Emergencia // Importe sua classe de modelo
-import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo // Importe seu repositório
+import com.example.socorristajunior.Data.model.Emergencia
+import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// 1. Definimos um estado mais completo para a tela Home
 data class HomeUiState(
     val searchText: String = "",
     val emergencias: List<Emergencia> = emptyList(),
-    val isLoading: Boolean = true // Começa como true para mostrar o carregamento
+    val isLoading: Boolean = true
 )
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    // 2. Hilt vai injetar seu repositório aqui
     private val emergenciaRepo: EmergenciaRepo
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    // 3. O bloco init é executado assim que o ViewModel é criado
-    init {
-        carregarEmergencias()
-    }
-
-    // 4. A lógica para buscar os dados do repositório
-    private fun carregarEmergencias() {
-        viewModelScope.launch {
-            // Coleta o Flow de emergências do repositório
-            emergenciaRepo.getAllEmergencias().collect { listaDeEmergencias ->
-                // Atualiza o estado da UI com os novos dados
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        emergencias = listaDeEmergencias,
-                        isLoading = false // Carregamento concluído
-                    )
+    // 🔎 Busca em tempo real
+    val resultadosBusca: StateFlow<List<Emergencia>> =
+        _uiState.map { it.searchText }
+            .distinctUntilChanged()
+            .flatMapLatest { termoBusca ->
+                if (termoBusca.isBlank()) {
+                    emergenciaRepo.getAllEmergencias()
+                } else {
+                    emergenciaRepo.searchEmergencias(termoBusca)
                 }
             }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+
+    init {
+        carregarDadosIniciais()
+    }
+
+    private fun carregarDadosIniciais() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            val totalEmergencias = emergenciaRepo.getTotalEmergencias()
+            if (totalEmergencias == 0) {
+                carregarDadosPadrao()
+            }
+
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 
-    // 5. As funções de evento que a UI vai chamar
-    fun onSearchTextChanged(novoTexto: String) {
-        _uiState.update { it.copy(searchText = novoTexto) }
-        // TODO: Lógica de filtro da lista
+    private suspend fun carregarDadosPadrao() {
+        val emergenciasPadrao = listOf(
+            Emergencia(
+                emernome = "Queimaduras",
+                emerdesc = "Procedimento para queimaduras de 1º, 2º e 3º grau",
+                emergravidade = "Alta",
+                emerimagem = "fire",
+                categoria = "Lesões",
+                duracaoEstimada = 10
+            ),
+            Emergencia(
+                emernome = "Engasgo Adulto",
+                emerdesc = "Manobra de Heimlich para desobstrução das vias aéreas",
+                emergravidade = "Altíssima",
+                emerimagem = "choke",
+                categoria = "Respiratório",
+                duracaoEstimada = 2
+            )
+        )
+        emergenciaRepo.insertAllEmergencias(emergenciasPadrao)
     }
 
-    fun onSearchSubmit() {
-        // TODO: Lógica de busca
-        println("Pesquisando por: ${_uiState.value.searchText}")
+    fun onSearchTextChanged(novoTexto: String) {
+        _uiState.update { it.copy(searchText = novoTexto) }
+    }
+
+    fun filtrarPorCategoria(categoria: String) {
+        viewModelScope.launch {
+            emergenciaRepo.getEmergenciasPorCategoria(categoria).collect { lista ->
+                _uiState.update { it.copy(emergencias = lista) }
+            }
+        }
     }
 }

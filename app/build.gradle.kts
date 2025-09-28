@@ -8,16 +8,27 @@ plugins {
 
 android {
     namespace = "com.example.socorristajunior"
-    compileSdk = 36
+    compileSdk = 34 // Mudei para 34 (mais estável)
 
     defaultConfig {
         applicationId = "com.example.socorristajunior"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Configuração do Room para schema export
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -29,20 +40,26 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -52,6 +69,36 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.ui.text)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    // Swipe (se necessário)
+    implementation(libs.saket.swipe)
+
+    // Extras
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Ícones do Material
+    implementation("androidx.compose.material:material-icons-extended:1.6.7")
+
+    // Lifecycle ViewModel para Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+
+    // Runtime com collector para StateFlow
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.2")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,26 +106,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    // Jetpack Compose Navigation
-    implementation(libs.androidx.navigation.compose)
-    // Room components
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler) // Note o uso de ksp()
-    // Dagger - Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler) // Note o uso de ksp()
-    ksp(libs.androidx.hilt.compiler)
-    // Swipe
-    implementation(libs.saket.swipe)
-    // Extras
-    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    // Icones
-    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-perf")
+}
 
+// Configuração do KSP
+ksp {
+    // Para Room
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
