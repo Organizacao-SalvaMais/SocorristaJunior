@@ -64,7 +64,7 @@ fun HomeScreen(
                 description = "Guias para Emergências",
                 buttonText = "Abrir",
                 buttonColor = Color(0xFFE51F2D),
-                onClick = { navController.navigate("emergencies") }
+                onClick = { navController.navigate("emergencias") }
             )
         }
     }

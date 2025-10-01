@@ -12,37 +12,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-// 🎨 Paleta personalizada para o Socorrista Júnior
-private val LightColorScheme = lightColorScheme(
-    primary = sRed,
-    secondary = sOceanBlue,
-    tertiary = sWhite,
-    background = sWhite,
-    surface = sWhite,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+private val DarkColorScheme = darkColorScheme(
+    primary = Color(0xFFF37272), //cor de fundo do rótulo de passo
+    secondary = Color(0xFF111822),//Color.White,//Color(0xFFEB0029),//cor do texto de passo
+    tertiary = Color.Black,// cor do texto
+    background = Color(0xFF0E141B),// cor de fundo
+    onBackground = Color(0xFF151D28), //fundo do espaço reservado para imagem
+    onPrimary = Color(0xFF111822) // cor do card
 )
 
-private val DarkColorScheme = darkColorScheme(
-    primary = sRed,
-    secondary = sOceanBlue,
-    tertiary = sWhiteGrey,
-    background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E),
+private val LightColorScheme = lightColorScheme(
+    primary = Color(0xFFF23D3D),// cor passo
+    secondary =Color.White, //Color.Black,// cor do texto de passo
+    tertiary = Color.Black,//cor do texto
+    background = Color(0xFFF7F9FB), //cor de fundo
+    onBackground = Color(0xFFF1F7FE) //fundo do espaço reservado para imagem
+
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onTertiary = Color.Black,
-    onBackground = Color.White,
-    onSurface = Color.White
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
 )
 
 @Composable
 fun SocorristaJuniorTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // ❌ desligamos o dynamicColor para manter a identidade visual fixa
+    // Dynamic color is available on Android 12+
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -50,6 +52,7 @@ fun SocorristaJuniorTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

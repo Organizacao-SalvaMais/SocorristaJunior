@@ -25,7 +25,7 @@ fun FeatureCard(
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -45,7 +45,7 @@ fun FeatureCard(
                 text = title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF424242)
+                color = MaterialTheme.colorScheme.tertiary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
