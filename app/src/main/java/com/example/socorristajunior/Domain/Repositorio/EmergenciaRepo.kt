@@ -42,5 +42,5 @@ class EmergenciaRepo @Inject constructor(
 
     suspend fun getTotalEmergencias(): Int {
         return emergenciaDAO.getTotalEmergencias()
-    }
+    }    
 }

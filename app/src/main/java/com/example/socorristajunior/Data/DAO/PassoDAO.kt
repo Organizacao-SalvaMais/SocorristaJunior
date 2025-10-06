@@ -9,7 +9,6 @@ import com.example.socorristajunior.Data.model.Passo
 
 @Dao
 interface PassoDAO {
-
     // Buscar passos de uma emergência em ordem
     @Query("SELECT * FROM passo WHERE pasemercodigo = :emergenciaId ORDER BY pasordem ASC")
     fun getPassosDaEmergencia(emergenciaId: Int): Flow<List<Passo>>

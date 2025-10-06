@@ -11,7 +11,6 @@ import com.example.socorristajunior.Data.model.Emergencia
 
 @Dao
 interface EmergenciaDAO {
-
     // Buscar todas as emergências ordenadas
     @Query("SELECT * FROM emergencia ORDER BY emernome ASC")
     fun getAllEmergencias(): Flow<List<Emergencia>>
@@ -31,7 +30,6 @@ interface EmergenciaDAO {
     // Buscar por categoria
     @Query("SELECT * FROM emergencia WHERE categoria = :categoria")
     fun getEmergenciasPorCategoria(categoria: String): Flow<List<Emergencia>>
-
 
     // Inserir emergência
     @Insert(onConflict = OnConflictStrategy.REPLACE)
