@@ -66,7 +66,7 @@ fun HomeScreen(
                 buttonText = "Abrir",
                 buttonTextColor = Color.White,
                 buttonColor = Color(0xFFE51F2D),
-                onClick = { navController.navigate("emergencias") }
+                onClick = { navController.navigate("emergencies") }
             )
         }
     }

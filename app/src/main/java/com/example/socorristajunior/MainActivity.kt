@@ -62,8 +62,8 @@ fun AppNavigation(){
         }
     }
 }
-
+/*
 @Composable
 fun EmergenciesScreen(navController: NavHostController) {
     TODO("Not yet implemented")
-}
+}*/

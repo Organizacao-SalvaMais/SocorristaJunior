@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.example.socorristajunior.Data.BancoDeDados.AppDatabase
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
 import com.example.socorristajunior.Data.DAO.PassoDAO
+import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
+import com.example.socorristajunior.Domain.Repositorio.PassoRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,5 +38,17 @@ object AppModule {
     @Singleton
     fun providePassoDao(appDatabase: AppDatabase): PassoDAO {
         return appDatabase.passoDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEmergenciaRepo(emergenciaDAO: EmergenciaDAO): EmergenciaRepo {
+        return EmergenciaRepo(emergenciaDAO)
+    }
+
+    @Provides
+
+    fun providePassoRepo(passoDAO: PassoDAO): PassoRepo {
+        return PassoRepo(passoDAO)
     }
 }
