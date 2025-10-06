@@ -21,6 +21,7 @@ fun FeatureCard(
     description: String,
     buttonText: String,
     buttonColor: Color,
+    buttonTextColor: Color,
     onClick: () -> Unit
 ) {
     Card(

@@ -54,6 +54,7 @@ fun FunctionalitiesScreen(
                 description = "Teste seus conhecimentos sobre primeiros socorros com nosso quiz educativo.",
                 buttonText = "Iniciar Quiz",
                 buttonColor = Color(0xFFF2D16B),
+                buttonTextColor = Color.White,
                 onClick = { navController.navigate("quiz") }
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -63,6 +64,7 @@ fun FunctionalitiesScreen(
                 title = "Emergências",
                 description = "Passo a passo para situações de emergência.",
                 buttonText = "Ver Procedimentos",
+                buttonTextColor = Color.White,
                 buttonColor = Color(0xFFD92B2B),
                 onClick = { navController.navigate("emergencies") }
             )

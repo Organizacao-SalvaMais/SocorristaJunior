@@ -33,7 +33,7 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar( // ✅ corrigido
-                title = { Text("Salvar Mais") }
+                title = { Text("Salvar +") }
             )
         }
     ) { innerPadding ->
@@ -47,11 +47,12 @@ fun HomeScreen(
         ) {
             FeatureCard(
                 icon = Icons.Filled.Psychology,
-                iconColor = Color(0xFF1D40E5),
+                iconColor = Color(0xFF3F51B5),
                 title = "Treinamento",
                 description = "Aprenda primeiros socorros com perguntas rápidas e diretas.",
                 buttonText = "Começar",
-                buttonColor = Color(0xFF1D40E5),
+                buttonTextColor = Color(0xFF3F51B5),
+                buttonColor = Color(0xFF3F51B5),
                 onClick = { navController.navigate("quiz") }
             )
 
@@ -63,6 +64,7 @@ fun HomeScreen(
                 title = "EMERGÊNCIA",
                 description = "Guias para Emergências",
                 buttonText = "Abrir",
+                buttonTextColor = Color.White,
                 buttonColor = Color(0xFFE51F2D),
                 onClick = { navController.navigate("emergencias") }
             )
