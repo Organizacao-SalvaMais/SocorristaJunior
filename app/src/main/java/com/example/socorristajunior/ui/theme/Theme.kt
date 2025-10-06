@@ -13,17 +13,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    background = Color(0xFFF3F2EC)
+    primary = Color(0xFFF37272), //cor de fundo do rótulo de passo
+    secondary = Color(0xFF111822),//Color.White,//Color(0xFFEB0029),//cor do texto de passo
+    tertiary = Color.White,// cor do texto
+    background = Color(0xFF0E141B),// cor de fundo
+    onBackground = Color(0xFF151D28), //fundo do espaço reservado para imagem
+    onPrimary = Color(0xFF111822) // cor do card
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = sWhiteGrey,
-    secondary = sOceanBlue,
-    tertiary = sWhite,
-    background = Color(0xFFF3F2EC)
+    primary = Color(0xFFF23D3D),// cor passo
+    secondary =Color.Black, //Color.Black,// cor do texto de passo
+    tertiary = Color.Black,//cor do texto
+    background = Color(0xFFF7F9FB), //cor de fundo
+    onBackground = Color(0xFFF1F7FE) //fundo do espaço reservado para imagem
 
 
     /* Other default colors to override

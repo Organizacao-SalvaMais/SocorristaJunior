@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.ui.text)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,4 +71,14 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
     // Swipe
     implementation(libs.saket.swipe)
+    // Extras
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    // Icones
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-perf")
+
 }
