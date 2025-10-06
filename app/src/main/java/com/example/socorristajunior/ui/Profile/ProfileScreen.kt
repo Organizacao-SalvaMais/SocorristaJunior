@@ -30,17 +30,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -89,28 +84,21 @@ fun ProfileScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Lonnie Murphy",
+                        text = "Usuário",
                         color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Hello",
-                        color = Color.LightGray,
-                        fontSize = 14.sp
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ProfileMenuItem(title = "My Home", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Messages", badge = "1", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Family Access", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Change Password", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Support", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Sign Out", textColor = Color(0xFFE51F2D), onClick = { /* TODO */ })
+            ProfileMenuItem(title = "Meu Desempenho", onClick = { /* TODO */ })
+            ProfileMenuItem(title = "Notificações", onClick = { /* TODO */ })
+            ProfileMenuItem(title = "Alterar Senha", onClick = { /* TODO */ })
+            ProfileMenuItem(title = "Suporte", onClick = { /* TODO */ })
+            ProfileMenuItem(title = "Sair", textColor = Color(0xFFE51F2D), onClick = { /* TODO */ })
         }
     }
 }

@@ -44,8 +44,8 @@ class ProfileViewModel @Inject constructor() : ViewModel() {
             val dummyUser = User(
                 username = "Usuário de Teste",
                 email = "teste@gmail.com",
-                phone = "(269)-748-9882",
-                gender = "Male",
+                phone = "(92) 99745-5208",
+                gender = "Masculino",
                 dateOfBirth = "11/07/2005"
             )
             _uiState.update { it.copy(user = dummyUser, isLoading = false) }

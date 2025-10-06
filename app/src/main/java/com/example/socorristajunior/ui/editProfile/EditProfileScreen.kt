@@ -100,7 +100,7 @@ fun EditProfileScreen(
                 OutlinedTextField(
                     value = username,
                     onValueChange = setUsername,
-                    label = { Text("Username") },
+                    label = { Text("Nome de Usuário") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -115,7 +115,7 @@ fun EditProfileScreen(
                 OutlinedTextField(
                     value = phone,
                     onValueChange = setPhone,
-                    label = { Text("Phone") },
+                    label = { Text("Telefone") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
                 )
@@ -123,14 +123,14 @@ fun EditProfileScreen(
                 OutlinedTextField(
                     value = gender,
                     onValueChange = setGender,
-                    label = { Text("Gender") },
+                    label = { Text("Gênero") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = dateOfBirth,
                     onValueChange = setDateOfBirth,
-                    label = { Text("Date of Birth") },
+                    label = { Text("Data de Aniversário") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
