@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Quiz
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.Data.model.Emergencia
+import com.example.socorristajunior.ui.components.BottomNavigationBar
 import com.example.socorristajunior.ui.components.FeatureCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +37,10 @@ fun HomeScreen(
             TopAppBar( // ✅ corrigido
                 title = { Text("Salvar +") }
             )
+        },
+        bottomBar = {
+            // Chame sua nova função de navegação aqui
+            BottomNavigationBar(navController)
         }
     ) { innerPadding ->
         Column(
