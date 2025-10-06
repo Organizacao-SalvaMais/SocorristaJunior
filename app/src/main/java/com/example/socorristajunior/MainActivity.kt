@@ -12,6 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.socorristajunior.ui.editProfile.EditProfileScreen
+import com.example.socorristajunior.ui.Profile.ProfileScreen
 import com.example.socorristajunior.ui.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.emergencies.EmergenciesScreen
 import com.example.socorristajunior.ui.home.HomeScreen
@@ -46,6 +48,9 @@ fun AppNavigation(){
         composable("emergencies") {
             EmergenciesScreen(navController = navController)
         }
+
+        composable("profile") { ProfileScreen(navController = navController) }
+        composable("edit_profile") { EditProfileScreen(navController = navController) }
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO
         composable(

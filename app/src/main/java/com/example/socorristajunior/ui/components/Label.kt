@@ -51,6 +51,7 @@ fun BottomNavigationBar(navController: NavController) {
                 }
             }
         )
+
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
             label = { Text("Perfil") },
