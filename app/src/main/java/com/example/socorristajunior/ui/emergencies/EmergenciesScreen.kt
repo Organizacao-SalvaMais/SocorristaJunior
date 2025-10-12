@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-
+import com.example.socorristajunior.ui.components.BottomNavigationBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +40,10 @@ fun EmergenciesScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            // Função da NavBar | | Label
+            BottomNavigationBar(navController)
         }
     ) { innerPadding ->
         if (uiState.isLoading) {
