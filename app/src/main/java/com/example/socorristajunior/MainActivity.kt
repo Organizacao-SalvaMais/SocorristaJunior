@@ -1,13 +1,10 @@
 package com.example.socorristajunior
 
-import android.R.color.black
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,9 +46,12 @@ fun AppNavigation(){
         composable("emergencies") {
             EmergenciesScreen(navController = navController)
         }
-
-        composable("profile") { ProfileScreen(navController = navController) }
-        composable("edit_profile") { EditProfileScreen(navController = navController) }
+        composable("profile") {
+            ProfileScreen(navController = navController)
+        }
+        composable("edit_profile") {
+            EditProfileScreen(navController = navController)
+        }
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO
         composable(
@@ -68,8 +68,3 @@ fun AppNavigation(){
         }
     }
 }
-/*
-@Composable
-fun EmergenciesScreen(navController: NavHostController) {
-    TODO("Not yet implemented")
-}*/

@@ -1,7 +1,5 @@
 package com.example.socorristajunior.ui.emergencies
 
-import androidx.compose.ui.graphics.vector.ImageVector
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.model.Emergencia

@@ -16,9 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.socorristajunior.ui.components.EmergencyDetailContent
 import com.example.socorristajunior.ui.emergencies.EmergenciesViewModel
-import com.example.socorristajunior.ui.emergencies.EmergencyStep
-import com.example.socorristajunior.ui.theme.sOceanBlue
 import com.example.socorristajunior.ui.theme.sRed
 import com.example.socorristajunior.ui.theme.sWhite
 
@@ -37,16 +36,12 @@ fun EmergencyDetailScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = { Text("Procedimento") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar para lista")
-                    }
-                }
-            )
+            SmallTopAppBar(navController = navController)
         }
     ) { innerPadding ->
+        /*EmergencyDetailContent(
+            steps = uiState.stepsList,
+        )*/
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -54,7 +49,7 @@ fun EmergencyDetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(uiState.stepsList) { step ->
+             items(uiState.stepsList) { step ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = sWhite),
@@ -88,7 +83,23 @@ fun EmergencyDetailScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class) // Anotação necessária para TopAppBar
 @Composable
-fun SmallTopAppBar(title: @Composable () -> Unit, navigationIcon: @Composable () -> Unit) {
-    TODO("Not yet implemented")
+fun SmallTopAppBar(navController: NavController) { // Assinatura de exemplo, ajuste se necessário
+    // Implementação real da TopAppBar
+    TopAppBar(
+        // Título que aparecerá na barra
+        title = { Text("Detalhes da Emergência") },
+        // Ícone de navegação para voltar
+        navigationIcon = {
+            // Botão com ícone clicável
+            IconButton(onClick = { navController.popBackStack() }) {
+                // Ícone de seta para a esquerda
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Voltar"
+                )
+            }
+        }
+    )
 }
