@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.quiz
+package com.example.socorristajunior.ui.screens.quiz
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

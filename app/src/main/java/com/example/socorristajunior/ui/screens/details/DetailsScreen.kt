@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.details
+package com.example.socorristajunior.ui.screens.details
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.EmergencyDetailContent
-import com.example.socorristajunior.ui.emergencies.EmergenciesViewModel
+import com.example.socorristajunior.ui.screens.emergencies.EmergenciesViewModel
 import com.example.socorristajunior.ui.theme.sRed
 import com.example.socorristajunior.ui.theme.sWhite
 
@@ -26,12 +26,12 @@ import com.example.socorristajunior.ui.theme.sWhite
 fun EmergencyDetailScreen(
     emergencyId: Int,
     navController: NavController,
-    viewModel: EmergenciesViewModel = hiltViewModel()
+    viewModel: DetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = emergencyId) {
-        viewModel.onEmergencySelected(emergencyId)
+        viewModel.loadSteps(emergencyId)
     }
 
     Scaffold(
@@ -39,45 +39,20 @@ fun EmergencyDetailScreen(
             SmallTopAppBar(navController = navController)
         }
     ) { innerPadding ->
-        /*EmergencyDetailContent(
-            steps = uiState.stepsList,
-        )*/
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-             items(uiState.stepsList) { step ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = sWhite),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        // A Row agora contém APENAS o texto do passo
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            // Lógica do ícone foi completamente removida daqui.
-                            Text(
-                                text = "Passo ${step.stepNumber}/${step.totalSteps}",
-                                fontWeight = FontWeight.Bold,
-                                color = sRed
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = step.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = step.description,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
+            if (uiState.isLoading) {
+                CircularProgressIndicator()
+            } else {
+                // --- OTIMIZAÇÃO 4: Usando o Componente Estilizado ---
+                // Agora que a lógica está correta, podemos usar seu EmergencyDetailContent.
+                // Ele é mais eficiente que a LazyColumn para esta finalidade, pois
+                // usa uma Column rolável simples, ideal para um número fixo de passos.
+                EmergencyDetailContent(steps = uiState.stepsList)
             }
         }
     }

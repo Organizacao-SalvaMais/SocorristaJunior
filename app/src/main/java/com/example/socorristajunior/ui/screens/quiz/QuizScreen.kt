@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.quiz
+package com.example.socorristajunior.ui.screens.quiz
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

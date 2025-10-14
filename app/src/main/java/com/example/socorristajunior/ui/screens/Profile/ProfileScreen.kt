@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.Profile
+package com.example.socorristajunior.ui.screens.Profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

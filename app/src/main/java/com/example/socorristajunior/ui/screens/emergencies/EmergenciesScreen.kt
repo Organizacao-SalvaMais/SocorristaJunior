@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.emergencies
+package com.example.socorristajunior.ui.screens.emergencies
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +26,7 @@ fun EmergenciesScreen(
     viewModel: EmergenciesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val filteredList by viewModel.filteredEmergencies.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -53,14 +54,6 @@ fun EmergenciesScreen(
                 CircularProgressIndicator()
             }
         } else {
-            val filteredList = if (uiState.searchText.isBlank()) {
-                uiState.emergenciesList
-            } else {
-                uiState.emergenciesList.filter { emergencia ->
-                    emergencia.emernome.contains(uiState.searchText, ignoreCase = true) ||
-                            emergencia.emerdesc.contains(uiState.searchText, ignoreCase = true)
-                }
-            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()

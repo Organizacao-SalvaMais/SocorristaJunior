@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.home
+package com.example.socorristajunior.ui.screens.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -13,13 +13,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import com.example.socorristajunior.ui.components.EmergencyContactsGrid
 import com.example.socorristajunior.ui.components.FeatureCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    //viewModel: HomeViewModel = hiltViewModel()
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -66,7 +67,12 @@ fun HomeScreen(
                 onClick = { navController.navigate("emergencies") }
             )
 
-           /* Spacer(modifier = Modifier.height(24.dp))
+            //Spacer(modifier = Modifier.height(24.dp))
+/*
+            EmergencyContactsGrid()
+*/
+
+            /*
             // Card de Botões de Contato
             FeatureCard(
                 icon = Icons.Filled.AddIcCall,

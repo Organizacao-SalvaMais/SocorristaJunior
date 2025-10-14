@@ -1,4 +1,4 @@
-package com.example.socorristajunior.ui.editProfile
+package com.example.socorristajunior.ui.screens.editProfile
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.socorristajunior.ui.Profile.ProfileViewModel
+import com.example.socorristajunior.ui.screens.Profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

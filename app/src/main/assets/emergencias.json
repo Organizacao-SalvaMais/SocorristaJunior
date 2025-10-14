@@ -1,0 +1,96 @@
+{
+  "status": "success",
+  "message": "Emergencia list retrieved successfully",
+  "data": [
+    {
+      "emernome": "Queimaduras (Trauma Térmico)",
+      "emerdesc": "Ferimento na pele resultante de calor extremo, frio, eletricidade ou substâncias químicas.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        { "pasnome": "Interrompa a Queimadura e Garanta a Segurança",
+          "pasimagem": null,
+          "pasdescricao": "Afaste a vítima da fonte de calor (fogo, água quente, eletricidade). Se a roupa estiver em chamas, apague-a abafando com um cobertor.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Resfrie a Área Queimada",
+          "pasimagem": null,
+          "pasdescricao": "Coloque a área afetada sob água corrente em temperatura ambiente (fria, mas não gelada) por pelo menos 15 a 20 minutos. Isso alivia a dor e impede que a queimadura se aprofunde. Não use gelo.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Remova Roupas e Joias com Cuidado",
+          "pasimagem": null,
+          "pasdescricao": "Retire com cuidado anéis, relógios, cintos ou roupas que estejam sobre a área queimada, antes que o local comece a inchar. NÃO remova nada que esteja grudado na pele.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Cubra a Queimadura",
+          "pasimagem": null,
+          "pasdescricao": "Cubra a área com um pano limpo e úmido ou com filme plástico de cozinha (sem apertar). Isso protege contra infecções e alivia a dor. Não use algodão.",
+          "pasordem": 4 }, {
+          "pasnome": "Evite Práticas Incorretas",
+          "pasimagem": null,
+          "pasdescricao": "Nunca aplique pasta de dente, manteiga, clara de ovo, borra de café ou qualquer pomada caseira. Não estoure as bolhas que se formarem; elas são uma proteção natural contra infecções.",
+          "pasordem": 5
+        },
+        {
+          "pasnome": "Avalie a Gravidade e Chame Ajuda",
+          "pasimagem": null,
+          "pasdescricao": "Chame a emergência (SAMU - 192) se a queimadura for profunda (3º grau), muito extensa (maior que a palma da mão da vítima), ou se atingir áreas críticas como rosto, mãos, pés, genitais ou grandes articulações.",
+          "pasordem": 6 }
+      ]
+    },
+    {
+      "emernome": "Acidente Vascular Encefálico (AVE)",
+      "emerdesc": "Popularmente conhecido como Derrame, ocorre quando vasos que levam sangue ao cérebro entopem (isquêmico) ou se rompem (hemorrágico), provocando a paralisia da área cerebral que ficou sem circulação sanguínea.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    },
+    {
+      "emernome": "Crise Convulsiva",
+      "emerdesc": "Contração muscular involuntária, anormal e violenta. Quando as crises são recorrentes, a condição é chamada de Epilepsia. É fundamental proteger a vítima de se machucar durante a crise.",
+      "emergravicodigo": 3,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    },
+    {
+      "emernome": "Desmaio / Síncope",
+      "emerdesc": "É a perda inesperada e temporária da consciência devido à diminuição do fluxo de oxigênio no cérebro. Geralmente tem início rápido, curta duração e recuperação espontânea.",
+      "emergravicodigo": 4,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    },
+    {
+      "emernome": "Insuficiência Respiratória Aguda",
+      "emerdesc": "Incapacidade do sistema respiratório de captar oxigênio e/ou eliminar gás carbônico adequadamente. Pode ser causada por engasgo (OVACE), asma, afogamento, entre outros.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    },
+    {
+      "emernome": "Lesões em Tecidos Moles",
+      "emerdesc": "Qualquer lesão na integridade da pele, como cortes, perfurações ou escoriações, que pode ser seguida ou não por hemorragia. O foco principal é o controle de sangramentos.",
+      "emergravicodigo": 3,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    },
+    {
+      "emernome": "Traumas Músculo-Esqueléticos",
+      "emerdesc": "Lesões em ossos, articulações e ligamentos de braços e pernas, como fraturas (quebra do osso), luxações (deslocamento da articulação) e entorses (lesão de ligamentos).",
+      "emergravicodigo": 3,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    },
+    {
+      "emernome": "Traumatismo Cranioencefálico (TCE)",
+      "emerdesc": "É uma lesão no cérebro causada por um trauma externo contra a cabeça, podendo ocasionar alterações anatômicas no crânio e comprometer as funções cerebrais.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1
+    }
+  ]
+}

@@ -33,7 +33,7 @@ interface EmergenciaDAO {
 
     // Inserir emergência
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEmergencia(emergencia: Emergencia)
+    suspend fun insertEmergencia(emergencia: Emergencia): Long
 
     // Inserir lista de emergências
     @Insert(onConflict = OnConflictStrategy.REPLACE)

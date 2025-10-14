@@ -10,12 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.socorristajunior.ui.editProfile.EditProfileScreen
-import com.example.socorristajunior.ui.Profile.ProfileScreen
-import com.example.socorristajunior.ui.details.EmergencyDetailScreen
-import com.example.socorristajunior.ui.emergencies.EmergenciesScreen
-import com.example.socorristajunior.ui.home.HomeScreen
-import com.example.socorristajunior.ui.quiz.QuizScreen
+import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
+import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
+import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
+import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
+import com.example.socorristajunior.ui.screens.home.HomeScreen
+import com.example.socorristajunior.ui.screens.quiz.QuizScreen
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
