@@ -75,13 +75,15 @@ dependencies {
     // Extras
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     // Icones
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
 
 }
