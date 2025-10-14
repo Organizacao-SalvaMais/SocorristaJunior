@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 // Modelo de dados de exemplo para o usuário
 data class User(
     val id: Int = 1, // Exemplo de ID fixo

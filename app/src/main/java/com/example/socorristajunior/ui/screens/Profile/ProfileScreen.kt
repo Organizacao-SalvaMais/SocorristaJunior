@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import androidx.compose.material3.MaterialTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,20 +72,20 @@ fun ProfileScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color(0xFF1F2F45)),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Foto de Perfil",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(100.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Usuário",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -97,7 +98,7 @@ fun ProfileScreen(navController: NavController) {
             ProfileMenuItem(title = "Notificações", onClick = { /* TODO */ })
             ProfileMenuItem(title = "Alterar Senha", onClick = { /* TODO */ })
             ProfileMenuItem(title = "Suporte", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Sair", textColor = Color(0xFFE51F2D), onClick = { /* TODO */ })
+            ProfileMenuItem(title = "Sair", textColor = MaterialTheme.colorScheme.error, onClick = { /* TODO */ })
         }
     }
 }
@@ -106,7 +107,7 @@ fun ProfileScreen(navController: NavController) {
 fun ProfileMenuItem(
     title: String,
     badge: String? = null,
-    textColor: Color = Color.Black,
+    textColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     onClick: () -> Unit
 ) {
     Row(
@@ -137,7 +138,7 @@ fun ProfileMenuItem(
         Icon(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = null,
-            tint = Color.Gray
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

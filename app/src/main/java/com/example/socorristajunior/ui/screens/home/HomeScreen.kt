@@ -10,10 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
-import com.example.socorristajunior.ui.components.EmergencyContactsGrid
 import com.example.socorristajunior.ui.components.FeatureCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +23,7 @@ fun HomeScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar( // ✅ corrigido
+            TopAppBar(
                 title = { Text("Salvar +") }
             )
         },
@@ -45,12 +43,12 @@ fun HomeScreen(
             // Card de Treinamento/Quiz
             FeatureCard(
                 icon = Icons.Filled.Psychology,
-                iconColor = Color(0xFF3F51B5),
+                iconColor = Color(0xFFE51F2D),
                 title = "Treinamento",
                 description = "Aprenda primeiros socorros com perguntas rápidas e diretas.",
                 buttonText = "Começar",
-                buttonTextColor = Color(0xFF3F51B5),
-                buttonColor = Color(0xFF3F51B5),
+                buttonTextColor= Color(0xFF0E141B),
+                buttonColor = Color(0xFFF2D16A),
                 onClick = { navController.navigate("quiz") }
             )
 
@@ -58,7 +56,7 @@ fun HomeScreen(
             // Card de Emergencia
             FeatureCard(
                 icon = Icons.Default.Warning,
-                iconColor = Color(0xFFFAEB01),
+                iconColor = Color(0xFFE51F2D),
                 title = "EMERGÊNCIA",
                 description = "Guias para Emergências",
                 buttonText = "Abrir",

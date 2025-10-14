@@ -3,9 +3,7 @@ package com.example.socorristajunior.ui.screens.emergencies
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.model.Emergencia
-import com.example.socorristajunior.Data.model.Passo
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
-import com.example.socorristajunior.Domain.Repositorio.PassoRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

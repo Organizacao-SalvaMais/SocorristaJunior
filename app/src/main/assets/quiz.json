@@ -1,0 +1,364 @@
+{
+  "status": "success",
+  "message": "Quiz list retrieved successfully",
+  "data": [
+    {
+      "qzcodigo": 1,
+      "qznome": "Traumas e Lesões Comuns",
+      "qzdesc": "Teste seus conhecimentos sobre como agir em situações de trauma, como queimaduras, fraturas e ferimentos.",
+      "questoes": [
+        {
+          "qtcodigo": 1,
+          "qtenunciado": "Qual é o primeiro cuidado correto ao socorrer alguém com uma queimadura na pele (ex: por água quente), após garantir a segurança do local?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 1,
+              "opresposta": "Aplicar pasta de dente ou manteiga para aliviar a dor.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 2,
+              "opresposta": "Resfriar o local com água corrente em temperatura ambiente.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 3,
+              "opresposta": "Estourar imediatamente as bolhas que se formaram.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 4,
+              "opresposta": "Cobrir a queimadura com um cobertor grosso para abafar.",
+              "opcorreta": false
+            }
+          ]
+        },
+        {
+          "qtcodigo": 6,
+          "qtenunciado": "Qual é a ação MAIS IMPORTANTE e imediata para controlar uma hemorragia grave (sangramento intenso) em um braço ou perna?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 21,
+              "opresposta": "Lavar o ferimento abundantemente com água e sabão.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 22,
+              "opresposta": "Aplicar um torniquete o mais apertado possível.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 23,
+              "opresposta": "Aplicar pressão direta e firme sobre o ferimento.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 24,
+              "opresposta": "Elevar o membro ferido acima do coração sem fazer pressão.",
+              "opcorreta": false
+            }
+          ]
+        },
+        {
+          "qtcodigo": 7,
+          "qtenunciado": "Ao encontrar uma pessoa com suspeita de fratura no antebraço, com dor intensa e deformidade visível, qual é a conduta correta de primeiros socorros?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 25,
+              "opresposta": "Tentar endireitar o braço da vítima para a posição correta.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 26,
+              "opresposta": "Imobilizar o braço na posição em que se encontra, sem movê-lo.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 27,
+              "opresposta": "Fazer uma massagem no local para aliviar a dor intensa.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 28,
+              "opresposta": "Pedir para a vítima movimentar o pulso para ver se está quebrado.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 33,
+              "opresposta": "Apenas as afirmativas I e II estão corretas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 34,
+              "opresposta": "Apenas as afirmativas III e IV estão corretas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 35,
+              "opresposta": "Apenas as afirmativas I e III estão corretas.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 53,
+              "opresposta": "Apenas as afirmativas II e IV estão corretas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 54,
+              "opresposta": "Todas as afirmativas estão corretas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 55,
+              "opresposta": "Apenas as afirmativas I e II estão corretas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 56,
+              "opresposta": "Apenas as afirmativas III e IV estão corretas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 57,
+              "opresposta": "Apenas as afirmativas I e III estão corretas.",
+              "opcorreta": true
+            }
+          ]
+        },
+        {
+          "qtcodigo": 8,
+          "qtenunciado": "Após uma pessoa sofrer uma queda e bater fortemente a cabeça, ela está consciente, mas confusa. Qual é o cuidado MAIS IMPORTANTE ao aguardar o socorro?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 29,
+              "opresposta": "Ajudar a pessoa a se sentar para ver se ela se sente melhor.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 30,
+              "opresposta": "Não mover a pessoa, especialmente a cabeça e o pescoço.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 31,
+              "opresposta": "Oferecer um analgésico para a dor de cabeça da pessoa.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 32,
+              "opresposta": "Verificar se a pessoa consegue movimentar os braços e as pernas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 36,
+              "opresposta": "Uma pontuação de 15 na GCS significa que o paciente está em coma profundo.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 37,
+              "opresposta": "Quanto menor a pontuação na GCS, mais leve é a lesão cerebral.",
+              "opcorreta": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "qzcodigo": 2,
+      "qznome": "Emergências Clínicas Comuns",
+      "qzdesc": "Teste seus conhecimentos sobre como identificar e agir em emergências clínicas como IAM, AVE e convulsões.",
+      "questoes": [
+        {
+          "qtcodigo": 2,
+          "qtenunciado": "Uma pessoa subitamente apresenta um lado do rosto caído (sorriso torto), fraqueza para levantar um dos braços e fala \"embolada\". Qual é a emergência mais provável?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 5,
+              "opresposta": "Crise de ansiedade ou pânico.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 6,
+              "opresposta": "Sintomas de hipoglicemia (falta de açúcar no sangue).",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 7,
+              "opresposta": "Sinais clássicos de um Acidente Vascular Encefálico (AVE/Derrame).",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 8,
+              "opresposta": "Um engasgo parcial com saliva.",
+              "opcorreta": false
+            }
+          ]
+        },
+        {
+          "qtcodigo": 3,
+          "qtenunciado": "Ao presenciar uma pessoa tendo uma crise convulsiva, com abalos musculares intensos, qual das seguintes ações é a MAIS PERIGOSA e deve ser EVITADA a todo custo?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 9,
+              "opresposta": "Proteger a cabeça da pessoa para que não bata no chão.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 10,
+              "opresposta": "Afastar objetos e móveis de perto para evitar lesões.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 11,
+              "opresposta": "Tentar colocar um objeto ou os dedos na boca da pessoa.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 12,
+              "opresposta": "Colocar a pessoa de lado após a crise terminar.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 38,
+              "opresposta": "I, III e IV.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 39,
+              "opresposta": "II, III e IV.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 40,
+              "opresposta": "I, II e III.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 41,
+              "opresposta": "Todas estão corretas.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 42,
+              "opresposta": "Nenhuma está correta.",
+              "opcorreta": false
+            }
+          ]
+        },
+        {
+          "qtcodigo": 4,
+          "qtenunciado": "Após uma pessoa desmaiar por calor excessivo e recuperar a consciência, qual é a posição mais indicada para ajudá-la a se recuperar mais rápido?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 13,
+              "opresposta": "Ajudá-la a se sentar e dar tapas leves no rosto.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 14,
+              "opresposta": "Deitá-la de costas e elevar suas pernas acima do nível do coração.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 15,
+              "opresposta": "Oferecer um copo de água com açúcar para normalizar a pressão.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 16,
+              "opresposta": "Ajudá-la a se levantar e caminhar para reativar a circulação.",
+              "opcorreta": false
+            }
+          ]
+        },
+        {
+          "qtcodigo": 5,
+          "qtenunciado": "Em um restaurante, uma pessoa se levanta subitamente, levando as mãos ao pescoço (sinal universal de asfixia), sem conseguir tossir ou falar. Qual a ação correta?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 17,
+              "opresposta": "Dar um copo de água para a pessoa beber e desengasgar.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 18,
+              "opresposta": "Dar tapas fortes nas costas com a pessoa sentada na cadeira.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 19,
+              "opresposta": "Posicionar-se atrás da pessoa e realizar a Manobra de Heimlich.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 20,
+              "opresposta": "Não fazer nada e esperar para ver se a pessoa consegue expelir sozinha.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 43,
+              "opresposta": "Checar/Verificar, Avaliar, Estimular e Observar.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 44,
+              "opresposta": "Observar, Checar/Verificar, Avaliar e Estimular.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 45,
+              "opresposta": "Estimular, Avaliar, Checar/Verificar e Observar.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 46,
+              "opresposta": "Checar/Verificar, Observar, Estimular e Avaliar.",
+              "opcorreta": true
+            },
+            {
+              "opcodigo": 47,
+              "opresposta": "Avaliar, Observar, Checar/Verificar e Estimular.",
+              "opcorreta": false
+            }
+          ]
+        },
+        {
+          "qtcodigo": 9,
+          "qtenunciado": "A Escala de Coma de Glasgow é aplicada da mesma forma para todas as idades? Assinale a alternativa correta.",
+          "qtimagem": null,
+          "opcoes": []
+        },
+        {
+          "qtcodigo": 10,
+          "qtenunciado": "Além da Escala de Coma de Glasgow, existem outras escalas que podem ser utilizadas para complementar a avaliação neurológica do paciente?",
+          "qtimagem": null,
+          "opcoes": [
+            {
+              "opcodigo": 48,
+              "opresposta": "Sim, a Escala de Braden é frequentemente usada em conjunto para avaliar o risco de lesões neurológicas.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 49,
+              "opresposta": "Não, a GCS é a única escala utilizada, pois as outras são apenas variações dela sem validação clínica.",
+              "opcorreta": false
+            },
+            {
+              "opcodigo": 50,
+              "opresposta": "Sim, a escala FOUR (Full Outline of UnResponsiveness) é uma alternativa que avalia detalhes adicionais, como os reflexos do tronco cerebral.",
+              "opcorreta": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

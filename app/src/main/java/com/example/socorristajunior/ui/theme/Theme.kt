@@ -22,7 +22,7 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFFF23D3D),// cor passo
-    secondary =Color.Black, //Color.Black,// cor do texto de passo
+    secondary =Color.White, //Color.Black,// cor do texto de passo
     tertiary = Color.Black,//cor do texto
     background = Color(0xFFF7F9FB), //cor de fundo
     onBackground = Color(0xFFF1F7FE) //fundo do espaço reservado para imagem
@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
 fun SocorristaJuniorTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
