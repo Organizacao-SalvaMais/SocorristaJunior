@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.socorristajunior" />
+                  <option name="mobileSdkAppId" value="1:145732133907:android:5734cb01b223e579accbe6" />
+                  <option name="projectId" value="salva-mais" />
+                  <option name="projectNumber" value="145732133907" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
