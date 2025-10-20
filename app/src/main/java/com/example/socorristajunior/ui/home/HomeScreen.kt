@@ -50,8 +50,8 @@ fun HomeScreen(
     // ⭐️ Coleta o estado do ViewModel, que inclui o status de login
     val state by viewModel.uiState.collectAsState()
     val isUserLoggedIn = state.loggedUser?.isLoggedIn == true
+    val userName = state.loggedUser?.username?.split(" ")?.first()
 
-    // O Scaffold pode ser o mesmo
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -61,7 +61,7 @@ fun HomeScreen(
                     Text(
                         // Mensagem personalizada se estiver logado, ou genérica se não
                         text = if (isUserLoggedIn && state?.loggedUser?.username.isNullOrBlank()) {
-                            "Olá, ${state?.loggedUser?.username?.split(" ")?.first()}!"
+                            "Olá, ${userName}"
                         } else {
                             "Salvar +"
                         },
@@ -71,10 +71,7 @@ fun HomeScreen(
             )
         },
         bottomBar = {
-            // O BottomNavigationBar só deve aparecer se o usuário estiver logado
-            if (isUserLoggedIn) {
-                BottomNavigationBar(navController)
-            }
+            BottomNavigationBar(navController)
         }
     ) { innerPadding ->
         Column(
@@ -85,29 +82,6 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-
-            // ⭐️ NOVO: BOTÃO DE LOGIN CONDICIONAL
-            if (!isUserLoggedIn) {
-                // Mensagem de boas-vindas para usuários deslogados
-                Text(
-                    text = "Faça login para salvar seu progresso e personalizar seu perfil.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                Button(
-                    onClick = {
-                        // Navega para a rota de login
-                        navController.navigate("LOGIN_ROUTE")
-                    },
-                    modifier = Modifier.fillMaxWidth().height(56.dp)
-                ) {
-                    Text("FAZER LOGIN / CADASTRAR")
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-            // ------------------------------------
 
             // Seções de conteúdo (Treinamento e Emergência)
             FeatureCard(
@@ -134,8 +108,6 @@ fun HomeScreen(
                 buttonColor = Color(0xFFE51F2D),
                 onClick = { navController.navigate("emergencies") }
             )
-
-            // ... (Você pode adicionar mais conteúdo)
         }
     }
 }

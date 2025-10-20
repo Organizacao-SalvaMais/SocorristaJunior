@@ -23,8 +23,6 @@ import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 import com.example.socorristajunior.ui.login.LoginScreen
-import com.example.socorristajunior.ui.login.LOGIN_ROUTE
-import com.example.socorristajunior.ui.login.MAIN_SCREEN_ROUTE
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -48,7 +46,6 @@ fun AppNavigation(){
         composable("login_route"){
             LoginScreen(navController = navController)
         }
-
         composable("home"){
             HomeScreen(navController = navController)
         }
@@ -59,8 +56,13 @@ fun AppNavigation(){
             EmergenciesScreen(navController = navController)
         }
 
-        composable("profile") { ProfileScreen(navController = navController) }
-        composable("edit_profile") { EditProfileScreen(navController = navController) }
+        composable("profile") {
+            ProfileScreen(navController = navController)
+        }
+
+        composable("edit_profile") {
+            EditProfileScreen(navController = navController)
+        }
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO
         composable(

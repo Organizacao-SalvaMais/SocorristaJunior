@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 // Define as rotas do aplicativo.
 const val LOGIN_ROUTE = "login_route"
-const val MAIN_SCREEN_ROUTE = "main_screen_route" // Tela principal após o login
+const val MAIN_SCREEN_ROUTE = "home" // Tela principal após o login
 
 @Composable
 fun LoginScreen(

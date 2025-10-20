@@ -34,11 +34,14 @@ fun ProfileScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val user = state.user
+    val isUserLoggedIn = user?.isLoggedIn == true // ⭐️ CHAVE: Status de Login
 
-    // Lógica de Navegação após Logout
-    LaunchedEffect(user?.isLoggedIn) {
-        if (user?.isLoggedIn == false && !state.isLoading) {
-            navController.navigate(LOGIN_ROUTE) {
+    // Lógica de Redirecionamento após Logout (Para evitar que o usuário fique no Profile deslogado)
+    LaunchedEffect(isUserLoggedIn) {
+        if (!isUserLoggedIn && !state.isLoading) {
+            // Após o logout, navegamos para a tela principal (Home).
+            // O Home deve saber lidar com usuários deslogados.
+            navController.navigate(MAIN_SCREEN_ROUTE) {
                 popUpTo(MAIN_SCREEN_ROUTE) { inclusive = true }
             }
         }
@@ -47,9 +50,9 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Meu Perfil") },
+                title = { Text(if (isUserLoggedIn) "Meu Perfil" else "Acesso") },
                 actions = {
-                    if (user?.isLoggedIn == true) {
+                    if (isUserLoggedIn) {
                         IconButton(onClick = { navController.navigate("edit_profile") }) {
                             Icon(Icons.Filled.Edit, contentDescription = "Editar Perfil")
                         }
@@ -57,22 +60,31 @@ fun ProfileScreen(
                 }
             )
         },
-        bottomBar = { BottomNavigationBar(navController) }
+        // A BottomNavigationBar só aparece se estiver logado
+        bottomBar = { if (isUserLoggedIn) BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            // ⭐️ Centraliza verticalmente o conteúdo se o usuário não estiver logado
+            verticalArrangement = if (isUserLoggedIn) Arrangement.Top else Arrangement.Center
         ) {
+
             if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.padding(32.dp))
+                CircularProgressIndicator()
                 return@Column
             }
 
-            if (user?.isLoggedIn == true) {
+            // ----------------------------------------
+            // ⭐️ CONTEÚDO CONDICIONAL ⭐️
+            // ----------------------------------------
+            if (isUserLoggedIn) {
+                // 1. USUÁRIO LOGADO: MOSTRA DETALHES E BOTÃO SAIR
+
                 // Header com dados reais
                 Box(
                     modifier = Modifier
@@ -90,13 +102,13 @@ fun ProfileScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = user.username ?: "Usuário Junior",
+                            text = user?.username ?: "Usuário Junior",
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = user.email ?: "Email não informado",
+                            text = user?.email ?: "Email não informado",
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 14.sp
                         )
@@ -105,25 +117,51 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Detalhes do Usuário
-                ProfileDetailItem(label = "Gênero", value = user.gender ?: "Não informado")
-                ProfileDetailItem(label = "Nascimento", value = user.dateOfBirth ?: "Não informado")
-                ProfileDetailItem(label = "Telefone", value = user.phone ?: "Não informado")
+                // Detalhes do Usuário (usando ProfileDetailItem)
+                ProfileDetailItem(label = "Gênero", value = user?.gender ?: "Não informado")
+                ProfileDetailItem(label = "Nascimento", value = user?.dateOfBirth ?: "Não informado")
+                ProfileDetailItem(label = "Telefone", value = user?.phone ?: "Não informado")
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Menu Itens
+                // Menu Itens e Botão de SAIR
                 ProfileMenuItem(title = "Meu Desempenho", onClick = { /* TODO */ })
                 ProfileMenuItem(title = "Alterar Senha", onClick = { /* TODO */ })
+                ProfileMenuItem(title = "Suporte", onClick = { /* TODO */ })
 
-                // Botão de SAIR (LOGOUT)
                 ProfileMenuItem(
                     title = "Sair",
                     textColor = Color(0xFFE51F2D),
                     onClick = { viewModel.signOut() } // Chama a função de Logout
                 )
+
             } else {
-                Text("Usuário não autenticado. Redirecionando para o login...")
+                // 2. USUÁRIO DESLOGADO: MOSTRA BOTÃO DE LOGIN/CADASTRO (TRANSFERIDO)
+
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Acesso Necessário",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(120.dp).padding(bottom = 16.dp)
+                )
+
+                Text(
+                    text = "Acesse sua conta para ver seu perfil completo.",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                // ⭐️ BOTÃO DE LOGIN/CADASTRO
+                Button(
+                    onClick = {
+                        // Navega para a tela de Login/Cadastro
+                        navController.navigate(LOGIN_ROUTE)
+                    },
+                    modifier = Modifier.fillMaxWidth().height(56.dp)
+                ) {
+                    Text("FAZER LOGIN / CADASTRE-SE")
+                }
             }
         }
     }
