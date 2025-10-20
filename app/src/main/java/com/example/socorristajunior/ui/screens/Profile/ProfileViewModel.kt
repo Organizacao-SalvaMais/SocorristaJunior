@@ -2,57 +2,52 @@ package com.example.socorristajunior.ui.screens.Profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.socorristajunior.Data.DAO.UserDAO
+import com.example.socorristajunior.Data.model.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-// Modelo de dados de exemplo para o usuário
-data class User(
-    val id: Int = 1, // Exemplo de ID fixo
-    val username: String,
-    val email: String,
-    val phone: String,
-    val gender: String,
-    val dateOfBirth: String
-)
-
-// Estado da UI para a tela de perfil
 data class ProfileUiState(
-    val user: User? = null,
-    val isLoading: Boolean = false,
-    val isSaving: Boolean = false,
-    val errorMessage: String? = null
+    val user: UserEntity? = null,
+    val isLoading: Boolean = true,
+    val isSaving: Boolean = false
 )
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor() : ViewModel() {
+class ProfileViewModel @Inject constructor(
+    private val userDao: UserDAO
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        loadUserProfile()
-    }
-
-    private fun loadUserProfile() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            // Simulação de carregamento de dados do usuário
-            val dummyUser = User(
-                username = "Usuário de Teste",
-                email = "teste@gmail.com",
-                phone = "(92) 99745-5208",
-                gender = "Masculino",
-                dateOfBirth = "11/07/2005"
+    // O UI State é derivado do Flow do Room (reativo)
+    val uiState: StateFlow<ProfileUiState> = userDao.getLoggedUser()
+        .map { userEntity ->
+            ProfileUiState(
+                user = userEntity,
+                isLoading = false
             )
-            _uiState.update { it.copy(user = dummyUser, isLoading = false) }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ProfileUiState(isLoading = true)
+        )
+
+    fun signOut() {
+        viewModelScope.launch {
+            userDao.logout() // Chama a função de Logout
         }
     }
 
+    // Lógica básica de salvamento (requer a UserEntity atualizada)
     fun saveProfile(
         username: String,
         email: String,
@@ -61,16 +56,18 @@ class ProfileViewModel @Inject constructor() : ViewModel() {
         dateOfBirth: String
     ) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
-            // Simulação de salvamento de dados
-            val updatedUser = _uiState.value.user?.copy(
-                username = username,
-                email = email,
-                phone = phone,
-                gender = gender,
-                dateOfBirth = dateOfBirth
-            )
-            _uiState.update { it.copy(user = updatedUser, isSaving = false, errorMessage = null) }
+            val currentUser = uiState.value.user
+            if (currentUser != null) {
+                // Cria uma nova entidade com os dados atualizados
+                val updatedUser = currentUser.copy(
+                    username = username,
+                    email = email,
+                    phone = phone,
+                    gender = gender,
+                    dateOfBirth = dateOfBirth
+                )
+                userDao.saveLoginStatus(updatedUser)
+            }
         }
     }
 }

@@ -51,11 +51,11 @@ fun EditProfileScreen(
 
     LaunchedEffect(uiState.user) {
         uiState.user?.let { user ->
-            setUsername(user.username)
-            setEmail(user.email)
-            setPhone(user.phone)
-            setGender(user.gender)
-            setDateOfBirth(user.dateOfBirth)
+            setUsername(user.username ?: "")
+            setEmail(user.email ?: "")
+            setPhone(user.phone ?: "")
+            setGender(user.gender ?: "")
+            setDateOfBirth(user.dateOfBirth ?: "")
         }
     }
 

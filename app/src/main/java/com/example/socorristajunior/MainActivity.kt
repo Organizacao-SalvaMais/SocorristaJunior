@@ -15,6 +15,7 @@ import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
+import com.example.socorristajunior.ui.screens.login.LoginScreen
 import com.example.socorristajunior.ui.screens.quiz.QuizScreen
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +43,9 @@ fun AppNavigation(){
         }
         composable("quiz") {
             QuizScreen(navController = navController)
+        }
+        composable("login"){
+            LoginScreen(navController = navController)
         }
         composable("emergencies") {
             EmergenciesScreen(navController = navController)

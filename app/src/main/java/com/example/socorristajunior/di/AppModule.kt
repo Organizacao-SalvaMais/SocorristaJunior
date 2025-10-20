@@ -6,6 +6,7 @@ import com.example.socorristajunior.Data.BancoDeDados.AppDatabase
 import com.example.socorristajunior.Data.BancoDeDados.PrepopulateDatabaseCallback
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
 import com.example.socorristajunior.Data.DAO.PassoDAO
+import com.example.socorristajunior.Data.DAO.UserDAO
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
 import dagger.Module
@@ -57,6 +58,12 @@ object AppModule {
     fun providePassoDao(appDatabase: AppDatabase): PassoDAO {
         // Retorna a implementação do DAO de Passo a partir da instância do banco.
         return appDatabase.passoDAO()
+    }
+
+    @Provides
+    @Singleton // Use @Singleton para manter o padrão
+    fun provideUserDao(appDatabase: AppDatabase): UserDAO {
+        return appDatabase.userDAO()
     }
 
     @Provides
