@@ -73,6 +73,11 @@ fun ProfileScreen(
         topBar = {
             TopAppBar(
                 title = { Text(if (isUserLoggedIn) "Meu Perfil" else "Acesso") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar para Home")
+                    }
+                },
                 actions = {
                     if (isUserLoggedIn) {
                         IconButton(onClick = { navController.navigate("edit_profile") }) {
@@ -82,8 +87,7 @@ fun ProfileScreen(
                 }
             )
         },
-        // A BottomNavigationBar só aparece se estiver logado
-        bottomBar = { if (isUserLoggedIn) BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier

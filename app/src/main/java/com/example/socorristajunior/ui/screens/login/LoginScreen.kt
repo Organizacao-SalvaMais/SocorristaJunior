@@ -3,6 +3,7 @@ package com.example.socorristajunior.ui.screens.login
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.socorristajunior.ui.components.BottomNavigationBar
 import kotlinx.coroutines.launch
 
 
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 const val LOGIN_ROUTE = "login"
 const val MAIN_SCREEN_ROUTE = "home" // Tela principal após o login
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -78,7 +81,20 @@ fun LoginScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Login") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar para Home")
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            // Função da NavBar | | Label
+            BottomNavigationBar(navController)
+        }
     ) { padding ->
         Column(
             modifier = Modifier
