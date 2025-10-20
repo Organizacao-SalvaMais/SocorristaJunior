@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Edit
@@ -111,26 +112,26 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .background(Color(0xFF1F2F45)),
+                        .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Foto de Perfil",
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.size(100.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = user?.username ?: "Usuário Junior",
-                            color = Color.White,
+                            text = user?.username ?: "Usuário",
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = user?.email ?: "Email não informado",
-                            color = Color.White.copy(alpha = 0.7f),
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                             fontSize = 14.sp
                         )
                     }
@@ -152,7 +153,7 @@ fun ProfileScreen(
 
                 ProfileMenuItem(
                     title = "Sair",
-                    textColor = Color(0xFFE51F2D),
+                    textColor = MaterialTheme.colorScheme.error,
                     onClick = { viewModel.signOut() } // Chama a função de Logout
                 )
 
@@ -162,13 +163,14 @@ fun ProfileScreen(
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Acesso Necessário",
-                    tint = Color.Gray,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(120.dp).padding(bottom = 16.dp)
                 )
 
                 Text(
                     text = "Acesse sua conta para ver seu perfil completo.",
                     style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
@@ -176,7 +178,6 @@ fun ProfileScreen(
                 // ⭐️ BOTÃO DE LOGIN/CADASTRO
                 Button(
                     onClick = {
-                        // Navega para a tela de Login/Cadastro
                         navController.navigate(LOGIN_ROUTE)
                     },
                     modifier = Modifier.fillMaxWidth().height(56.dp)
@@ -199,13 +200,13 @@ fun ProfileDetailItem(label: String, value: String) {
         Text(
             text = label,
             modifier = Modifier.width(100.dp),
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp
         )
         Text(
             text = value,
             modifier = Modifier.weight(1f),
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
@@ -215,7 +216,7 @@ fun ProfileDetailItem(label: String, value: String) {
 @Composable
 fun ProfileMenuItem(
     title: String,
-    textColor: Color = Color.Black,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit
 ) {
     Row(
@@ -233,9 +234,9 @@ fun ProfileMenuItem(
             fontWeight = FontWeight.Medium
         )
         Icon(
-            imageVector = Icons.Default.ArrowForward,
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
             contentDescription = null,
-            tint = Color.Gray
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

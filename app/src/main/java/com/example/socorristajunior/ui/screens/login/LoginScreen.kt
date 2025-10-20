@@ -90,6 +90,7 @@ fun LoginScreen(
         ) {
             Text(
                 text = "Bem-vindo ao Salvar+",
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 48.dp)
             )
