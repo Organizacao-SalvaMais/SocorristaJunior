@@ -22,11 +22,15 @@ import com.example.socorristajunior.ui.quiz.QuizScreen
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+import com.example.socorristajunior.ui.login.LoginScreen
+import com.example.socorristajunior.ui.login.LOGIN_ROUTE
+import com.example.socorristajunior.ui.login.MAIN_SCREEN_ROUTE
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // enableEdgeToEdge()
         installSplashScreen()
         setContent {
             SocorristaJuniorTheme {
@@ -40,6 +44,11 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home"){
+
+        composable("login_route"){
+            LoginScreen(navController = navController)
+        }
+
         composable("home"){
             HomeScreen(navController = navController)
         }

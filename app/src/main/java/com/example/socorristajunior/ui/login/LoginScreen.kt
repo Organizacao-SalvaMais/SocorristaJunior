@@ -1,108 +1,147 @@
 package com.example.socorristajunior.ui.login
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
+
+
+// Define as rotas do aplicativo.
+const val LOGIN_ROUTE = "login_route"
+const val MAIN_SCREEN_ROUTE = "main_screen_route" // Tela principal após o login
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: LoginViewModel = viewModel(), // Injetado automaticamente ou via Hilt
-    onNavigateToHome: () -> Unit // Função de navegação passada de fora
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    // Coleta o estado do ViewModel (a View "observa" o ViewModel)
+    // Coleta o estado da UI (derivado do Flow do Room)
     val state by viewModel.uiState.collectAsState()
 
+    // Variáveis de estado para os campos de texto
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Efeito Colateral: Lida com a navegação após o login
-    LaunchedEffect(state.isAuthenticated) {
-        if (state.isAuthenticated) {
-            onNavigateToHome()
+    // Estado para o Snackbar (mensagens de erro)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // 1. Lógica de Navegação em caso de SUCESSO
+    LaunchedEffect(state.isLoggedIn) {
+        if (state.isLoggedIn) {
+            // Navega para a tela principal e limpa a pilha de navegação
+            navController.navigate(MAIN_SCREEN_ROUTE) {
+                popUpTo(LOGIN_ROUTE) { inclusive = true }
+            }
         }
     }
 
-    // Efeito Colateral: Limpa a mensagem de erro se o usuário começar a digitar
-    LaunchedEffect(email, password) {
+    // 2. Lógica de Mensagem de Erro
+    LaunchedEffect(state.errorMessage) {
+        val currentError = state.errorMessage
         if (state.errorMessage != null) {
-            viewModel.clearError()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = currentError!!,
+                    actionLabel = "Tentar novamente"
+                )
+                // Limpa o erro após mostrar para que ele não reapareça
+                viewModel.clearError()
+            }
         }
+    }
+
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // Lógica para focar no campo de email ao carregar a tela
+    LaunchedEffect(Unit) {
+        // Garantimos que a tela está pronta antes de solicitar o foco
+        // Um pequeno delay ajuda em alguns dispositivos mais lentos
+        kotlinx.coroutines.delay(100)
+        focusRequester.requestFocus()
+        keyboardController?.show() // Força a exibição do teclado
     }
 
     Scaffold(
-        topBar = { TopBar(title = { Text("Acesso") }) }
-    ) { paddingValues ->
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
+                .padding(padding)
+                .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Bem-vindo!", style = MaterialTheme.typography.headlineLarge)
-            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "Bem-vindo ao Salvar+",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 48.dp)
+            )
 
-            // Campo Email
+            // Campo de Email
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("E-mail") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Email") },
+                leadingIcon = { Icon(Icons.Default.MailOutline, contentDescription = "Email") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+                    // ⭐️ AQUI É A CHAVE: Aplica o FocusRequester
+                    .focusRequester(focusRequester)
             )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Campo Senha
+            // Campo de Senha
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Senha") },
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Senha") },
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp)
             )
-            Spacer(modifier = Modifier.height(24.dp))
 
             // Botão de Login
             Button(
-                onClick = { viewModel.signIn(email, password) },
-                enabled = !state.isLoading,
-                modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    // Chama a função signIn do ViewModel
+                    viewModel.signIn(email, password)
+                },
+                enabled = !state.isLoading, // Desativa o botão enquanto carrega
+                modifier = Modifier.fillMaxWidth().height(56.dp)
             ) {
                 if (state.isLoading) {
-                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 } else {
-                    Text("Entrar")
+                    Text("ENTRAR")
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            // Mensagem de Erro
-            state.errorMessage?.let {
-                Text(
-                    text = it,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            // Link para Cadastro
-            TextButton(onClick = { navController.navigate("signup") }) {
+            // Você pode adicionar um botão de cadastro aqui
+            TextButton(onClick = { /* Navegar para a tela de Cadastro */ }) {
                 Text("Não tem conta? Cadastre-se")
             }
         }
     }
 }
 
-@Composable
-fun TopBar(title: @Composable () -> Unit) {
+private fun LoginViewModel.clearError() {
     TODO("Not yet implemented")
 }

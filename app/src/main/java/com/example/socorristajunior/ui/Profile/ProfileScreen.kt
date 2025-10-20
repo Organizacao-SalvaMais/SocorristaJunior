@@ -2,63 +2,62 @@ package com.example.socorristajunior.ui.Profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import com.example.socorristajunior.ui.login.LOGIN_ROUTE
+import com.example.socorristajunior.ui.login.MAIN_SCREEN_ROUTE
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+    val user = state.user
+
+    // Lógica de Navegação após Logout
+    LaunchedEffect(user?.isLoggedIn) {
+        if (user?.isLoggedIn == false && !state.isLoading) {
+            navController.navigate(LOGIN_ROUTE) {
+                popUpTo(MAIN_SCREEN_ROUTE) { inclusive = true }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Perfil") },
+                title = { Text("Meu Perfil") },
                 actions = {
-                    IconButton(onClick = { navController.navigate("edit_profile") }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Editar")
+                    if (user?.isLoggedIn == true) {
+                        IconButton(onClick = { navController.navigate("edit_profile") }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "Editar Perfil")
+                        }
                     }
                 }
             )
         },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
+        bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -68,45 +67,95 @@ fun ProfileScreen(navController: NavController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(Color(0xFF1F2F45)),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Foto de Perfil",
-                        tint = Color.White,
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Usuário",
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+            if (state.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.padding(32.dp))
+                return@Column
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            if (user?.isLoggedIn == true) {
+                // Header com dados reais
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(Color(0xFF1F2F45)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Foto de Perfil",
+                            tint = Color.White,
+                            modifier = Modifier.size(100.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = user.username ?: "Usuário Junior",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = user.email ?: "Email não informado",
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
 
-            ProfileMenuItem(title = "Meu Desempenho", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Notificações", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Alterar Senha", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Suporte", onClick = { /* TODO */ })
-            ProfileMenuItem(title = "Sair", textColor = Color(0xFFE51F2D), onClick = { /* TODO */ })
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Detalhes do Usuário
+                ProfileDetailItem(label = "Gênero", value = user.gender ?: "Não informado")
+                ProfileDetailItem(label = "Nascimento", value = user.dateOfBirth ?: "Não informado")
+                ProfileDetailItem(label = "Telefone", value = user.phone ?: "Não informado")
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Menu Itens
+                ProfileMenuItem(title = "Meu Desempenho", onClick = { /* TODO */ })
+                ProfileMenuItem(title = "Alterar Senha", onClick = { /* TODO */ })
+
+                // Botão de SAIR (LOGOUT)
+                ProfileMenuItem(
+                    title = "Sair",
+                    textColor = Color(0xFFE51F2D),
+                    onClick = { viewModel.signOut() } // Chama a função de Logout
+                )
+            } else {
+                Text("Usuário não autenticado. Redirecionando para o login...")
+            }
         }
+    }
+}
+
+@Composable
+fun ProfileDetailItem(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.width(100.dp),
+            color = Color.Gray,
+            fontSize = 14.sp
+        )
+        Text(
+            text = value,
+            modifier = Modifier.weight(1f),
+            color = Color.Black,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
 @Composable
 fun ProfileMenuItem(
     title: String,
-    badge: String? = null,
     textColor: Color = Color.Black,
     onClick: () -> Unit
 ) {
@@ -124,17 +173,6 @@ fun ProfileMenuItem(
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
-        if (badge != null) {
-            Text(
-                text = badge,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(Color.Red)
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                color = Color.White,
-                fontSize = 12.sp
-            )
-        }
         Icon(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = null,
@@ -142,4 +180,3 @@ fun ProfileMenuItem(
         )
     }
 }
-

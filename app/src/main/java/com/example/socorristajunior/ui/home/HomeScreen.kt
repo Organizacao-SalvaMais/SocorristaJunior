@@ -37,22 +37,44 @@ import com.example.socorristajunior.ui.Profile.ProfileViewModel
 import com.example.socorristajunior.ui.components.BottomNavigationBar
 import com.example.socorristajunior.ui.components.FeatureCard
 
+import androidx.compose.material3.Button // Importar Button
+import androidx.compose.material3.Text // Importar Text
+import com.example.socorristajunior.ui.login.LOGIN_ROUTE // Importar a rota de login
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    // ⭐️ Coleta o estado do ViewModel, que inclui o status de login
+    val state by viewModel.uiState.collectAsState()
+    val isUserLoggedIn = state.loggedUser?.isLoggedIn == true
+
+    // O Scaffold pode ser o mesmo
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar( // ✅ corrigido
-                title = { Text("Salvar +") }
+            TopAppBar(
+                title = {
+                    Text(
+                        // Mensagem personalizada se estiver logado, ou genérica se não
+                        text = if (isUserLoggedIn && state?.loggedUser?.username.isNullOrBlank()) {
+                            "Olá, ${state?.loggedUser?.username?.split(" ")?.first()}!"
+                        } else {
+                            "Salvar +"
+                        },
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             )
         },
         bottomBar = {
-            // Função da NavBar | | Label
-            BottomNavigationBar(navController)
+            // O BottomNavigationBar só deve aparecer se o usuário estiver logado
+            if (isUserLoggedIn) {
+                BottomNavigationBar(navController)
+            }
         }
     ) { innerPadding ->
         Column(
@@ -63,6 +85,31 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
+
+            // ⭐️ NOVO: BOTÃO DE LOGIN CONDICIONAL
+            if (!isUserLoggedIn) {
+                // Mensagem de boas-vindas para usuários deslogados
+                Text(
+                    text = "Faça login para salvar seu progresso e personalizar seu perfil.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                Button(
+                    onClick = {
+                        // Navega para a rota de login
+                        navController.navigate("LOGIN_ROUTE")
+                    },
+                    modifier = Modifier.fillMaxWidth().height(56.dp)
+                ) {
+                    Text("FAZER LOGIN / CADASTRAR")
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+            // ------------------------------------
+
+            // Seções de conteúdo (Treinamento e Emergência)
             FeatureCard(
                 icon = Icons.Filled.Psychology,
                 iconColor = Color(0xFF3F51B5),
@@ -71,6 +118,7 @@ fun HomeScreen(
                 buttonText = "Começar",
                 buttonTextColor = Color(0xFF3F51B5),
                 buttonColor = Color(0xFF3F51B5),
+                // A navegação continua a mesma, mas seções podem ser restritas
                 onClick = { navController.navigate("quiz") }
             )
 
@@ -86,6 +134,8 @@ fun HomeScreen(
                 buttonColor = Color(0xFFE51F2D),
                 onClick = { navController.navigate("emergencies") }
             )
+
+            // ... (Você pode adicionar mais conteúdo)
         }
     }
 }
