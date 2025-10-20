@@ -1,4 +1,6 @@
-package com.example.socorristajunior.ui.home
+package com.example.socorristajunior.ui.screens.home
+
+// por enquanto deixaremos esse ViewModel vazio, pois a tela inicial esta estatica.
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,13 +10,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+/*
 data class HomeUiState(
     val searchText: String = "",
-    val emergencias: List<Emergencia> = emptyList(),
     val isLoading: Boolean = true
-)
-
+)*/
+/*
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val emergenciaRepo: EmergenciaRepo
@@ -22,8 +23,8 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
-
-    // 🔎 Busca em tempo real
+/*
+    // 🔎 Busca em tempo real isso não deveria estar aqui e sim na parte de emergencias
     val resultadosBusca: StateFlow<List<Emergencia>> =
         _uiState.map { it.searchText }
             .distinctUntilChanged()
@@ -39,7 +40,7 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
-
+*/
     init {
         carregarDadosIniciais()
     }
@@ -56,7 +57,7 @@ class HomeViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = false) }
         }
     }
-
+    // pq essa merda está aqui?
     private suspend fun carregarDadosPadrao() {
         val emergenciasPadrao = listOf(
             Emergencia(
@@ -78,7 +79,7 @@ class HomeViewModel @Inject constructor(
         )
         emergenciaRepo.insertAllEmergencias(emergenciasPadrao)
     }
-
+/*
     fun onSearchTextChanged(novoTexto: String) {
         _uiState.update { it.copy(searchText = novoTexto) }
     }
@@ -89,5 +90,6 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(emergencias = lista) }
             }
         }
-    }
+    }*/
 }
+*/

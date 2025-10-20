@@ -16,6 +16,8 @@ swipeVersion = "1.1.1"
 kspVersion = "2.0.21-1.0.27"
 uiText = "1.9.1"
 firebasePerfKtx = "22.0.2"
+constraintlayout = "2.2.1"
+runtimeLivedata = "1.9.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +51,8 @@ androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", vers
 saket-swipe = { group = "me.saket.swipe", name = "swipe", version.ref = "swipeVersion" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 
 [plugins]
@@ -58,4 +62,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 # Adicione estes dois para Hilt e KSP
 android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
+androidx-room = { id = "androidx.room", version.ref = "roomVersion" }
 

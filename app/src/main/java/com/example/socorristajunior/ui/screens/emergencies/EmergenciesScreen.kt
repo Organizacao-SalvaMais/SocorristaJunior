@@ -1,10 +1,9 @@
-package com.example.socorristajunior.ui.emergencies
+package com.example.socorristajunior.ui.screens.emergencies
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -12,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +26,7 @@ fun EmergenciesScreen(
     viewModel: EmergenciesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val filteredList by viewModel.filteredEmergencies.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -56,14 +54,6 @@ fun EmergenciesScreen(
                 CircularProgressIndicator()
             }
         } else {
-            val filteredList = if (uiState.searchText.isBlank()) {
-                uiState.emergenciesList
-            } else {
-                uiState.emergenciesList.filter { emergencia ->
-                    emergencia.emernome.contains(uiState.searchText, ignoreCase = true) ||
-                            emergencia.emerdesc.contains(uiState.searchText, ignoreCase = true)
-                }
-            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
