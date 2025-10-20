@@ -7,6 +7,7 @@ import com.example.socorristajunior.Data.BancoDeDados.PrepopulateDatabaseCallbac
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
 import com.example.socorristajunior.Data.DAO.PassoDAO
 import com.example.socorristajunior.Data.DAO.UserDAO
+import com.example.socorristajunior.Domain.Repositorio.CadastroRepositorio
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
 import dagger.Module
@@ -78,5 +79,13 @@ object AppModule {
     fun providePassoRepo(passoDAO: PassoDAO): PassoRepo {
     // Retorna uma instância do repositório, injetando o DAO.
         return PassoRepo(passoDAO)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCadastroRepo(): CadastroRepositorio {
+        // Como o repositório não tem dependências,
+        // podemos simplesmente criar uma nova instância
+        return CadastroRepositorio()
     }
 }

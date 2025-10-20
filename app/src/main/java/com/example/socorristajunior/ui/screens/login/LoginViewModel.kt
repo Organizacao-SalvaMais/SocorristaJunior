@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    // Método para limpar o erro
+    // Metodo para limpar o erro
     fun clearError() {
         _errorFlow.value = null
     }

@@ -134,9 +134,13 @@ fun LoginScreen(
                 }
             }
 
-            // Você pode adicionar um botão de cadastro aqui
-            TextButton(onClick = { /* Navegar para a tela de Cadastro */ }) {
-                Text("Não tem conta? Cadastre-se")
+            Button(
+                onClick = {
+                    // É ASSIM QUE VOCÊ CHAMA A TELA:
+                    navController.navigate("cadastro")
+                }
+            ) {
+                Text("Criar nova conta")
             }
         }
     }
