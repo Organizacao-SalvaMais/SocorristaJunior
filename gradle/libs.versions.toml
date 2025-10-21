@@ -16,6 +16,11 @@ swipeVersion = "1.1.1"
 kspVersion = "2.0.21-1.0.27"
 uiText = "1.9.1"
 firebasePerfKtx = "22.0.2"
+<<<<<<< Updated upstream
+=======
+firebaseAuthKtx = "24.0.1"
+appcompat = "1.7.1"
+>>>>>>> Stashed changes
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +54,11 @@ androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", vers
 saket-swipe = { group = "me.saket.swipe", name = "swipe", version.ref = "swipeVersion" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
+<<<<<<< Updated upstream
+=======
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+>>>>>>> Stashed changes
 
 
 [plugins]
