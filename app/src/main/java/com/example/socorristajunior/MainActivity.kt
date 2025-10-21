@@ -1,24 +1,23 @@
 package com.example.socorristajunior
 
-import android.R.color.black
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.socorristajunior.ui.editProfile.EditProfileScreen
-import com.example.socorristajunior.ui.Profile.ProfileScreen
-import com.example.socorristajunior.ui.details.EmergencyDetailScreen
-import com.example.socorristajunior.ui.emergencies.EmergenciesScreen
-import com.example.socorristajunior.ui.home.HomeScreen
-import com.example.socorristajunior.ui.quiz.QuizScreen
+import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
+import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
+import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
+import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
+import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
+import com.example.socorristajunior.ui.screens.home.HomeScreen
+import com.example.socorristajunior.ui.screens.login.LoginScreen
+import com.example.socorristajunior.ui.screens.quiz.QuizScreen
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // enableEdgeToEdge()
         installSplashScreen()
         setContent {
             SocorristaJuniorTheme {
@@ -46,12 +45,22 @@ fun AppNavigation(){
         composable("quiz") {
             QuizScreen(navController = navController)
         }
+        composable("login"){
+            LoginScreen(navController = navController)
+        }
         composable("emergencies") {
             EmergenciesScreen(navController = navController)
         }
+        composable("profile") {
+            ProfileScreen(navController = navController)
+        }
+        composable("edit_profile") {
+            EditProfileScreen(navController = navController)
+        }
+        composable("cadastro") {
+            CadastroScreen(navController = navController)
+        }
 
-        composable("profile") { ProfileScreen(navController = navController) }
-        composable("edit_profile") { EditProfileScreen(navController = navController) }
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO
         composable(
@@ -68,8 +77,3 @@ fun AppNavigation(){
         }
     }
 }
-/*
-@Composable
-fun EmergenciesScreen(navController: NavHostController) {
-    TODO("Not yet implemented")
-}*/

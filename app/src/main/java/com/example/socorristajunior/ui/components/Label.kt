@@ -29,10 +29,10 @@ fun BottomNavigationBar(navController: NavController) {
                 navController.navigate("home") {
                     // Evita duplicar a tela inicial no back stack
                     popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
+                       // saveState = true // foi comentado pois o causava uma estranhesa na navegação
                     }
                     launchSingleTop = true
-                    restoreState = true
+                   // restoreState = true // foi comentado pois o causava uma estranhesa na navegação
                 }
             }
         )

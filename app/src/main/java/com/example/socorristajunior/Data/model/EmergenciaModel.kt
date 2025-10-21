@@ -20,7 +20,7 @@ data class Emergencia(
     val emergravidade: String,
 
     @ColumnInfo(name = "emerimagem")
-    val emerimagem: String,
+    val emerimagem: String? = null,
 
     @ColumnInfo(name = "categoria")
     val categoria: String? = null,

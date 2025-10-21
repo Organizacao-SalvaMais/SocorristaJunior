@@ -1,0 +1,320 @@
+{
+  "status": "success",
+  "message": "Emergencia list retrieved successfully",
+  "data": [
+    {
+      "emernome": "Queimaduras (Trauma Térmico)",
+      "emerdesc": "Ferimento na pele resultante de calor extremo, frio, eletricidade ou substâncias químicas.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        { "pasnome": "Interrompa a Queimadura e Garanta a Segurança",
+          "pasimagem": null,
+          "pasdescricao": "Afaste a vítima da fonte de calor (fogo, água quente, eletricidade). Se a roupa estiver em chamas, apague-a abafando com um cobertor.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Resfrie a Área Queimada",
+          "pasimagem": null,
+          "pasdescricao": "Coloque a área afetada sob água corrente em temperatura ambiente (fria, mas não gelada) por pelo menos 15 a 20 minutos. Isso alivia a dor e impede que a queimadura se aprofunde. Não use gelo.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Remova Roupas e Joias com Cuidado",
+          "pasimagem": null,
+          "pasdescricao": "Retire com cuidado anéis, relógios, cintos ou roupas que estejam sobre a área queimada, antes que o local comece a inchar. NÃO remova nada que esteja grudado na pele.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Cubra a Queimadura",
+          "pasimagem": null,
+          "pasdescricao": "Cubra a área com um pano limpo e úmido ou com filme plástico de cozinha (sem apertar). Isso protege contra infecções e alivia a dor. Não use algodão.",
+          "pasordem": 4 }, {
+          "pasnome": "Evite Práticas Incorretas",
+          "pasimagem": null,
+          "pasdescricao": "Nunca aplique pasta de dente, manteiga, clara de ovo, borra de café ou qualquer pomada caseira. Não estoure as bolhas que se formarem; elas são uma proteção natural contra infecções.",
+          "pasordem": 5
+        },
+        {
+          "pasnome": "Avalie a Gravidade e Chame Ajuda",
+          "pasimagem": null,
+          "pasdescricao": "Chame a emergência (SAMU - 192) se a queimadura for profunda (3º grau), muito extensa (maior que a palma da mão da vítima), ou se atingir áreas críticas como rosto, mãos, pés, genitais ou grandes articulações.",
+          "pasordem": 6 }
+      ]
+    },
+    {
+      "emernome": "Acidente Vascular Encefálico (AVE)",
+      "emerdesc": "Ocorre quando um vaso sanguíneo no cérebro é bloqueado ou se rompe, afetando as funções cerebrais. Conhecido como Derrame, exige ação imediata.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Identifique os Sinais (SAMU)",
+          "pasimagem": null,
+          "pasdescricao": "Use o teste SAMU para uma avaliação rápida. S (Sorriso): Peça para a pessoa sorrir e observe se um lado do rosto está caído. A (Abraço): Peça para elevar os dois braços e verifique se um deles desce involuntariamente. M (Música): Peça para cantarolar ou falar uma frase simples e note se a fala está arrastada ou confusa.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Ligue Imediatamente para a Emergência",
+          "pasimagem": null,
+          "pasdescricao": "U (Urgente): Se identificar qualquer um dos sinais anteriores, ligue imediatamente para o SAMU (192). Informe os sintomas, a hora em que começaram e o local. Cada minuto é crucial para reduzir as sequelas.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Posicione a Vítima com Cuidado",
+          "pasimagem": null,
+          "pasdescricao": "Se a pessoa estiver consciente, deite-a confortavelmente com a cabeça e os ombros ligeiramente elevados e apoiados em um travesseiro. Afrouxe quaisquer roupas apertadas no pescoço.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "O que NÃO Fazer",
+          "pasimagem": null,
+          "pasdescricao": "Não ofereça comida, água ou qualquer tipo de medicamento, pois a capacidade de engolir pode estar comprometida, causando engasgo. Não espere os sintomas passarem.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Monitore a Vítima",
+          "pasimagem": null,
+          "pasdescricao": "Permaneça ao lado da pessoa, monitorando sua respiração e nível de consciência até a chegada do socorro. Se a vítima ficar inconsciente e parar de respirar, inicie a reanimação cardiorrespiratória (RCP).",
+          "pasordem": 5
+        }
+      ]
+    },
+    {
+      "emernome": "Crise Convulsiva",
+      "emerdesc": "Perda de consciência súbita seguida por tremores e contrações musculares violentas em todo o corpo.",
+      "emergravicodigo": 3,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Proteja a Vítima",
+          "pasimagem": null,
+          "pasdescricao": "Mantenha a calma. Deite a pessoa no chão e ampare sua cabeça com algo macio (casaco, travesseiro) para evitar que ela se machuque. Afaste objetos perigosos (móveis, cadeiras) de perto.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "O que NÃO Fazer Durante a Crise",
+          "pasimagem": null,
+          "pasdescricao": "Nunca tente segurar os braços ou pernas da pessoa para conter os movimentos. Não coloque nada na boca da vítima (dedos, panos, objetos), pois isso pode causar ferimentos graves ou asfixia.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Posicione a Cabeça e Cronometre a Crise",
+          "pasimagem": null,
+          "pasdescricao": "Vire a cabeça da pessoa de lado para facilitar a saída de saliva e evitar que ela se engasgue. Se possível, comece a cronometrar a duração da convulsão.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Cuidados Após a Crise",
+          "pasimagem": null,
+          "pasdescricao": "Quando os tremores pararem, coloque a pessoa na Posição Lateral de Segurança (deitada de lado). Permaneça com ela até que recupere a consciência completamente. É normal que ela acorde confusa e sonolenta.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Quando Chamar a Emergência (SAMU - 192)",
+          "pasimagem": null,
+          "pasdescricao": "Ligue para a emergência se for a primeira vez que a pessoa tem uma convulsão, se a crise durar mais de 5 minutos, se houver outra crise logo em seguida, se a pessoa se machucou gravemente ou se ela for gestante ou diabética.",
+          "pasordem": 5
+        }
+      ]
+    },
+    {
+      "emernome": "Desmaio / Síncope",
+      "emerdesc": "Perda temporária de consciência devido à falta de oxigenação no cérebro, geralmente com recuperação rápida e espontânea.",
+      "emergravicodigo": 4,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Deite a Vítima de Costas",
+          "pasimagem": null,
+          "pasdescricao": "Ao perceber os sinais de desmaio (tontura, palidez, suor frio), deite a pessoa no chão de costas para evitar uma queda e possíveis lesões. Se ela já desmaiou, certifique-se de que está deitada em um local seguro.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Eleve as Pernas",
+          "pasimagem": null,
+          "pasdescricao": "Eleve as pernas da pessoa a uma altura de aproximadamente 30 cm (acima do nível do coração), apoiando-as em uma cadeira, bolsa ou casacos. Isso ajuda a gravidade a direcionar o fluxo sanguíneo de volta para o cérebro.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Verifique a Respiração e Afrouxe Roupas",
+          "pasimagem": null,
+          "pasdescricao": "Confirme se a pessoa está respirando normalmente. Afrouxe roupas apertadas, como cintos, gravatas ou colarinhos, para facilitar a circulação sanguínea e a respiração.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Aguarde a Recuperação e Acalme a Vítima",
+          "pasimagem": null,
+          "pasdescricao": "A consciência geralmente retorna em menos de um minuto. Quando a pessoa acordar, mantenha-a deitada por mais alguns minutos. Depois, ajude-a a se sentar lentamente. Ofereça um ambiente arejado.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Quando Chamar a Emergência (SAMU - 192)",
+          "pasimagem": null,
+          "pasdescricao": "Ligue para a emergência se a pessoa não recuperar a consciência rapidamente (em até 2 minutos), se tiver se machucado na queda (especialmente na cabeça), se for diabética, gestante, idosa, ou se queixar de dor no peito ou dificuldade para respirar.",
+          "pasordem": 5
+        }
+      ]
+    },
+    {
+      "emernome": "Insuficiência Respiratória Aguda",
+      "emerdesc": "Grave dificuldade para respirar, onde os pulmões não conseguem fornecer oxigênio suficiente ao corpo. É uma emergência médica que necessita de atendimento imediato.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Reconheça os Sinais de Alerta",
+          "pasimagem": null,
+          "pasdescricao": "Observe os sinais de dificuldade respiratória grave: respiração muito rápida e curta, lábios ou unhas azulados (cianose), confusão mental, suor excessivo e uso dos músculos do pescoço para respirar.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Chame a Emergência Imediatamente (SAMU - 192)",
+          "pasimagem": null,
+          "pasdescricao": "Esta é a ação mais importante. A insuficiência respiratória aguda não pode ser tratada com primeiros socorros básicos. Informe ao atendente os sinais que você está observando.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Mantenha a Vítima em Posição Confortável",
+          "pasimagem": null,
+          "pasdescricao": "Acalme a pessoa e ajude-a a encontrar uma posição confortável, geralmente sentada e inclinada para frente, apoiando os braços nos joelhos ou em uma mesa. Isso ajuda a expandir os pulmões. Afrouxe roupas apertadas.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Verifique as Vias Aéreas",
+          "pasimagem": null,
+          "pasdescricao": "Observe se há algum objeto visível na boca ou garganta que possa estar causando um engasgo. Se a pessoa estiver consciente, incentive-a a tossir. Não coloque os dedos na boca da vítima sem ver o objeto.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Monitore Constantemente a Vítima",
+          "pasimagem": null,
+          "pasdescricao": "Fique ao lado da pessoa, observando sua respiração e nível de consciência até a chegada do socorro. Esteja preparado para iniciar a reanimação cardiorrespiratória (RCP) se ela ficar inconsciente e parar de respirar.",
+          "pasordem": 5
+        }
+      ]
+    },
+    {
+      "emernome": "Lesões em Tecidos Moles",
+      "emerdesc": "Lesões abertas na pele que podem causar sangramento. Os primeiros socorros visam estancar a hemorragia, limpar e proteger a área.",
+      "emergravicodigo": 3,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Lave as Mãos e Avalie o Ferimento",
+          "pasimagem": null,
+          "pasdescricao": "Antes de qualquer cuidado, lave bem as mãos com água e sabão para evitar infecções. Avalie o ferimento: é profundo? Está sangrando muito? Há algum objeto dentro?",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Controle o Sangramento (Hemorragia)",
+          "pasimagem": null,
+          "pasdescricao": "Com um pano limpo, gaze ou um pedaço de roupa, aplique pressão direta e firme sobre o ferimento por vários minutos até o sangramento parar ou diminuir. Se possível, eleve o membro ferido acima do nível do coração.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Limpe o Ferimento",
+          "pasimagem": null,
+          "pasdescricao": "Após controlar o sangramento, lave a ferida com água corrente e sabão neutro para remover sujeiras. Use uma pinça limpa para retirar pequenos detritos, se visíveis. Não use álcool ou água oxigenada diretamente na ferida.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Proteja a Lesão com um Curativo",
+          "pasimagem": null,
+          "pasdescricao": "Depois de limpar e secar a área ao redor, cubra o ferimento com um curativo estéril (gaze, band-aid) para protegê-lo de bactérias e evitar novas lesões. Troque o curativo diariamente ou sempre que estiver sujo ou úmido.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Quando Procurar Ajuda Médica",
+          "pasimagem": null,
+          "pasdescricao": "Procure um médico se o sangramento não parar, o corte for muito profundo ou largo, houver um objeto encravado que não sai, a lesão for resultado de uma mordida (animal ou humana) ou se surgirem sinais de infecção (vermelhidão, inchaço, pus).",
+          "pasordem": 5
+        }
+      ]
+    },
+    {
+      "emernome": "Traumas Músculo-Esqueléticos",
+      "emerdesc": "Lesões que afetam ossos, articulações e músculos, como fraturas, luxações e entorses, e que exigem imobilização como cuidado principal.",
+      "emergravicodigo": 3,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Mantenha a Calma e Não Mova a Vítima",
+          "pasimagem": null,
+          "pasdescricao": "Acalme a pessoa e peça para que ela não se mova. A prioridade máxima é manter a área lesionada (braço, perna, etc.) na posição exata em que se encontra para não agravar a lesão.",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Imobilize a Lesão",
+          "pasimagem": null,
+          "pasdescricao": "Use talas improvisadas (pedaços de madeira, papelão dobrado, revistas) e amarre-as com panos, cintos ou faixas acima e abaixo da lesão para impedir o movimento. NUNCA tente endireitar uma fratura ou recolocar uma articulação no lugar.",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Controle o Sangramento (Se Houver)",
+          "pasimagem": null,
+          "pasdescricao": "Se houver um ferimento aberto (fratura exposta), não lave a ferida. Aplique pressão suave com um pano limpo NAS LATERAIS da lesão ou do osso exposto, e não diretamente sobre ele, para tentar controlar o sangramento.",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Aplique Gelo",
+          "pasimagem": null,
+          "pasdescricao": "Coloque uma bolsa de gelo ou compressa fria, sempre enrolada em um pano, sobre a área lesionada por 15 a 20 minutos. Isso ajuda a reduzir o inchaço e a dor. Nunca aplique gelo diretamente sobre a pele.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Chame Ajuda Profissional",
+          "pasimagem": null,
+          "pasdescricao": "Ligue para o serviço de emergência (SAMU - 192). Fraturas, luxações e entorses graves precisam de avaliação e tratamento médico para garantir a recuperação correta e evitar complicações futuras.",
+          "pasordem": 5
+        }
+      ]
+    },
+    {
+      "emernome": "Traumatismo Cranioencefálico (TCE)",
+      "emerdesc": "Qualquer trauma na cabeça que possa afetar o cérebro. O cuidado mais importante é não mover a vítima e procurar ajuda médica imediata.",
+      "emergravicodigo": 1,
+      "emerimagem": null,
+      "emerfoncodigo": 1,
+      "passos": [
+        {
+          "pasnome": "Não Mova a Vítima",
+          "pasimagem": null,
+          "pasdescricao": "Esta é a regra mais importante. Se a pessoa sofreu uma pancada na cabeça, pode haver uma lesão na coluna cervical. Não mova a cabeça, o pescoço ou as costas da vítima em hipótese alguma, a menos que haja perigo imediato no local (como um incêndio).",
+          "pasordem": 1
+        },
+        {
+          "pasnome": "Chame a Emergência Imediatamente (SAMU - 192)",
+          "pasimagem": null,
+          "pasdescricao": "Toda lesão na cabeça deve ser considerada grave até que um profissional de saúde avalie. Ligue para o SAMU e informe o que aconteceu e o estado da vítima (consciente, confusa, sangrando, etc.).",
+          "pasordem": 2
+        },
+        {
+          "pasnome": "Verifique a Consciência e a Respiração",
+          "pasimagem": null,
+          "pasdescricao": "Verifique se a pessoa está consciente e respirando. Se estiver inconsciente, mas respirando, coloque-a cuidadosamente em Posição Lateral de Segurança, movendo o corpo em bloco para proteger a coluna. Se não estiver respirando, inicie a reanimação cardiorrespiratória (RCP).",
+          "pasordem": 3
+        },
+        {
+          "pasnome": "Controle Sangramentos Externos",
+          "pasimagem": null,
+          "pasdescricao": "Se houver um corte sangrando na cabeça, aplique pressão suave com um pano limpo. Não aplique pressão forte se houver suspeita de fratura no crânio (deformidade ou afundamento). Não remova nenhum objeto encravado.",
+          "pasordem": 4
+        },
+        {
+          "pasnome": "Monitore os Sinais de Alerta",
+          "pasimagem": null,
+          "pasdescricao": "Enquanto aguarda o socorro, observe a vítima. Fique atento a sinais de piora como sonolência excessiva, vômitos, confusão mental, convulsões ou pupilas de tamanhos diferentes. Repasse essas informações para a equipe de emergência.",
+          "pasordem": 5
+        }
+      ]
+    }
+  ]
+}
