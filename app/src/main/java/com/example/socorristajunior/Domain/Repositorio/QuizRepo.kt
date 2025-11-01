@@ -1,24 +1,21 @@
 package com.example.socorristajunior.Domain.Repositorio
 
+import com.example.socorristajunior.Data.DAO.QuizCategoryDAO
 import com.example.socorristajunior.Data.DAO.QuizDAO
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
 // (MODIFICAÇÃO) Define o Repositório como um Singleton (só haverá uma instância dele)
 @Singleton
-// ️ (MODIFICAÇÃO) Habilita a injeção de dependência (Hilt)
 class QuizRepo @Inject constructor(
-    //️ (MODIFICAÇÃO) O Hilt irá injetar a instância do QuizDAO aqui
-    private val quizDAO: QuizDAO
+    //  (MODIFICAÇÃO) Injeta o DAO de Categoria
+    private val quizCategoryDAO: QuizCategoryDAO
 ) {
 
-    //️ (MODIFICAÇÃO) Expõe a função do DAO para o ViewModel
-    // O QuizViewModel usará esta função para obter a lista de quizzes
-    fun getQuizzes() = quizDAO.getAllQuizzes()
+    // ️ (MODIFICAÇÃO) Função para buscar todas as categorias (para a lista de quizzes)
+    fun getCategorias() = quizCategoryDAO.getCategorias()
 
-    //️ (MODIFICAÇÃO) Expõe a função do DAO para buscar por categoria
-    fun getQuizzesByCategory(categoria: String) = quizDAO.getQuizzesByCategory(categoria)
-
-    //️ (MODIFICAÇÃO) Expõe a função do DAO para buscar por ID
-    fun getQuizById(id: Int) = quizDAO.getQuizById(id)
+    // ️ (MODIFICAÇÃO) Função para buscar um quiz completo (Categoria + Questões + Opções)
+    fun getQuizCompleto(categoriaId: Int) =
+        quizCategoryDAO.getCategoriaComQuestoes(categoriaId)
 }

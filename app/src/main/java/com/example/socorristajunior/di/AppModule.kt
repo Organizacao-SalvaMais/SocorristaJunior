@@ -5,10 +5,11 @@ import androidx.room.Room
 import com.example.socorristajunior.Data.BancoDeDados.AppDatabase
 import com.example.socorristajunior.Data.BancoDeDados.PrepopulateDatabaseCallback
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
+import com.example.socorristajunior.Data.DAO.OptionDAO
 import com.example.socorristajunior.Data.DAO.PassoDAO
-import com.example.socorristajunior.Data.DAO.QuizDAO
+import com.example.socorristajunior.Data.DAO.QuestionDAO
+import com.example.socorristajunior.Data.DAO.QuizCategoryDAO
 import com.example.socorristajunior.Data.DAO.UserDAO
-import com.example.socorristajunior.Domain.Repositorio.CadastroRepositorio
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
 import com.example.socorristajunior.Domain.Repositorio.QuizRepo
@@ -28,9 +29,20 @@ object AppModule {
     @Singleton
     fun providePrepopulateCallback(
         @ApplicationContext context: Context,
-        dbProvider: Provider<AppDatabase>
+        // (MODIFICAÇÃO) O Callback agora precisará de todos os DAOs para popular o quiz
+        dbProvider: Provider<AppDatabase>,
+        quizCategoryDAO: Provider<QuizCategoryDAO>,
+        questionDAO: Provider<QuestionDAO>,
+        optionDAO: Provider<OptionDAO>
     ): PrepopulateDatabaseCallback {
-        return PrepopulateDatabaseCallback(context, dbProvider)
+        // Passa os provedores de DAO para o construtor do callback
+        return PrepopulateDatabaseCallback(
+            context,
+            dbProvider,
+            quizCategoryDAO,
+            questionDAO,
+            optionDAO
+        )
     }
 
     @Provides
@@ -93,15 +105,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideQuizDao(appDatabase: AppDatabase): QuizDAO {
-        // Pega o DAO da instância principal do banco de dados
-        return appDatabase.quizDAO()
+    fun provideQuizCategoryDao(appDatabase: AppDatabase): QuizCategoryDAO {
+        return appDatabase.quizCategoryDAO()
     }
 
     @Provides
     @Singleton
-    fun provideQuizRepo(quizDAO: QuizDAO): QuizRepo {
-        // Cria o repositório injetando o DAO (que o Hilt aprendeu a criar acima)
-        return QuizRepo(quizDAO)
+    fun provideQuestionDao(appDatabase: AppDatabase): QuestionDAO {
+        return appDatabase.questionDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOptionDao(appDatabase: AppDatabase): OptionDAO {
+        return appDatabase.optionDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuizRepo(quizCategoryDAO: QuizCategoryDAO): QuizRepo {
+        return QuizRepo(quizCategoryDAO)
     }
 }
