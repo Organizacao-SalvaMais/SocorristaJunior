@@ -6,10 +6,12 @@ import com.example.socorristajunior.Data.BancoDeDados.AppDatabase
 import com.example.socorristajunior.Data.BancoDeDados.PrepopulateDatabaseCallback
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
 import com.example.socorristajunior.Data.DAO.PassoDAO
+import com.example.socorristajunior.Data.DAO.QuizDAO
 import com.example.socorristajunior.Data.DAO.UserDAO
 import com.example.socorristajunior.Domain.Repositorio.CadastroRepositorio
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
+import com.example.socorristajunior.Domain.Repositorio.QuizRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -80,12 +82,26 @@ object AppModule {
     // Retorna uma instância do repositório, injetando o DAO.
         return PassoRepo(passoDAO)
     }
-
+/*
     @Provides
     @Singleton
     fun provideCadastroRepo(): CadastroRepositorio {
         // Como o repositório não tem dependências,
         // podemos simplesmente criar uma nova instância
         return CadastroRepositorio()
+    }*/
+
+    @Provides
+    @Singleton
+    fun provideQuizDao(appDatabase: AppDatabase): QuizDAO {
+        // Pega o DAO da instância principal do banco de dados
+        return appDatabase.quizDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuizRepo(quizDAO: QuizDAO): QuizRepo {
+        // Cria o repositório injetando o DAO (que o Hilt aprendeu a criar acima)
+        return QuizRepo(quizDAO)
     }
 }
