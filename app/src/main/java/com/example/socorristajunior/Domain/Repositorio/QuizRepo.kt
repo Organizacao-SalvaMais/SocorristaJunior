@@ -1,7 +1,6 @@
 package com.example.socorristajunior.Domain.Repositorio
 
 import com.example.socorristajunior.Data.DAO.QuizCategoryDAO
-import com.example.socorristajunior.Data.DAO.QuizDAO
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 

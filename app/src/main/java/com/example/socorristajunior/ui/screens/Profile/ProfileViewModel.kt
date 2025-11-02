@@ -22,7 +22,7 @@ data class ProfileUiState(
     val isSaving: Boolean = false
 )
 
-@HiltViewModel
+//@HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userDao: UserDAO
 ) : ViewModel() {

@@ -19,7 +19,7 @@ data class AuthUiState(
     val errorMessage: String? = null
 )
 
-@HiltViewModel
+// @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userDao: UserDAO
 ) : ViewModel() {

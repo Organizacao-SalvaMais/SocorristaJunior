@@ -101,6 +101,18 @@ fun EmergenciesScreen(
                                     color = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
+
+                                // *** ADICIONE ISTO ***
+                                // Exibe a gravidade que veio do Supabase
+                                Text(
+                                    text = "Gravidade: ${emergencia.emergravidade}",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                                Spacer(modifier = Modifier.height(8.dp)) // Aumentei o espaço
+                                // ********************
+
                                 Text(
                                     text = emergencia.emerdesc,
                                     style = MaterialTheme.typography.bodyMedium

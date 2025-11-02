@@ -23,7 +23,8 @@ import javax.inject.Provider
 
 class PrepopulateDatabaseCallback(
     private val context: Context,
-    private val dbProvider: Provider<AppDatabase>,
+    // A proxima linha esta comentada pois não precisamos mais chamar do JSON
+    // private val dbProvider: Provider<AppDatabase>,
     private val quizCategoryDAO: Provider<QuizCategoryDAO>,
     private val questionDAO: Provider<QuestionDAO>,
     private val optionDAO: Provider<OptionDAO>
@@ -36,13 +37,16 @@ class PrepopulateDatabaseCallback(
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
 
-        // ⭐️ (CORREÇÃO 2) Lança a corrotina para popular AMBOS os JSONs
+        // Lança a corrotina para popular AMBOS os JSONs
         applicationScope.launch {
-            prepopulateEmergencias() // Popula as emergências
+            // JSON de Emergencias
+            // prepopulateEmergencias() // Popula as emergências
+            // JSON de Quizzes
             prepopulateQuizzes()     // Popula os quizzes
         }
     }
-
+    // Não precisamos mais da função abaixo.
+/*
     private suspend fun prepopulateEmergencias() {
         try {
             // Abre o arquivo de emergências
@@ -86,11 +90,11 @@ class PrepopulateDatabaseCallback(
             e.printStackTrace() // Loga erro se o arquivo não for encontrado
         }
     }
-
+*/
     private suspend fun prepopulateQuizzes() {
         try {
             // 1. ABRIR O ARQUIVO JSON
-            val inputStream = context.assets.open("quizzes.json")
+            val inputStream = context.assets.open("quiz.json")
             val reader = InputStreamReader(inputStream)
 
             // 2. PARSEAR O JSON USANDO GSON
