@@ -17,9 +17,10 @@ import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
 import com.example.socorristajunior.ui.screens.login.LoginScreen
-import com.example.socorristajunior.ui.screens.quiz.QuizHomeScreen
-import com.example.socorristajunior.ui.screens.quiz.QuizResultScreen
-import com.example.socorristajunior.ui.screens.quiz.QuizQuestionScreen
+import com.example.socorristajunior.ui.screens.quiz.home.QuizHomeRoute
+import com.example.socorristajunior.ui.screens.quiz.question.QuizQuestionRoute
+import com.example.socorristajunior.ui.screens.quiz.question.QuizResultArgs
+import com.example.socorristajunior.ui.screens.quiz.result.QuizResultRoute
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,26 +45,63 @@ fun AppNavigation() {
         composable("home") {
             HomeScreen(navController = navController)
         }
-
-        composable("quizScreen") {
-            QuizHomeScreen(navController = navController)
+        // Rota 1: Tela Inicial do Quiz (Seleção de Dificuldade)
+        // (Substituindo seu antigo "quizScreen")
+        composable(route = "quiz_home") {
+            // ✅ CORRETO: Chame a função 'publica' QuizHomeRoute.
+            // Ela vai lidar com o ViewModel e chamar a 'private' QuizHomeScreen.
+            QuizHomeRoute(
+                onNavigateToQuiz = { categoryId ->
+                    navController.navigate("quiz_question/$categoryId")
+                }
+            )
         }
-        composable("questionScreen") {
-            QuizQuestionScreen( navController = navController)
-        }
 
-        // 🔹 TELA DE RESULTADO
+        // Rota 2: Tela de Pergunta (Question)
+        // (Substituindo seu antigo "questionScreen")
         composable(
-            route = "quiz_result/{score}/{total}",
+            route = "quiz_question/{categoryId}", // ⬅️ Recebe o ID
+            arguments = listOf(
+                navArgument("categoryId") { type = NavType.IntType }
+            )
+        ) {
+            // O QuizQuestionViewModel (dentro do QuizQuestionRoute)
+            // pegará o "categoryId" automaticamente.
+            QuizQuestionRoute(
+                // Ação de navegação: Ir para a tela de resultados
+                onNavigateToResults = { args: QuizResultArgs ->
+                    // Navega para os resultados e limpa a tela de perguntas da pilha
+                    navController.navigate("quiz_result/${args.score}/${args.totalQuestions}") {
+                        // Isso remove a tela de perguntas do "histórico"
+                        // para que o usuário não possa "voltar" para ela.
+                        popUpTo("quiz_home")
+                    }
+                }
+            )
+        }
+
+        // Rota 3: Tela de Resultados (Results)
+        // (Substituindo seu antigo "quiz_result")
+        composable(
+            route = "quiz_result/{score}/{totalQuestions}", // ⬅️ Recebe os args
             arguments = listOf(
                 navArgument("score") { type = NavType.IntType },
-                navArgument("total") { type = NavType.IntType }
+                navArgument("totalQuestions") { type = NavType.IntType }
             )
-        ) { backStackEntry ->
-            val score = backStackEntry.arguments?.getInt("score") ?: 0
-            val total = backStackEntry.arguments?.getInt("total") ?: 0
-            QuizResultScreen(navController = navController, score = score, total = total)
+        ) {
+            // O QuizResultsViewModel (dentro do QuizResultsRoute)
+            // pegará os argumentos "score" e "totalQuestions" automaticamente.
+            QuizResultRoute(
+                // Ação de navegação: Voltar para a Home do Quiz
+                onRestart = {
+                    // Limpa a pilha de navegação e volta para a home do quiz
+                    navController.navigate("quiz_home") {
+                        popUpTo("quiz_home") { inclusive = true }
+                    }
+                }
+            )
         }
+
         composable("login") {
             LoginScreen(navController = navController)
         }
@@ -98,4 +136,9 @@ fun AppNavigation() {
             )
         }
     }
+}
+
+@Composable
+fun QuizResultRoute(onRestart: () -> Unit) {
+    TODO("Not yet implemented")
 }
