@@ -1,6 +1,6 @@
 package com.example.socorristajunior.ui.screens.cadastro
 
-
+/*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.ui.text.font.FontWeight
@@ -232,4 +232,4 @@ fun CadastroScreen(
             }
         }
     }
-}
+}*/

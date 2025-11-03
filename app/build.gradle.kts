@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.androidx.room)
+    kotlin("plugin.serialization") version "2.1.0"
 }
 
 android {
@@ -68,6 +69,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     // Jetpack Compose Navigation
     implementation(libs.androidx.navigation.compose)
+    //ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.6")
     // Room components
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -92,4 +97,24 @@ dependencies {
     implementation("com.google.firebase:firebase-perf")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    //Supabase
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.2.5"))
+    implementation("io.github.jan-tennert.supabase:supabase-kt")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+
+    // Ktor (CORREÇÃO AQUI)
+    // 1. Defina a versão que o Supabase 3.2.5 espera
+    val ktorVersion = "3.3.1"
+    // 2. Adicione a BOM do Ktor com essa versão
+    implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
+    // 3. Adicione os módulos Ktor SEM versão. A BOM vai gerenciá-las.
+    implementation("io.ktor:ktor-client-android")
+    implementation("io.ktor:ktor-client-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.ktor:ktor-client-logging")
+
+    //Retrofit2
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

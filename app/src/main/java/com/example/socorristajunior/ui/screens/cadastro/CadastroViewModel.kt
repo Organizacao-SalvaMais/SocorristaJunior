@@ -1,5 +1,5 @@
 package com.example.socorristajunior.ui.screens.cadastro
-
+/*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -81,4 +81,4 @@ class CadastroViewModel @Inject constructor( // 2. ADICIONE "@Inject constructor
                 if (success) "Cadastro realizado com sucesso!" else "Erro ao cadastrar."
         }
     }
-}
+}*/
