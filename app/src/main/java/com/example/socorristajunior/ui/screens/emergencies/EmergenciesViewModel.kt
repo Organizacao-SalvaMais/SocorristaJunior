@@ -1,5 +1,6 @@
 package com.example.socorristajunior.ui.screens.emergencies
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.model.Emergencia
@@ -18,19 +19,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class EmergencyStep(val stepNumber: Int, val totalSteps: Int, val title: String, val description: String)
-/*
 data class EmergenciesUiState(
     val emergenciesList: List<Emergencia> = emptyList(),
-    val stepsList: List<EmergencyStep> = emptyList(),
-    val searchText: String = "",
-    val selectedEmergencyId: Int? = null,
-    val isLoading: Boolean = true
-)
-*/
-
-data class EmergenciesUiState(
-    val allEmergencies: List<Emergencia> = emptyList(),
     val searchText: String = "",
     val isLoading: Boolean = true
 )
@@ -40,39 +30,60 @@ class EmergenciesViewModel @Inject constructor(
     private val emergenciaRepo: EmergenciaRepo
 ) : ViewModel() {
 
+    // _uiState privado para gerenciar o estado interno
     private val _uiState = MutableStateFlow(EmergenciesUiState())
-    private val searchText = _uiState.map { it.searchText }.distinctUntilChanged()
-    private val allEmergencies = _uiState.map { it.allEmergencies }
+    // uiState público e imutável para a UI observar
+    val uiState = _uiState.asStateFlow()
 
+    // Flow que lê DIRETAMENTE do banco de dados local (Room)
+    private val emergenciesFromDb: StateFlow<List<Emergencia>> =
+        emergenciaRepo.getAllEmergencias()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+
+    // Flow que combina a busca de texto com a lista do banco
     val filteredEmergencies: StateFlow<List<Emergencia>> =
-        combine(allEmergencies, searchText) { emergencies, text ->
-            if (text.isBlank()) {
+        combine(emergenciesFromDb, _uiState) { emergencies, state ->
+            // Atualiza a lista no _uiState (necessário para a busca)
+            _uiState.update { it.copy(emergenciesList = emergencies) }
+
+            if (state.searchText.isBlank()) {
                 emergencies
             } else {
                 emergencies.filter {
-                    it.emernome.contains(text, ignoreCase = true) ||
-                            it.emerdesc.contains(text, ignoreCase = true)
+                    it.emernome.contains(state.searchText, ignoreCase = true) ||
+                            it.emerdesc.contains(state.searchText, ignoreCase = true)
                 }
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val uiState = _uiState.asStateFlow()
-
     init {
-        loadEmergencies()
+        // Quando o ViewModel for criado, inicie a sincronização
+        syncEmergencias()
     }
 
-    // Carregas a lista das emergencia que vem do banco e só modifica quando o banco é modificado.
-    private fun loadEmergencies() {
+    /*
+      Tenta buscar os dados mais recentes do Supabase e salvar no banco local.
+      A UI irá atualizar automaticamente pois está observando o banco local.
+     */
+    private fun syncEmergencias() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                // o ".first" que diz que a lista é carregada apenas quando a pagina é carregada, caso queiram que ela atualize quando o banco atualizar então utilize ".collect".
-                val emergenciesFromDb = emergenciaRepo.getAllEmergencias().first()
-                _uiState.update {
-                    it.copy(allEmergencies = emergenciesFromDb, isLoading = false)
-                }
+                // Chama a nova função de sincronização do repositório
+                Log.d("SupabaseSync", "Iniciando sincronização com Supabase...")
+                emergenciaRepo.syncEmergenciasFromSupabase()
+                Log.d("SupabaseSync", "Sincronização concluída com sucesso!")
+                _uiState.update { it.copy(isLoading = false) }
+
             } catch (e: Exception) {
+                // Vamos imprimir o erro no Logcat
+                Log.e("SupabaseSync", "Falha ao sincronizar com Supabase: ${e.message}", e)
+
+                // TODO: Lidar com erro de rede (ex: mostrar Snackbar)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

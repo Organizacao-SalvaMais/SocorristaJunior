@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.model.Passo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
-import com.example.socorristajunior.ui.screens.emergencies.EmergencyStep
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,8 +55,6 @@ class DetailsViewModel @Inject constructor(
             }
         }
     }
-
-
 
     private fun Passo.toEmergencyStep(totalSteps: Int): EmergencyStep {
         return EmergencyStep(
