@@ -73,7 +73,7 @@ private fun QuizHomeScreen(
     onStartQuiz: (categoryId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundBrush = Brush.linearGradient(
+    /*val backgroundBrush = Brush.linearGradient(
         colors = listOf(
             MaterialTheme.colorScheme.background,
             MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
@@ -81,13 +81,13 @@ private fun QuizHomeScreen(
         ),
         start = Offset.TopLeft,
         end = Offset.BottomRight
-    )
+    )*/
 
     // Container principal
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(backgroundBrush)
+            /*.background(backgroundBrush)*/
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -107,7 +107,7 @@ private fun QuizHomeScreen(
                     MaterialTheme.colorScheme.primary
                 )
             )
-
+/*
             // Ícone do cabeçalho
             Box(
                 modifier = Modifier
@@ -125,9 +125,9 @@ private fun QuizHomeScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))*/
 
-            // Título
+            /*// Título
             Text(
                 text = "Quiz de Primeiros Socorros",
                 style = MaterialTheme.typography.displaySmall.copy(
@@ -136,18 +136,19 @@ private fun QuizHomeScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 44.sp
                 ),
-            )
+            )*/
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Descrição
+           /* // Descrição
             Text(
                 text = "Teste seus conhecimentos sobre situações de emergência e aprenda a salvar vidas",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            )*/
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -210,7 +211,7 @@ private fun QuizHomeScreen(
     }
 }
 
-// --- 3. COMPOSABLES AUXILIARES "BURROS" ---
+// --- 3. COMPOSABLES AUXILIARES  ---
 
 @Composable
 fun DifficultyCard(
@@ -241,8 +242,9 @@ fun DifficultyCard(
                 Icon(
                     imageVector = item.icon,
                     contentDescription = null,
-                    tint = item.color,
-                    modifier = Modifier.size(32.dp)
+                    tint = Color.Red,
+                    modifier = Modifier.size(32.dp),
+
                 )
             }
 
