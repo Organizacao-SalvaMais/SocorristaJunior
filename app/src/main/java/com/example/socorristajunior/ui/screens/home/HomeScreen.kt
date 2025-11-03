@@ -49,7 +49,7 @@ fun HomeScreen(
                 buttonText = "Começar",
                 buttonTextColor= Color(0xFF0E141B),
                 buttonColor = Color(0xFFF2D16A),
-                onClick = { navController.navigate("quiz") }
+                onClick = { navController.navigate("quizScreen") }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
