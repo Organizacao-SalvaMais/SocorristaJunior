@@ -25,7 +25,7 @@ data class Passo(
     val pasnome: String,
 
     @ColumnInfo(name = "pasimagem")
-    val pasimagem: String,
+    val pasimagem: String? = null,
 
     @ColumnInfo(name = "pasdescricao")
     val pasdescricao: String,

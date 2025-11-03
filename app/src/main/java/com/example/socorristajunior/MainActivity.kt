@@ -10,17 +10,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.socorristajunior.ui.details.EmergencyDetailScreen
-/*import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
+import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
 import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
-import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen*/
-import com.example.socorristajunior.ui.emergencies.EmergenciesScreen
-import com.example.socorristajunior.ui.home.HomeScreen
-/*import com.example.socorristajunior.ui.screens.login.LoginScreen*/
-import com.example.socorristajunior.ui.quiz.QuizHomeScreen
-import com.example.socorristajunior.ui.quiz.QuizResultScreen
-import com.example.socorristajunior.ui.quiz.QuizQuestionScreen
+import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
+import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
+import com.example.socorristajunior.ui.screens.home.HomeScreen
+import com.example.socorristajunior.ui.screens.login.LoginScreen
+import com.example.socorristajunior.ui.screens.quiz.QuizScreen
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,33 +36,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+    NavHost(navController = navController, startDestination = "home"){
+        composable("home"){
             HomeScreen(navController = navController)
         }
-
-        composable("quizScreen") {
-            QuizHomeScreen(navController = navController)
+        composable("quiz") {
+            QuizScreen(navController = navController)
         }
-        composable("questionScreen") {
-            QuizQuestionScreen( navController = navController)
-        }
-
-        // 🔹 TELA DE RESULTADO
-        composable(
-            route = "quiz_result/{score}/{total}",
-            arguments = listOf(
-                navArgument("score") { type = NavType.IntType },
-                navArgument("total") { type = NavType.IntType }
-            )
-        ) { backStackEntry ->
-            val score = backStackEntry.arguments?.getInt("score") ?: 0
-            val total = backStackEntry.arguments?.getInt("total") ?: 0
-            QuizResultScreen(navController = navController, score = score, total = total)
-        }
-      /*  composable("login") {
+        composable("login"){
             LoginScreen(navController = navController)
         }
         composable("emergencies") {
@@ -76,13 +56,10 @@ fun AppNavigation() {
         }
         composable("edit_profile") {
             EditProfileScreen(navController = navController)
-        }*/
-
-
-
-        /* composable("cadastro") {
+        }
+        composable("cadastro") {
             CadastroScreen(navController = navController)
-        }*/
+        }
 
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO
