@@ -85,46 +85,6 @@
               "opcodigo": 28,
               "opresposta": "Pedir para a vítima movimentar o pulso para ver se está quebrado.",
               "opcorreta": false
-            },
-            {
-              "opcodigo": 33,
-              "opresposta": "Apenas as afirmativas I e II estão corretas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 34,
-              "opresposta": "Apenas as afirmativas III e IV estão corretas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 35,
-              "opresposta": "Apenas as afirmativas I e III estão corretas.",
-              "opcorreta": true
-            },
-            {
-              "opcodigo": 53,
-              "opresposta": "Apenas as afirmativas II e IV estão corretas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 54,
-              "opresposta": "Todas as afirmativas estão corretas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 55,
-              "opresposta": "Apenas as afirmativas I e II estão corretas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 56,
-              "opresposta": "Apenas as afirmativas III e IV estão corretas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 57,
-              "opresposta": "Apenas as afirmativas I e III estão corretas.",
-              "opcorreta": true
             }
           ]
         },

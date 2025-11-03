@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler) // Note o uso de ksp()
     ksp(libs.androidx.hilt.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     // Swipe
     implementation(libs.saket.swipe)
     // Extras
