@@ -1,1 +1,14 @@
+# 1. ARQUIVO DE CHAVES SUPABASE/BUILDCONFIG
+/local.properties
+/local.properties.*
+.secrets
+
+# 2. DIRETÓRIOS DE BUILD GERADOS
 /build
+/app/build
+.gradle
+
+# 3. PASTAS DE AMBIENTE DO ANDROID STUDIO/IDE
+.idea/
+.idea
+*.iml

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,8 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.androidx.room)
+    kotlin("plugin.serialization") version "2.1.0"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -19,6 +23,27 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        val propertiesFile = project.rootProject.file("local.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.inputStream().use { input ->
+                properties.load(input)
+            }
+        } else {
+            logger.warn("Arquivo local.properties não encontrado. As chaves SUPABASE_ serao substituidas por valores nulos.")
+        }
+
+        buildConfigField(
+            "String",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "\"${properties.getProperty("SUPABASE_PUBLISHABLE_KEY", "MISSING_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${properties.getProperty("SUPABASE_URL", "MISSING_URL")}\""
+        )
     }
 
     buildTypes {
@@ -38,6 +63,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -66,20 +92,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     // Jetpack Compose Navigation
     implementation(libs.androidx.navigation.compose)
+
     // Room components
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler) // Note o uso de ksp()
+
     // Dagger - Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler) // Note o uso de ksp()
     ksp(libs.androidx.hilt.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+
     // Swipe
     implementation(libs.saket.swipe)
+
     // Extras
-    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -87,9 +118,26 @@ dependencies {
     // Icones
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
 
+    implementation("com.google.firebase:firebase-auth-ktx")
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    //Supabase
+    val supabaseVersion = "3.1.4"
+    val ktorVersion = "3.1.3" // Versão compatível com Supabase 3.x
+
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:$supabaseVersion") // Banco de Dados
+    implementation("io.github.jan-tennert.supabase:storage-kt:$supabaseVersion") // Storage de Imagens
+
+
+    implementation("io.ktor:ktor-client-android:$ktorVersion") // Motor HTTP Ktor
+    implementation("io.ktor:ktor-client-core:$ktorVersion") // Core do Ktor
+    implementation("io.ktor:ktor-utils:${ktorVersion}")
+
 }
