@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.androidx.room)
     kotlin("plugin.serialization") version "2.1.0"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -93,7 +94,7 @@ dependencies {
     // Icones
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
 
