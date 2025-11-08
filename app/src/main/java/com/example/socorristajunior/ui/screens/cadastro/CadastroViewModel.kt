@@ -73,7 +73,7 @@ class CadastroViewModel @Inject constructor( // 2. ADICIONE "@Inject constructor
                     gender = genero,
                     dateOfBirth = dataNascimento
                 )
-                repository.registerUser(user)
+                repository.cadastrarUsuario(user)
             }
 
             _loading.value = false

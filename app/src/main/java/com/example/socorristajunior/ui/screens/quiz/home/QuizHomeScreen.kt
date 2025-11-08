@@ -25,6 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.filled.ArrowBack
 
 
 // Você precisa definir o que é "BottomRight"
@@ -40,7 +45,8 @@ private val Offset.Companion.TopLeft: Offset
 @Composable
 fun QuizHomeRoute(
     viewModel: QuizHomeViewModel = hiltViewModel(),
-    onNavigateToQuiz: (categoryId: Int) -> Unit
+    onNavigateToQuiz: (categoryId: Int) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     // Observa o estado do ViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,17 +66,20 @@ fun QuizHomeRoute(
         // Chama a tela "burra"
         QuizHomeScreen(
             uiState = uiState,
-            onStartQuiz = viewModel::onCategorySelected // Passa a referência da função
+            onStartQuiz = viewModel::onCategorySelected, // Passa a referência da função
+            onNavigateBack = onNavigateBack
         )
     }
 }
 
 
 // --- 2. A TELA "BURRA" (Apenas desenha a UI) ---
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun QuizHomeScreen(
     uiState: QuizHomeUiState,
     onStartQuiz: (categoryId: Int) -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     /*val backgroundBrush = Brush.linearGradient(
@@ -82,131 +91,149 @@ private fun QuizHomeScreen(
         start = Offset.TopLeft,
         end = Offset.BottomRight
     )*/
-
-    // Container principal
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            /*.background(backgroundBrush)*/
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .widthIn(max = 800.dp) // Limita a largura máxima
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            // --- Cabeçalho ---
-            val headerGradient = Brush.linearGradient(
-                colors = listOf(
-                    MaterialTheme.colorScheme.primary,
-                    MaterialTheme.colorScheme.secondary,
-                    MaterialTheme.colorScheme.primary
-                )
+    Scaffold(
+        modifier = modifier.fillMaxSize(), // Aplica o modifier ao Scaffold
+        // 4. Adicione a TopAppBar que você queria
+        topBar = {
+            TopAppBar(
+                // Define o título da barra
+                title = { Text("Quiz de Primeiros Socorros") },
+                // Define o ícone de navegação (seta de voltar)
+                navigationIcon = {
+                    // Cria um botão clicável para o ícone
+                    IconButton(onClick = onNavigateBack) { // 5. Chame o callback ao clicar
+                        // Adiciona o ícone de seta
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar")
+                    }
+                }
             )
-/*
-            // Ícone do cabeçalho
-            Box(
+        }
+    ) { innerPadding ->
+        // Container principal
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                /*.background(backgroundBrush)*/
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(headerGradient)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .widthIn(max = 800.dp) // Limita a largura máxima
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(40.dp)
+
+                // --- Cabeçalho ---
+                val headerGradient = Brush.linearGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.secondary,
+                        MaterialTheme.colorScheme.primary
+                    )
                 )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))*/
-
-            /*// Título
-            Text(
-                text = "Quiz de Primeiros Socorros",
-                style = MaterialTheme.typography.displaySmall.copy(
-                    fontWeight = FontWeight.Bold,
-                    brush = headerGradient, // Aplica o gradiente ao texto
-                    textAlign = TextAlign.Center,
-                    lineHeight = 44.sp
-                ),
-            )*/
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-           /* // Descrição
-            Text(
-                text = "Teste seus conhecimentos sobre situações de emergência e aprenda a salvar vidas",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )*/
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // --- Grid de Dificuldades (Responsivo) ---
-            BoxWithConstraints(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
-            ) {
-                val isWide = this.maxWidth > 600.dp
-                if (isWide) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        uiState.categories.forEach { item ->
-                            DifficultyCard(
-                                item = item,
-                                onClick = { onStartQuiz(item.categoryId) },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                } else {
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        uiState.categories.forEach { item ->
-                            DifficultyCard(
-                                item = item,
-                                onClick = { onStartQuiz(item.categoryId) },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // --- Card de Rodapé (Estatísticas) ---
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                )
-            ) {
-                Row(
+                /*
+                // Ícone do cabeçalho
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .size(80.dp)
+                        .clip(CircleShape)
+                        .background(headerGradient)
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
+                    contentAlignment = Alignment.Center
                 ) {
-                    uiState.stats.forEach { stat ->
-                        StatItem(
-                            label = stat.label,
-                            value = stat.value,
-                            color = stat.color
-                        )
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))*/
+
+                /*// Título
+                Text(
+                    text = "Quiz de Primeiros Socorros",
+                    style = MaterialTheme.typography.displaySmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        brush = headerGradient, // Aplica o gradiente ao texto
+                        textAlign = TextAlign.Center,
+                        lineHeight = 44.sp
+                    ),
+                )*/
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                /* // Descrição
+                Text(
+                    text = "Teste seus conhecimentos sobre situações de emergência e aprenda a salvar vidas",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )*/
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // --- Grid de Dificuldades (Responsivo) ---
+                BoxWithConstraints(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                ) {
+                    val isWide = this.maxWidth > 600.dp
+                    if (isWide) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            uiState.categories.forEach { item ->
+                                DifficultyCard(
+                                    item = item,
+                                    onClick = { onStartQuiz(item.categoryId) },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    } else {
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            uiState.categories.forEach { item ->
+                                DifficultyCard(
+                                    item = item,
+                                    onClick = { onStartQuiz(item.categoryId) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp)) // Espaço extra no final
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // --- Card de Rodapé (Estatísticas) ---
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        uiState.stats.forEach { stat ->
+                            StatItem(
+                                label = stat.label,
+                                value = stat.value,
+                                color = stat.color
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp)) // Espaço extra no final
+            }
         }
     }
 }

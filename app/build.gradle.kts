@@ -95,6 +95,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
 
