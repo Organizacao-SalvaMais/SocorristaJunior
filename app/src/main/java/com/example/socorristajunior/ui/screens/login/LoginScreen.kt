@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import com.example.socorristajunior.ui.components.GoogleSignInButton
 import kotlinx.coroutines.launch
-
 
 // Define as rotas do aplicativo.
 const val LOGIN_ROUTE = "login"
@@ -47,46 +47,6 @@ fun LoginScreen(
     // Estado para o Snackbar (mensagens de erro)
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-
-    // --- INÍCIO DA LÓGICA DO GOOGLE ---
-
-    // 1. Crie o "ouvinte" que espera a resposta do Google
-    val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { result ->
-            // A tela do Google respondeu. Vamos ver o que ela disse.
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                // Sucesso! Pegamos a conta do Google
-                val account = task.getResult(ApiException::class.java)
-
-                // 2. ENVIE O RESULTADO PARA O VIEWMODEL
-                if (account != null) {
-                    viewModel.handleGoogleSignIn(account)
-                }
-            } catch (e: ApiException) {
-                // Falha no login (usuário cancelou, erro de rede, etc.)
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = "Falha no login com Google: ${e.statusCode}",
-                    )
-                }
-            }
-        }
-    )
-
-    // 3. Crie o cliente de Login do Google
-    val googleSignInClient = remember {
-        // Você PRECISA configurar isso no Firebase e no google-services.json
-        // Este ID é o "Web client ID" (tipo 3) que fica no seu console do Firebase.
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("426536441799-aha830v7o118g7bqheg1s1el8ngesn93.apps.googleusercontent.com") // <-- MUITO IMPORTANTE
-            .requestEmail()
-            .build()
-        GoogleSignIn.getClient(navController.context, gso)
-    }
-
-    // --- FIM DA LÓGICA DO GOOGLE ---
 
     // 1. Lógica de Navegação em caso de SUCESSO
     LaunchedEffect(state.isLoggedIn) {
@@ -216,22 +176,26 @@ fun LoginScreen(
             }
 
             // Botão de Login com Google
-            OutlinedButton(
-                onClick = {
-                    // É ISSO QUE O BOTÃO FAZ:
-                    // Ele não chama o ViewModel, ele CHAMA A TELA DO GOOGLE.
-                    googleSignInLauncher.launch(googleSignInClient.signInIntent)
+            GoogleSignInButton(
+                // Passa o seu Web Client ID
+                webClientId = "426536441799-aha830v7o118g7bqheg1s1el8ngesn93.apps.googleusercontent.com",
+
+                // O que fazer em caso de SUCESSO:
+                onTokenReceived = { googleAccount ->
+                    // Chama o ViewModel, exatamente como você fazia antes
+                    viewModel.handleGoogleSignIn(googleAccount)
                 },
-                modifier = Modifier.fillMaxWidth().height(56.dp)
-            ) {
-                // Você pode adicionar um ícone do Google aqui depois
-                // Icon(painter = painterResource(id = R.drawable.ic_google_logo), contentDescription = null)
-                Text("ENTRAR COM GOOGLE")
-            }
+
+                // O que fazer em caso de FALHA:
+                onSignInFailed = { errorMessage ->
+                    // Mostra o Snackbar, exatamente como você fazia antes
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = errorMessage)
+                    }
+                }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // --- FIM DA ADIÇÃO ---
 
             Button(
                 onClick = {

@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
-/*import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen*/
+import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
@@ -117,12 +117,9 @@ fun AppNavigation() {
         composable("edit_profile") {
             EditProfileScreen(navController = navController)
         }
-
-
-
-        /* composable("cadastro") {
+        composable("cadastro") {
             CadastroScreen(navController = navController)
-        }*/
+        }
 
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO

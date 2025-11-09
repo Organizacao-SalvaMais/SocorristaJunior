@@ -10,7 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+import com.example.socorristajunior.Domain.Repositorio.UsuarioRepositorio
+import com.example.socorristajunior.Data.model.Usuario
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
@@ -29,7 +30,8 @@ data class AuthUiState(
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userDao: UserDAO,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val usuarioRepositorio: UsuarioRepositorio
 ) : ViewModel() {
 
     // 1. Flow privado para os erros
@@ -84,20 +86,18 @@ class LoginViewModel @Inject constructor(
         // Inicia uma coroutine no escopo do ViewModel
         viewModelScope.launch {
             try {
-                // 1. Pega o idToken da conta Google (precisamos disso para o Firebase)
+                // 1. Pega o idToken da conta Google
                 val idToken = account.idToken
-
-                // Validação: Se o token for nulo, o login não pode continuar
                 if (idToken == null) {
                     _errorFlow.value = "Erro: Token do Google está nulo."
-                    return@launch // Aborta a coroutine
+                    return@launch
                 }
 
-                // 2. Cria a credencial do Firebase usando o token do Google
+                // 2. Cria a credencial do Firebase
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
 
-                // 3. FAZ O LOGIN NO FIREBASE (a parte que faltava)
-                // .await() espera a tarefa do Firebase terminar (requer a dependência 'kotlinx-coroutines-play-services')
+                // 3. FAZ O LOGIN NO FIREBASE (aqui está a chave)
+                // .await() espera a tarefa do Firebase terminar
                 val authResult = auth.signInWithCredential(credential).await()
 
                 // 4. Pega o usuário que o Firebase acabou de criar/logar
@@ -105,17 +105,55 @@ class LoginViewModel @Inject constructor(
 
                 // 5. Se o Firebase retornou um usuário com sucesso...
                 if (firebaseUser != null) {
-                    // Cria a nossa entidade UserEntity local
+
+                    // INÍCIO DA LÓGICA DE CADASTRO NO SUPABASE
+
+                    // 6. VERIFICA SE O USUÁRIO É NOVO
+                    // O Firebase nos diz se essa credencial resultou em um novo cadastro
+                    val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
+
+                    if (isNewUser) {
+                        // 7. SE FOR NOVO: Salva o perfil no Supabase
+                        // (Esta é a lógica do seu CadastroViewModel)
+                        val novoUsuario = Usuario(
+                            id = null, // Deixa o Supabase gerar o PK
+                            usunome = firebaseUser.displayName ?: "Usuário Google",
+                            usuemail = firebaseUser.email!!,
+                            firecodigo = firebaseUser.uid // Chave de ligação
+                        )
+
+                        // 8. CHAMA SUPABASE REPOSITORY
+                        val dataSuccess = usuarioRepositorio.insertUser(novoUsuario)
+
+                        if (!dataSuccess) {
+                            // ERRO CRÍTICO: O usuário foi criado no Firebase,
+                            // mas NÃO foi salvo no Supabase.
+                            _errorFlow.value = "Falha ao criar seu perfil no banco de dados."
+
+                            // Opcional, mas recomendado: desfaz o cadastro no Firebase
+                            // para que o usuário possa tentar de novo
+                            firebaseUser.delete().await()
+
+                            return@launch // Aborta o login
+                        }
+                    }
+                    // Se o usuário não for novo (isNewUser == false),
+                    // ele simplesmente pula este bloco e vai para o login local.
+
+                    // FIM DA LÓGICA DE CADASTRO NO SUPABASE
+
+
+                    // 9. CRIA A ENTIDADE LOCAL (ROOM)
+                    // Isso acontece para usuários novos (que acabaram de ser salvos no Supabase)
+                    // e para usuários antigos (que já estavam no Supabase).
                     val user = UserEntity(
                         isLoggedIn = true,
-                        // Usa o nome e email do usuário do Firebase
                         username = firebaseUser.displayName ?: "Usuário Google",
                         email = firebaseUser.email!!,
-                        // MUITO IMPORTANTE: Usa o 'uid' do Firebase como nosso token/ID principal
                         userToken = firebaseUser.uid
                     )
 
-                    // 6. AGORA SIM, salvamos o usuário no nosso banco local (Room)
+                    // 10. Salva o usuário no nosso banco local (Room)
                     userDao.saveLoginStatus(user)
 
                 } else {
@@ -124,12 +162,8 @@ class LoginViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                // Captura qualquer erro que possa acontecer (ex: rede, usuário cancelou)
-
-                // Se for um cancelamento da coroutine, relança o erro
+                // ... (seu 'catch' continua igual)
                 if (e is CancellationException) throw e
-
-                // Mostra a mensagem de erro para o usuário
                 _errorFlow.value = "Falha no login com Firebase: ${e.message}"
             }
         }
