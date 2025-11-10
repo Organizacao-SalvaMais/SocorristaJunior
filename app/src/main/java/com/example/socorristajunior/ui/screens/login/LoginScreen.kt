@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import com.example.socorristajunior.ui.screens.forgotPassorword.FORGOT_PASSWORD_ROUTE
 import kotlinx.coroutines.launch
 
 
@@ -149,6 +150,15 @@ fun LoginScreen(
                 } else {
                     Text("ENTRAR")
                 }
+            }
+            TextButton(
+                onClick = {
+                    // Navega para a nova tela de redefinição
+                    navController.navigate(FORGOT_PASSWORD_ROUTE)
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Esqueci minha senha")
             }
 
             Button(

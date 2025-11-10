@@ -15,6 +15,8 @@ import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
+import com.example.socorristajunior.ui.screens.forgotPassorword.FORGOT_PASSWORD_ROUTE
+import com.example.socorristajunior.ui.screens.forgotPassorword.ForgotPasswordScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
 import com.example.socorristajunior.ui.screens.login.LoginScreen
 import com.example.socorristajunior.ui.screens.quiz.QuizScreen
@@ -59,6 +61,9 @@ fun AppNavigation(){
         }
         composable("cadastro") {
             CadastroScreen(navController = navController)
+        }
+        composable(FORGOT_PASSWORD_ROUTE) {
+            ForgotPasswordScreen(navController = navController)
         }
 
 
