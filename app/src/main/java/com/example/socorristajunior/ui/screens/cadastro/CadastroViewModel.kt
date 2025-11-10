@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.model.Usuario
 import com.example.socorristajunior.Domain.Repositorio.UsuarioRepositorio
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,9 @@ class CadastroViewModel @Inject constructor(
 
     private val _signUpState = MutableStateFlow<SignUpState>(SignUpState.Idle)
     val signUpState: StateFlow<SignUpState> = _signUpState
+
+    private val _resetPasswordState = MutableStateFlow<ResetState>(ResetState.Idle)
+    val resetPasswordState: StateFlow<ResetState> = _resetPasswordState
 
     fun signUp(email: String, name: String, password: String) {
         _signUpState.value = SignUpState.Loading
@@ -55,7 +59,8 @@ class CadastroViewModel @Inject constructor(
                         // Cenário de falha de persistência de dados no Supabase.
                         // O usuário existe no Firebase, mas não tem perfil no Supabase.
                         // Ação: Logar o erro e notificar o usuário (ou tentar uma reinserção).
-                        _signUpState.value = SignUpState.Error("Cadastro concluído, mas o perfil não foi salvo no Supabase. Tente novamente.")
+                        _signUpState.value =
+                            SignUpState.Error("Cadastro concluído, mas o perfil não foi salvo no Supabase. Tente novamente.")
                     }
                 }
             } catch (e: Exception) {
@@ -67,6 +72,28 @@ class CadastroViewModel @Inject constructor(
             }
         }
     }
+
+    fun sendPasswordResetEmail(email: String) {
+        _resetPasswordState.value = ResetState.Loading
+
+        viewModelScope.launch {
+            try {
+                // 🚨 CHAMA O METODO DO FIREBASE AUTH:
+                firebaseAuth.sendPasswordResetEmail(email).await()
+
+                _resetPasswordState.value =
+                    ResetState.Success("Link de redefinição enviado para $email.")
+
+            } catch (e: Exception) {
+                val errorMessage = when (e) {
+                    // Trata o erro mais comum: usuário não encontrado.
+                    is FirebaseAuthInvalidUserException -> "Nenhuma conta encontrada com este e-mail. Verifique o endereço."
+                    else -> "Erro ao enviar link: ${e.localizedMessage ?: "Erro desconhecido"}"
+                }
+                _resetPasswordState.value = ResetState.Error(errorMessage)
+            }
+        }
+    }
 }
 
 // Modelos de Estado para a UI
@@ -75,4 +102,11 @@ sealed class SignUpState {
     data object Loading : SignUpState()
     data object Success : SignUpState()
     data class Error(val message: String) : SignUpState()
+}
+
+sealed class ResetState {
+    data object Idle : ResetState()
+    data object Loading : ResetState()
+    data class Success(val message: String) : ResetState()
+    data class Error(val message: String) : ResetState()
 }
