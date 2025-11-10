@@ -21,8 +21,8 @@ data class PassoApiDto(
     @SerialName("pasordem") // Mapeia o nome da coluna no Supabase
     val pasordem: Int,
 
-    @SerialName("emer_id") // Mapeia o nome da coluna no Supabase
-    val emer_id: Int,
+    @SerialName("emercodigo") // Mapeia o nome da coluna no Supabase
+    val emercodigo: Int,
 
     @SerialName("created_at") // Mapeia o nome da coluna no Supabase
     val createdAt: String? = null // Opcional

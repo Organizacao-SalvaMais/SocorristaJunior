@@ -73,7 +73,7 @@ class EmergenciaRepo @Inject constructor(
                         pasimagem = passoDto.pasimagem,
                         pasdescricao = passoDto.pasdescricao,
                         pasordem = passoDto.pasordem,
-                        pasemercodigo = passoDto.emer_id // Chave estrangeira
+                        pasemercodigo = passoDto.emercodigo // Chave estrangeira
                     )
                 )
             }

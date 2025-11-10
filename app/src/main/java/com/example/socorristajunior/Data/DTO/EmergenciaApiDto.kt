@@ -10,7 +10,10 @@ data class GravidadeApiDto(
     val id: Int,
 
     @SerialName("gravnome")
-    val gravnome: String
+    val gravnome: String,
+
+    @SerialName("gravicor")
+    val gravicor: String? = null
 )
 
 // DTO para a tabela 'fontes'
