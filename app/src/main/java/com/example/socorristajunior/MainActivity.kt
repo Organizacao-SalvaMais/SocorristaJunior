@@ -10,12 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
+import com.example.socorristajunior.ui.screens.profile.ProfileScreen
 import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
-import com.example.socorristajunior.ui.screens.forgotPassorword.FORGOT_PASSWORD_ROUTE
 import com.example.socorristajunior.ui.screens.forgotPassorword.ForgotPasswordScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
 import com.example.socorristajunior.ui.screens.login.LoginScreen
@@ -122,7 +121,7 @@ fun AppNavigation() {
         composable("cadastro") {
             CadastroScreen(navController = navController)
         }
-        composable(FORGOT_PASSWORD_ROUTE) {
+        composable("forgot_password") {
             ForgotPasswordScreen(navController = navController)
         }
 

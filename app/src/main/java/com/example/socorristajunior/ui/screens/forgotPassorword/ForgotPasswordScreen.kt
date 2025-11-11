@@ -2,6 +2,8 @@ package com.example.socorristajunior.ui.screens.forgotPassorword
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,7 +16,7 @@ import com.example.socorristajunior.ui.screens.cadastro.CadastroViewModel// Use 
 import com.example.socorristajunior.ui.screens.cadastro.ResetState
 import kotlinx.coroutines.launch
 
-const val FORGOT_PASSWORD_ROUTE = "forgot_password"
+//const val FORGOT_PASSWORD_ROUTE = "forgot_password"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +48,17 @@ fun ForgotPasswordScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Esqueci a Senha") })
+            TopAppBar(
+                title = { Text("Esqueci a Senha") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar"
+                        )
+                    }
+                }
+            )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
@@ -60,6 +72,7 @@ fun ForgotPasswordScreen(
         ) {
             Text(
                 text = "Insira seu email para receber o link de redefinição.",
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 32.dp)
             )

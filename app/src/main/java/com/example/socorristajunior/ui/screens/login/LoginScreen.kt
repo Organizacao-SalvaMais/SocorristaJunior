@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
 import com.example.socorristajunior.ui.components.GoogleSignInButton
-import com.example.socorristajunior.ui.screens.forgotPassorword.FORGOT_PASSWORD_ROUTE
 import kotlinx.coroutines.launch
 
 // Define as rotas do aplicativo.
@@ -160,7 +159,7 @@ fun LoginScreen(
             TextButton(
                 onClick = {
                     // Navega para a nova tela de redefinição
-                    navController.navigate(FORGOT_PASSWORD_ROUTE)
+                    navController.navigate("forgot_password")
                 },
                 modifier = Modifier.padding(top = 8.dp)
             ) {
