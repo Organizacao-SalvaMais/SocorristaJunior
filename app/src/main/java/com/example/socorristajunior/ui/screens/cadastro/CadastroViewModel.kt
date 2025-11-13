@@ -44,10 +44,11 @@ class CadastroViewModel @Inject constructor(
 
                     // 2. CRIA OBJETO DE DOMÍNIO
                     val novoUsuario = Usuario(
-                        id = null, // Deixando o Supabase gerar o PK
+                        usucodigo = null, // Deixando o Supabase gerar o PK
                         usunome = name,
                         usuemail = email,
-                        firecodigo = fireCode // Chave de ligação
+                        firecodigo = fireCode,
+                        // Chave de ligação
                     )
 
                     // 3. CHAMA SUPABASE REPOSITORY
