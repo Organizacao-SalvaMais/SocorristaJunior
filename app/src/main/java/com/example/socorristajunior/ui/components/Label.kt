@@ -1,6 +1,7 @@
 package com.example.socorristajunior.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContactEmergency
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
@@ -10,6 +11,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -20,6 +24,14 @@ fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // Estado para controlar a exibição do modal de contatos
+    var showEmergencyContacts by remember { mutableStateOf(false) }
+
+    // Se o modal estiver aberto, mostre-o
+    if (showEmergencyContacts) {
+        EmergencyContactsModal(onDismiss = { showEmergencyContacts = false })
+    }
+
     NavigationBar {
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Menu") },
@@ -29,10 +41,10 @@ fun BottomNavigationBar(navController: NavController) {
                 navController.navigate("home") {
                     // Evita duplicar a tela inicial no back stack
                     popUpTo(navController.graph.findStartDestination().id) {
-                       // saveState = true // foi comentado pois o causava uma estranhesa na navegação
+                        // saveState = true // foi comentado pois o causava uma estranhesa na navegação
                     }
                     launchSingleTop = true
-                   // restoreState = true // foi comentado pois o causava uma estranhesa na navegação
+                    // restoreState = true // foi comentado pois o causava uma estranhesa na navegação
                 }
             }
         )
@@ -52,6 +64,17 @@ fun BottomNavigationBar(navController: NavController) {
             }
         )
 
+        // NOVO ITEM: Contatos de Emergência
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.ContactEmergency, contentDescription = "Contatos") },
+            label = { Text("Contatos") },
+            selected = false, // Sempre falso pois não é uma tela de navegação
+            onClick = {
+                // Abre o modal em vez de navegar para uma tela
+                showEmergencyContacts = true
+            }
+        )
+
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
             label = { Text("Perfil") },
@@ -67,6 +90,4 @@ fun BottomNavigationBar(navController: NavController) {
             }
         )
     }
-
-
 }
