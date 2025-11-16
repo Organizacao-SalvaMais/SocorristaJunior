@@ -45,17 +45,12 @@ fun EditProfileScreen(
 
     val (username, setUsername) = remember { mutableStateOf(uiState.user?.username ?: "") }
     val (email, setEmail) = remember { mutableStateOf(uiState.user?.email ?: "") }
-    val (phone, setPhone) = remember { mutableStateOf(uiState.user?.phone ?: "") }
-    val (gender, setGender) = remember { mutableStateOf(uiState.user?.gender ?: "") }
-    val (dateOfBirth, setDateOfBirth) = remember { mutableStateOf(uiState.user?.dateOfBirth ?: "") }
+
 
     LaunchedEffect(uiState.user) {
         uiState.user?.let { user ->
             setUsername(user.username ?: "")
             setEmail(user.email ?: "")
-            setPhone(user.phone ?: "")
-            setGender(user.gender ?: "")
-            setDateOfBirth(user.dateOfBirth ?: "")
         }
     }
 
@@ -71,7 +66,7 @@ fun EditProfileScreen(
                 actions = {
                     TextButton(
                         onClick = {
-                            viewModel.saveProfile(username, email, phone, gender, dateOfBirth)
+                            viewModel.saveProfile(username, email)
                             navController.popBackStack()
                         }
                     ) {
@@ -96,7 +91,6 @@ fun EditProfileScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp)
             ) {
-                // ... (campos de texto)
                 OutlinedTextField(
                     value = username,
                     onValueChange = setUsername,
@@ -110,29 +104,6 @@ fun EditProfileScreen(
                     label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = phone,
-                    onValueChange = setPhone,
-                    label = { Text("Telefone") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = gender,
-                    onValueChange = setGender,
-                    label = { Text("Gênero") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = dateOfBirth,
-                    onValueChange = setDateOfBirth,
-                    label = { Text("Data de Aniversário") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
         }

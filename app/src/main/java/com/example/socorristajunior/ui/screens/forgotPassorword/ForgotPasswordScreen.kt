@@ -16,7 +16,6 @@ import com.example.socorristajunior.ui.screens.cadastro.CadastroViewModel// Use 
 import com.example.socorristajunior.ui.screens.cadastro.ResetState
 import kotlinx.coroutines.launch
 
-//const val FORGOT_PASSWORD_ROUTE = "forgot_password"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +48,7 @@ fun ForgotPasswordScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Esqueci a Senha") },
+                title = { Text("Esqueci a Senha | Alterar Senha") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

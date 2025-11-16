@@ -11,39 +11,57 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.w3c.dom.CDATASection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CadastroScreen(
     navController: NavController,
-    // Injeta a ViewModel usando Hilt
     viewModel: CadastroViewModel = hiltViewModel()
 ) {
-    // 1. Estados da UI para os campos de texto
+    // Estados da UI para os campos de texto
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // 2. Coleta o estado de cadastro da ViewModel
+    // Estados do Snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // Coleta o estado de cadastro da ViewModel
     val signUpState by viewModel.signUpState.collectAsState()
 
     // 3. Efeito colateral para navegar ou mostrar feedback
     LaunchedEffect(signUpState) {
         when (signUpState) {
             is SignUpState.Success -> {
-                println("Cadastro de usuário concluído com sucesso!")
+                // DISPARAR O SNACKBAR DE SUCESSO
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Sucesso! Cadastro concluído",
+                        duration = SnackbarDuration.Short
+                    )
+                }
 
+                // Pequeno delay para o usuário ver a mensagem antes de navegar
+                kotlinx.coroutines.delay(800)
+
+                // NAVEGAR PARA LOGIN
                 navController.navigate("login") {
-                    // Limpa a tela de cadastro da pilha para que o usuário não volte
                     popUpTo("cadastro") { inclusive = true }
                 }
             }
             is SignUpState.Error -> {
-                // Lógica para mostrar Snackbar com a mensagem de erro
                 val errorMessage = (signUpState as SignUpState.Error).message
-                println("Erro de Cadastro: $errorMessage")
-                // Você pode usar um Scaffold/SnackbarHost para exibir a mensagem
+
+                // DISPARAR O SNACKBAR DE ERRO
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Erro: $errorMessage",
+                        duration = SnackbarDuration.Long
+                    )
+                }
             }
             else -> Unit
         }
@@ -52,7 +70,8 @@ fun CadastroScreen(
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Novo Cadastro") })
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
