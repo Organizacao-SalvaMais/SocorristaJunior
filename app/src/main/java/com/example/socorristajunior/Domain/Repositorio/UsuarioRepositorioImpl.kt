@@ -40,12 +40,11 @@ class UsuarioRepositorioImpl @Inject constructor(
     override suspend fun getUserByFirebaseId(fireCodigo: String): Usuario? {
         return withContext(Dispatchers.IO) {
             try {
-
                 val result = postgrest.from(TABLE_NAME)
                     .select {
                         filter { eq("firecodigo", fireCodigo) }
                     }
-                    .decodeList<UsuarioDTO>() // ← Decodifica como lista
+                    .decodeList<UsuarioDTO>()
 
                 // Pega o primeiro elemento da lista (se existir)
                 val dto = result.firstOrNull()
@@ -63,6 +62,21 @@ class UsuarioRepositorioImpl @Inject constructor(
                 Timber.e(e, "Erro ao buscar perfil no Supabase")
                 null
             }
+        }
+    }
+
+    override suspend fun deleteUser(fireCodigo: String): Boolean {
+        return try {
+            withContext(Dispatchers.IO) {
+                // Deleta a linha na tabela 'usuario' onde 'firecodigo' coincide
+                postgrest.from(TABLE_NAME).delete {
+                    filter { eq("firecodigo", fireCodigo) }
+                }
+                true // Sucesso
+            }
+        } catch (e: Exception) {
+            println("ERRO SUPABASE: Falha ao deletar perfil: ${e.message}")
+            false
         }
     }
 }

@@ -48,7 +48,6 @@ class CadastroViewModel @Inject constructor(
                         usunome = name,
                         usuemail = email,
                         firecodigo = fireCode,
-                        // Chave de ligação
                     )
 
                     // 3. CHAMA SUPABASE REPOSITORY
