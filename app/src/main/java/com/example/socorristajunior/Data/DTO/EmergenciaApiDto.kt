@@ -47,10 +47,10 @@ data class EmergenciaApiDto(
     @SerialName("emerimagem") // Mapeia o nome da coluna no Supabase
     val emerimagem: String? = null, // Varchar pode ser nulo
 
-    @SerialName("fk_gravcodigo")
-    val fk_gravcodigo: GravidadeApiDto? = null,
+    @SerialName("gravidade")
+    val gravidade: GravidadeApiDto? = null,
 
-    @SerialName("fk_foncodigo")
+    @SerialName("fontes")
     val fontes: FontesApiDto? = null,
 
     @SerialName("passos")

@@ -30,10 +30,8 @@ fun EmergenciaApiDto.toEntity(): Emergencia {
         emernome = this.emernome,
         emerdesc = this.emerdesc,
         emerimagem = this.emerimagem,
-        // Mapeia o objeto aninhado 'gravicodigo' para os campos da entidade
-        gravidadeNome = this.gravicodigo?.gravnome ?: "Não definida",
-        gravidadeCor = this.gravicodigo?.gravicor,
-        // Mapeia o objeto aninhado 'fontes'
+        gravidadeNome = this.gravidade?.gravnome ?: "Não definida",
+        gravidadeCor = this.gravidade?.gravicor,
         fonteNome = this.fontes?.fonnome ?: "Não definida",
         fonteUrl = this.fontes?.url
     )

@@ -105,7 +105,7 @@ fun EmergenciesScreen(
                                 // *** ADICIONE ISTO ***
                                 // Exibe a gravidade que veio do Supabase
                                 Text(
-                                    text = "Gravidade: ${emergencia.emergravidade}",
+                                    text = "Gravidade: ${emergencia.gravidadeNome}",
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.secondary
