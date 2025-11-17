@@ -30,8 +30,8 @@ fun EmergenciaApiDto.toEntity(): Emergencia {
         emernome = this.emernome,
         emerdesc = this.emerdesc,
         emerimagem = this.emerimagem,
-        gravidadeNome = this.fk_gravcodigo?.gravnome ?: "Não definida",
-        gravidadeCor = this.fk_gravcodigo?.gravicor,
+        gravidadeNome = this.gravidade?.gravnome ?: "Não definida",
+        gravidadeCor = this.gravidade?.gravicor,
         fonteNome = this.fontes?.fonnome ?: "Não definida",
         fonteUrl = this.fontes?.url
     )

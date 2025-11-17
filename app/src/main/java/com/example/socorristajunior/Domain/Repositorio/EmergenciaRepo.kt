@@ -36,7 +36,7 @@ class EmergenciaRepo @Inject constructor(
      */
 
     private suspend fun fetchAllEmergenciasFromApi(): List<EmergenciaApiDto> {
-        val colunas = Columns.raw("*, fk_gravcodigo(*), fk_foncodigo(*), passos(*)")
+        val colunas = Columns.raw("*, gravidade(*), fontes(*), passos(*)")
 
         return supabaseClient.postgrest["emergencia"]
             .select(columns = colunas)
@@ -68,10 +68,8 @@ class EmergenciaRepo @Inject constructor(
                         emernome = dto.emernome,
                         emerdesc = dto.emerdesc,
                         emerimagem = dto.emerimagem,
-
-                        // MUDANÇA: Mapeando para as novas colunas da Entidade Room
-                        gravidadeNome = dto.fk_gravcodigo?.gravnome ?: "Não definida",
-                        gravidadeCor = dto.fk_gravcodigo?.gravicor,
+                        gravidadeNome = dto.gravidade?.gravnome ?: "Não definida",
+                        gravidadeCor = dto.gravidade?.gravicor,
                         fonteNome = dto.fontes?.fonnome ?: "Não definida",
                         fonteUrl = dto.fontes?.url
                     )
@@ -86,9 +84,6 @@ class EmergenciaRepo @Inject constructor(
                             pasimagem = passoDto.pasimagem,
                             pasdescricao = passoDto.pasdescricao,
                             pasordem = passoDto.pasordem,
-
-                            // MUDANÇA: Usando a coluna 'fk_emercodigo'
-                            // da Entidade Room e do DTO
                             fk_emercodigo = passoDto.fk_emercodigo
                         )
                     )
