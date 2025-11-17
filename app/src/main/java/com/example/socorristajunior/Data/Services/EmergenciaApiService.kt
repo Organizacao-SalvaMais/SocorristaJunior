@@ -8,8 +8,12 @@ import retrofit2.http.GET
 
 interface EmergenciaApiService {
     @GET("emergencia")
-    suspend fun getEmergencias(): List<EmergenciaApiDto>
+    suspend fun getEmergencias(
+        @Query("select") select: String = "*,fk_gravcodigo(*),fk_foncodigo(*)"
+    ): List<EmergenciaApiDto>
 
     @GET("passos")
-    suspend fun getPassosByEmergencia(@Query("emer_id") emerId: Long): List<PassoApiDto>
+    suspend fun getPassosByEmergencia(
+        @Query("fk_emercodigo") emerIdFilter: String
+    ): List<PassoApiDto>
 }
