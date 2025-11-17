@@ -3,16 +3,21 @@ package com.example.socorristajunior.Domain.Repositorio
 import com.example.socorristajunior.Data.model.Usuario
 import com.example.socorristajunior.Data.DTO.UsuarioDTO
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
+import io.github.jan.supabase.storage.update
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+
 class UsuarioRepositorioImpl @Inject constructor(
     // Injeção do cliente Postgrest configurado no SupabaseModule
-    private val postgrest: Postgrest
+    private val postgrest: Postgrest,
+    private val storage: Storage
 ) : UsuarioRepositorio {
 
+    private val BUCKET_NAME = "profile_photos"
     private val TABLE_NAME = "usuario"
 
     override suspend fun insertUser(usuario: Usuario): Boolean {
@@ -60,6 +65,39 @@ class UsuarioRepositorioImpl @Inject constructor(
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Erro ao buscar perfil no Supabase")
+                null
+            }
+        }
+    }
+
+    override suspend fun uploadProfilePhoto(uid: String, imageBytes: ByteArray): String? {
+        val path = "profile/$uid.jpg"
+
+        return withContext(Dispatchers.IO) {
+            try {
+                storage.from(BUCKET_NAME).upload(
+                    path = path,
+                    data = imageBytes
+                ) {
+                    upsert = true  // Configurações vão dentro do bloco lambda
+                }
+
+                // 2. OBTÉM A URL PÚBLICA
+                val publicUrl = storage.from(BUCKET_NAME).publicUrl(path)
+
+                // 3. ATUALIZA O REGISTRO DO USUÁRIO NO POSTGREST
+                postgrest.from(TABLE_NAME).update(
+                    mapOf("profile_photo_url" to publicUrl)
+                ) {
+                    filter { eq("firecodigo", uid) }
+                }
+
+                // 4. RETORNA A URL
+                publicUrl
+
+            } catch (e: Exception) {
+                println("ERRO UPLOAD SUPABASE: ${e.message}")
+                e.printStackTrace()
                 null
             }
         }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "7dae4586477419383f43ef355210cceb",
+    "identityHash": "86688d6943c442fcc4fa33b2d05ee22f",
     "entities": [
       {
         "tableName": "emergencia",
@@ -134,7 +134,7 @@
       },
       {
         "tableName": "logged_user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `phone` TEXT, `gender` TEXT, `dateOfBirth` TEXT, `userToken` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `userToken` TEXT, `photoUrl` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -161,26 +161,14 @@
             "notNull": false
           },
           {
-            "fieldPath": "phone",
-            "columnName": "phone",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "gender",
-            "columnName": "gender",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "dateOfBirth",
-            "columnName": "dateOfBirth",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "userToken",
             "columnName": "userToken",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "photoUrl",
+            "columnName": "photoUrl",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -350,7 +338,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7dae4586477419383f43ef355210cceb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '86688d6943c442fcc4fa33b2d05ee22f')"
     ]
   }
 }

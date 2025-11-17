@@ -10,4 +10,6 @@ interface UsuarioRepositorio {
 
     // Deleta Conta
     suspend fun deleteUser(fireCodigo: String): Boolean
+
+    suspend fun uploadProfilePhoto(uid: String, imageBytes: ByteArray): String?
 }

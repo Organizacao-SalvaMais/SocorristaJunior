@@ -1,5 +1,7 @@
 package com.example.socorristajunior.ui.screens.profile
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.DAO.UserDAO
@@ -45,17 +47,17 @@ class ProfileViewModel @Inject constructor(
         _userEntityFlow,
         _isSavingFlow
     ) { userEntity, isSaving ->
-        // O isLoading é true se o userEntity ainda não foi carregado (inicia nulo)
-        val isLoading = userEntity == null && _userEntityFlow.value == null
 
         ProfileUiState(
             user = userEntity,
-            isLoading = isLoading,
-            isSaving = isSaving // Usa o estado mutável
+            // 🚨 CORREÇÃO: isLoading é false assim que o valor do Room é emitido.
+            isLoading = false,
+            isSaving = isSaving
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
+        // O loading só é TRUE aqui, antes da primeira emissão do combine
         initialValue = ProfileUiState(isLoading = true)
     )
 
@@ -100,6 +102,34 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun uploadPhoto(imageBytes: ByteArray) {
+        val uid = auth.currentUser?.uid ?: return
+        val currentUserEntity = uiState.value.user ?: return
+
+        _isSavingFlow.value = true
+
+        viewModelScope.launch {
+            try {
+                val newUrl = usuarioRepositorio.uploadProfilePhoto(uid, imageBytes)
+
+                if (newUrl != null) {
+                    // Se for bem-sucedido, atualiza o estado local (Room) para forçar o refresh da UI
+                    val updatedUser = currentUserEntity.copy(photoUrl = newUrl)
+                    userDao.saveLoginStatus(updatedUser)
+                } else {
+                    // Tratar falha no upload
+                    throw Exception("Falha no upload para o Storage.")
+                }
+
+            } catch (e: Exception) {
+                println("Erro no upload: ${e.message}")
+                // Reporte o erro para a UI
+            } finally {
+                _isSavingFlow.value = false
+            }
+        }
+    }
+
     fun deleteAccount() {
         val currentUser = auth.currentUser
 
@@ -135,6 +165,7 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
     fun reauthenticateAndDelete(password: String) {
         val currentUser = auth.currentUser
         val userProfile = uiState.value.user
@@ -186,4 +217,38 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun processAndUploadPhoto(context: Context, imageUri: Uri) {
+        val uid = auth.currentUser?.uid ?: return
+        val currentUserEntity = _userEntityFlow.value ?: return
+
+        _isSavingFlow.value = true // Inicia o indicador de loading
+
+        viewModelScope.launch {
+            try {
+                // 1. Converte URI para ByteArray
+                val imageBytes = context.contentResolver.openInputStream(imageUri)?.use {
+                    it.readBytes()
+                } ?: throw Exception("Falha ao ler a imagem.")
+
+                // 2. Chama o Repositório para Upload e Atualização do DB
+                val newUrl = usuarioRepositorio.uploadProfilePhoto(uid, imageBytes)
+
+                if (newUrl != null) {
+                    // 3. Atualiza o estado local (Room) com a nova URL
+                    val updatedUser = currentUserEntity.copy(photoUrl = newUrl)
+                    userDao.saveLoginStatus(updatedUser)
+                } else {
+                    throw Exception("Falha no upload para o Storage.")
+                }
+
+            } catch (e: Exception) {
+                println("Erro no processamento/upload: ${e.message}")
+                // Reportar erro para a UI
+            } finally {
+                _isSavingFlow.value = false // Desliga o indicador de loading
+            }
+        }
+    }
 }
+

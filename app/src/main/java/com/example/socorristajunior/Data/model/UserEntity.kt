@@ -15,10 +15,8 @@ data class UserEntity(
     // Detalhes do Usuário (Para exibição no Perfil)
     val username: String? = null,
     val email: String? = null,
-    val phone: String? = null,
-    val gender: String? = null,
-    val dateOfBirth: String? = null,
 
     // Token de autenticação
-    val userToken: String? = null
+    val userToken: String? = null,
+    val photoUrl: String? = null
 )

@@ -1,5 +1,9 @@
 package com.example.socorristajunior.ui.screens.profile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +53,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -68,6 +73,20 @@ fun ProfileScreen(
     // Coleta o estado de exibição do diálogo
     val showDeleteDialog by viewModel.showDeleteDialog.collectAsState()
 
+    val context = LocalContext.current
+
+    // 1. Defina o Launcher para abrir a galeria
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        // 3. Se um URI for selecionado, chame a ViewModel
+        if (uri != null) {
+            // Acessamos o context que foi definido acima
+            viewModel.processAndUploadPhoto(context, uri)
+        }
+    }
+
+    /*
     // Lógica de Navegação após Logout
     LaunchedEffect(isUserLoggedIn) {
         if (!isUserLoggedIn && !state.isLoading) {
@@ -77,7 +96,7 @@ fun ProfileScreen(
                 popUpTo(MAIN_SCREEN_ROUTE) { inclusive = true }
             }
         }
-    }
+    }*/
 
     Scaffold(
         topBar = {
@@ -151,6 +170,14 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                ProfileMenuItem(
+                    title = "Alterar Foto",
+                    onClick = {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                )
                 ProfileMenuItem(
                     title = "Excluir Conta",
                     textColor = MaterialTheme.colorScheme.error,
