@@ -63,21 +63,21 @@ fun EmergencyContactsModal(
             phone = "192",
             icon = Icons.Default.LocalHospital,
             iconColor = Color.White,
-            backgroundColor = Color(0xFFE62727) // Vermelho do seu tema
+            backgroundColor = Color(0xFFE62727)
         ),
         EmergencyContact(
             name = "BOMBEIROS",
             phone = "193",
             icon = Icons.Default.LocalFireDepartment,
             iconColor = Color.White,
-            backgroundColor = Color(0xFFA40000) // Vermelho escuro
+            backgroundColor = Color(0xFFA40000)
         ),
         EmergencyContact(
             name = "POLÍCIA MILITAR",
             phone = "190",
             icon = Icons.Default.Security,
             iconColor = Color.White,
-            backgroundColor = Color(0xFF517BCA) // Azul
+            backgroundColor = Color(0xFF517BCA)
         )
     )
 
@@ -103,7 +103,7 @@ fun EmergencyContactsModal(
             Column(
                 modifier = Modifier.padding(24.dp)
             ) {
-                // Header com título e botão de fechar
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -113,13 +113,16 @@ fun EmergencyContactsModal(
                         text = "Contatos de Emergência",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.weight(1f)
                     )
+
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     IconButton(
                         onClick = onDismiss,
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(40.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.onBackground)
                     ) {
@@ -127,14 +130,14 @@ fun EmergencyContactsModal(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Fechar",
                             tint = MaterialTheme.colorScheme.tertiary,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Lista de contatos
+
                 emergencyContacts.forEach { contact ->
                     EmergencyContactItem(
                         contact = contact,
@@ -148,7 +151,7 @@ fun EmergencyContactsModal(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                // Texto informativo
+
                 Text(
                     text = "Clique em um contato para discar automaticamente",
                     style = MaterialTheme.typography.bodySmall,
@@ -187,7 +190,8 @@ fun EmergencyContactItem(
         ) {
             // Lado esquerdo: Ícone e informações
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
             ) {
                 // Ícone circular
                 Box(
@@ -224,14 +228,13 @@ fun EmergencyContactItem(
                     )
                 }
             }
-
-            // Número grande à direita
             Text(
                 text = contact.phone,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = contact.backgroundColor,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
