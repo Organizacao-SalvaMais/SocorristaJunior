@@ -3,6 +3,8 @@ package com.example.socorristajunior.ui.screens.emergencies
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.socorristajunior.Data.DAO.UserDAO
+import com.example.socorristajunior.Data.DAO.UserInteractionDAO
 import com.example.socorristajunior.Data.model.Emergencia
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -25,15 +29,26 @@ data class EmergenciesUiState(
     val isLoading: Boolean = true
 )
 
+data class EmergenciaComFavorito(
+    val emergencia: Emergencia,
+    val isFavorite: Boolean
+)
+
 @HiltViewModel
 class EmergenciesViewModel @Inject constructor(
-    private val emergenciaRepo: EmergenciaRepo
+    private val emergenciaRepo: EmergenciaRepo,
+    private val userDao: UserDAO,
+    private val interactionDAO: UserInteractionDAO
 ) : ViewModel() {
 
     // _uiState privado para gerenciar o estado interno
     private val _uiState = MutableStateFlow(EmergenciesUiState())
     // uiState público e imutável para a UI observar
     val uiState = _uiState.asStateFlow()
+
+    private val currentUserId = userDao.getLoggedUser()
+        .map { it?.supabaseUserId }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // Flow que lê DIRETAMENTE do banco de dados local (Room)
     private val emergenciesFromDb: StateFlow<List<Emergencia>> =
@@ -45,20 +60,33 @@ class EmergenciesViewModel @Inject constructor(
             )
 
     // Flow que combina a busca de texto com a lista do banco
-    val filteredEmergencies: StateFlow<List<Emergencia>> =
-        combine(emergenciesFromDb, _uiState) { emergencies, state ->
-            // Atualiza a lista no _uiState (necessário para a busca)
-            _uiState.update { it.copy(emergenciesList = emergencies) }
+    val filteredEmergencies: StateFlow<List<EmergenciaComFavorito>> = combine(
+        emergenciaRepo.getAllEmergencias(), // Lista base
+        currentUserId.flatMapLatest { userId -> // Lista de favoritos do usuário
+            if (userId != null) interactionDAO.getAllInteractionsFlow(userId)
+            else flowOf(emptyList())
+        },
+        _uiState.map { it.searchText }.distinctUntilChanged() // Texto da busca
+    ) { emergencias, interacoes, searchText ->
 
-            if (state.searchText.isBlank()) {
-                emergencies
-            } else {
-                emergencies.filter {
-                    it.emernome.contains(state.searchText, ignoreCase = true) ||
-                            it.emerdesc.contains(state.searchText, ignoreCase = true)
-                }
+        // Transforma a lista de interações em um Map para acesso rápido
+        // Chave: ID da emergência, Valor: se é favorito
+        val favoritosMap = interacoes.associate { it.emergencyId to it.isFavorite }
+
+        // Filtra e mapeia
+        emergencias
+            .filter {
+                searchText.isBlank() ||
+                        it.emernome.contains(searchText, ignoreCase = true) ||
+                        it.emerdesc.contains(searchText, ignoreCase = true)
             }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+            .map { emergencia ->
+                EmergenciaComFavorito(
+                    emergencia = emergencia,
+                    isFavorite = favoritosMap[emergencia.emercodigo] ?: false
+                )
+            }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         // Quando o ViewModel for criado, inicie a sincronização

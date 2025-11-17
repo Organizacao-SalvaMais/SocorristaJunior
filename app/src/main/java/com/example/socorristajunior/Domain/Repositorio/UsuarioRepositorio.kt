@@ -12,4 +12,8 @@ interface UsuarioRepositorio {
     suspend fun deleteUser(fireCodigo: String): Boolean
 
     suspend fun uploadProfilePhoto(uid: String, imageBytes: ByteArray): String?
+
+    suspend fun getOrCreateSupabaseUser(firebaseUid: String, email: String, nome: String): Int?
+
+    suspend fun logout()
 }

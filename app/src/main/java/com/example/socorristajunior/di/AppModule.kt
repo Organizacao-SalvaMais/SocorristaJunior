@@ -10,6 +10,7 @@ import com.example.socorristajunior.Data.DAO.PassoDAO
 import com.example.socorristajunior.Data.DAO.QuestionDAO
 import com.example.socorristajunior.Data.DAO.QuizCategoryDAO
 import com.example.socorristajunior.Data.DAO.UserDAO
+import com.example.socorristajunior.Data.DAO.UserInteractionDAO
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
 import com.example.socorristajunior.Domain.Repositorio.QuizRepo
@@ -97,6 +98,12 @@ object AppModule {
         return appDatabase.userDAO() // Assumindo que sua classe AppDatabase tem a função userDao()
     }
 
+    @Provides
+    @Singleton
+    fun provideUserInteractionDao(appDatabase: AppDatabase): UserInteractionDAO {
+        return appDatabase.userInteractionDao()
+    }
+
     // --- PROVEDORES DE REPOSITÓRIO ---
 
     @Provides
@@ -104,12 +111,14 @@ object AppModule {
     fun provideEmergenciaRepo(
         supabaseClient: SupabaseClient,
         emergenciaDAO: EmergenciaDAO,
-        passoDAO: PassoDAO
+        passoDAO: PassoDAO,
+        interactionDAO: UserInteractionDAO
     ): EmergenciaRepo {
         return EmergenciaRepo(
             supabaseClient,
             emergenciaDAO,
-            passoDAO
+            passoDAO,
+            interactionDAO
         )
     }
 

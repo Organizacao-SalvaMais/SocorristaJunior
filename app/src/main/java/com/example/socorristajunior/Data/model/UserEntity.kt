@@ -18,5 +18,7 @@ data class UserEntity(
 
     // Token de autenticação
     val userToken: String? = null,
-    val photoUrl: String? = null
+    val photoUrl: String? = null,
+
+    val supabaseUserId: Int? = null
 )

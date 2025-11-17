@@ -21,4 +21,7 @@ interface UserDAO {
     // Simula o logout (Define o status como false, mantendo a mesma linha de ID=1)
     @Query("UPDATE logged_user SET isLoggedIn = 0, userToken = null, username = null WHERE id = 1")
     suspend fun logout()
+
+    @Query("DELETE FROM logged_user")
+    suspend fun clearUser()
 }

@@ -1,10 +1,11 @@
 package com.example.socorristajunior.Domain.Repositorio
 
+import com.example.socorristajunior.Data.DAO.UserDAO
 import com.example.socorristajunior.Data.model.Usuario
 import com.example.socorristajunior.Data.DTO.UsuarioDTO
+import com.google.firebase.auth.FirebaseAuth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
-import io.github.jan.supabase.storage.update
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +15,9 @@ import timber.log.Timber
 class UsuarioRepositorioImpl @Inject constructor(
     // Injeção do cliente Postgrest configurado no SupabaseModule
     private val postgrest: Postgrest,
-    private val storage: Storage
+    private val storage: Storage,
+    private val userDao: UserDAO,
+    private val firebaseAuth: FirebaseAuth
 ) : UsuarioRepositorio {
 
     private val BUCKET_NAME = "profile_photos"
@@ -116,5 +119,50 @@ class UsuarioRepositorioImpl @Inject constructor(
             println("ERRO SUPABASE: Falha ao deletar perfil: ${e.message}")
             false
         }
+    }
+
+    override suspend fun getOrCreateSupabaseUser(firebaseUid: String, email: String, nome: String): Int? {
+        return try {
+            withContext(Dispatchers.IO) {
+                // 1. Tenta buscar usando o DTO existente
+                val result = postgrest.from(TABLE_NAME)
+                    .select {
+                        filter {
+                            eq("firecodigo", firebaseUid)
+                        }
+                    }.decodeSingleOrNull<UsuarioDTO>()
+
+                if (result != null) {
+                    // Se achou, retorna o ID. Se vier nulo (improvável no banco), retorna null
+                    return@withContext result.usucodigo
+                } else {
+                    // 2. Se não existe, insere um novo
+                    val usuarioDto = UsuarioDTO(
+                        usuNome = nome,
+                        usuEmail = email,
+                        fireCodigo = firebaseUid
+                    )
+
+                    val insertedUser = postgrest.from(TABLE_NAME)
+                        .insert(usuarioDto) {
+                            select() // Pede o retorno do objeto criado
+                        }.decodeSingle<UsuarioDTO>()
+
+                    return@withContext insertedUser.usucodigo
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Erro ao buscar/criar ID do Supabase")
+            null
+        }
+    }
+
+    override suspend fun logout() {
+        // 1. Desloga do Firebase
+        firebaseAuth.signOut()
+
+        // 2. Limpa o usuário do banco local (Room)
+        // Isso fará o Flow no ViewModel emitir 'null' e sumir com os corações
+        userDao.clearUser()
     }
 }

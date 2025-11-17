@@ -76,6 +76,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             auth.signOut() // Desloga do Firebase
             userDao.logout() // Limpa o estado local
+            usuarioRepositorio.logout()
         }
     }
 

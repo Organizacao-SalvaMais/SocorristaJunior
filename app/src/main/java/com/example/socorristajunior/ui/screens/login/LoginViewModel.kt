@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.socorristajunior.Domain.Repositorio.UsuarioRepositorio
-import com.example.socorristajunior.Data.model.Usuario
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
@@ -38,7 +37,6 @@ class LoginViewModel @Inject constructor(
     // Flow para o status do DB (login)
     private val _dbLoginStatus = userDao.getLoggedUser()
         .map { userEntity ->
-            // Par(isLoggedIn, isLoading)
             Pair(userEntity?.isLoggedIn ?: false, false)
         }
         .stateIn(
@@ -80,15 +78,20 @@ class LoginViewModel @Inject constructor(
                     val fireCode = firebaseUser.uid
 
                     // 2. FASE SUPABASE: Buscar o perfil
-                    val usuarioPerfil = usuarioRepositorio.getUserByFirebaseId(fireCode)
+                    val supabaseId = usuarioRepositorio.getOrCreateSupabaseUser(
+                        firebaseUid = fireCode,
+                        email = firebaseUser.email ?: "",
+                        nome = firebaseUser.displayName ?: "Usuario"
+                    )
 
-                    if (usuarioPerfil != null) {
+                    if (supabaseId != null) {
                         // SUCESSO COMPLETO
                         val user = UserEntity(
                             isLoggedIn = true,
-                            username = usuarioPerfil.usunome,
-                            email = usuarioPerfil.usuemail,
-                            userToken = fireCode
+                            username = firebaseUser.displayName ?: "Usuario",
+                            email = firebaseUser.email,
+                            userToken = fireCode,
+                            supabaseUserId = supabaseId
                         )
                         userDao.saveLoginStatus(user)
                     } else {
@@ -130,39 +133,25 @@ class LoginViewModel @Inject constructor(
                 val firebaseUser = authResult.user
 
                 if (firebaseUser != null) {
-                    // 6. VERIFICA SE O USUÁRIO É NOVO
-                    val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
-
-                    if (isNewUser) {
-                        // 7. SE FOR NOVO: Salva o perfil no Supabase
-                        val novoUsuario = Usuario(
-                            usucodigo = null,
-                            usunome = firebaseUser.displayName ?: "Usuário Google",
-                            usuemail = firebaseUser.email!!,
-                            firecodigo = firebaseUser.uid,
-                        )
-
-                        // 8. CHAMA SUPABASE REPOSITORY
-                        val dataSuccess = usuarioRepositorio.insertUser(novoUsuario)
-
-                        if (!dataSuccess) {
-                            _errorFlow.value = "Falha ao criar seu perfil no banco de dados."
-                            // Opcional: desfaz o cadastro no Firebase
-                            firebaseUser.delete().await()
-                            return@launch
-                        }
-                    }
-
-                    // 9. CRIA A ENTIDADE LOCAL (ROOM)
-                    val user = UserEntity(
-                        isLoggedIn = true,
-                        username = firebaseUser.displayName ?: "Usuário Google",
-                        email = firebaseUser.email!!,
-                        userToken = firebaseUser.uid
+                    val supabaseId = usuarioRepositorio.getOrCreateSupabaseUser(
+                        firebaseUid = firebaseUser.uid,
+                        email = firebaseUser.email ?: "",
+                        nome = firebaseUser.displayName ?: "Usuário Google"
                     )
 
-                    // 10. Salva o usuário no banco local (Room)
-                    userDao.saveLoginStatus(user)
+                    if (supabaseId != null) {
+                        val user = UserEntity(
+                            isLoggedIn = true,
+                            username = firebaseUser.displayName ?: "Usuário Google",
+                            email = firebaseUser.email!!,
+                            userToken = firebaseUser.uid,
+                            supabaseUserId = supabaseId // Salvando o ID do Supabase
+                        )
+                        userDao.saveLoginStatus(user)
+                    } else {
+                        auth.signOut()
+                        _errorFlow.value = "Falha ao sincronizar usuário Google com o banco."
+                    }
 
                 } else {
                     _errorFlow.value = "Falha ao obter usuário do Firebase."

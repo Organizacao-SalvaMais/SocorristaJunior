@@ -83,7 +83,10 @@ fun EmergenciesScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
-                    items(filteredList) { emergencia ->
+                    items(filteredList) { item ->
+                        val emergencia = item.emergencia
+                        val isFav = item.isFavorite
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -93,30 +96,48 @@ fun EmergenciesScreen(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                             elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text(
-                                    text = emergencia.emernome,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = emergencia.emernome,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
 
-                                // *** ADICIONE ISTO ***
-                                // Exibe a gravidade que veio do Supabase
-                                Text(
-                                    text = "Gravidade: ${emergencia.gravidadeNome}",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
-                                Spacer(modifier = Modifier.height(8.dp)) // Aumentei o espaço
-                                // ********************
+                                    // *** ADICIONE ISTO ***
+                                    // Exibe a gravidade que veio do Supabase
+                                    Text(
+                                        text = "Gravidade: ${emergencia.gravidadeNome}",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp)) // Aumentei o espaço
+                                    // ********************
 
-                                Text(
-                                    text = emergencia.emerdesc,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
+                                    Text(
+                                        text = emergencia.emerdesc,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                                if (isFav) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Favorite,
+                                        contentDescription = "Favorito",
+                                        tint = MaterialTheme.colorScheme.error, // Vermelho
+                                        modifier = Modifier
+                                            .padding(start = 8.dp)
+                                            .size(24.dp)
+                                    )
+                                }
                             }
                         }
                     }

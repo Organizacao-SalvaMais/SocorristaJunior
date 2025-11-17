@@ -10,12 +10,15 @@ import javax.inject.Inject
 import io.github.jan.supabase.postgrest.query.Columns
 import android.util.Log
 import com.example.socorristajunior.Data.DAO.PassoDAO
+import com.example.socorristajunior.Data.DTO.UserInteractionDto
 import com.example.socorristajunior.Data.model.Passo
+import com.example.socorristajunior.Data.model.UserInteraction
 
 class EmergenciaRepo @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val emergenciaDAO: EmergenciaDAO,
-    private val passoDAO: PassoDAO
+    private val passoDAO: PassoDAO,
+    private val interactionDAO: com.example.socorristajunior.Data.DAO.UserInteractionDAO
 ) {
     // --- Funções do Banco de Dados Local (Room) ---
 
@@ -130,6 +133,50 @@ class EmergenciaRepo @Inject constructor(
 
     suspend fun getTotalEmergencias(): Int {
         return emergenciaDAO.getTotalEmergencias()
+    }
+
+    // --- Gestão de Interações (Favoritos/Visualizados) ---
+
+    /*
+     * Alterna o status de favorito.
+     * 1. Atualiza Localmente (Instantâneo para o usuário)
+     * 2. Envia para o Supabase (Background)
+     */
+    suspend fun toggleFavorite(userId: Int, emergencyId: Int, currentStatus: Boolean) {
+        val newStatus = !currentStatus
+
+        // 1. Recupera ou cria a interação local
+        val interaction = UserInteraction(
+            userId = userId,
+            emergencyId = emergencyId,
+            isFavorite = newStatus,
+            isViewed = true // Se favoritou, assume que visualizou
+        )
+
+        // Salva no Room
+        interactionDAO.saveInteraction(interaction)
+
+        // 2. Envia para o Supabase (Upsert)
+        try {
+            val dto = UserInteractionDto(userId, emergencyId, newStatus, true)
+            supabaseClient.postgrest["usuario_interacao"].upsert(dto)
+        } catch (e: Exception) {
+            Log.e("Repo", "Erro ao salvar favorito na nuvem: ${e.message}")
+            // Em um app real, você agendaria uma sincronização com WorkManager aqui
+        }
+    }
+
+    /*
+     * Marca como visualizado ao abrir a tela
+     */
+    suspend fun markAsViewed(userId: Int, emergencyId: Int) {
+        // Lógica similar, mas apenas setando isViewed = true
+        // Preserva o estado de favorito atual se existir
+        // ... (implementação similar ao toggleFavorite)
+    }
+
+    fun getInteraction(userId: Int, emerId: Int): Flow<UserInteraction?> {
+        return interactionDAO.getInteractionFlow(userId, emerId)
     }
 
 }
