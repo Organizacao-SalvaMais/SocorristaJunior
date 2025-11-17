@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable // Anotação para serialização
 data class PassoApiDto(
 
-    @SerialName("id") // Mapeia o nome da coluna no Supabase
-    val id: Int,
+    @SerialName("pascodigo") // Mapeia o nome da coluna no Supabase
+    val pascodigo: Int,
 
     @SerialName("pasnome") // Mapeia o nome da coluna no Supabase
     val pasnome: String,
@@ -21,8 +21,8 @@ data class PassoApiDto(
     @SerialName("pasordem") // Mapeia o nome da coluna no Supabase
     val pasordem: Int,
 
-    @SerialName("emercodigo") // Mapeia o nome da coluna no Supabase
-    val emercodigo: Int,
+    @SerialName("fk_emercodigo") // Mapeia o nome da coluna no Supabase
+    val fk_emercodigo: Int,
 
     @SerialName("created_at") // Mapeia o nome da coluna no Supabase
     val createdAt: String? = null // Opcional

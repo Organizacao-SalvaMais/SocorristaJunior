@@ -1,5 +1,9 @@
 package com.example.socorristajunior.Data.model
 
+import com.example.socorristajunior.Data.DTO.EmergenciaApiDto
+import com.example.socorristajunior.Data.DTO.PassoApiDto
+
+/*
 fun EmergenciaJson.toEntity(): Emergencia {
     // Lógica para converter o código de gravidade em texto.
     val gravidadeString = when (this.emergravicodigo) {
@@ -17,6 +21,32 @@ fun EmergenciaJson.toEntity(): Emergencia {
         emergravidade = gravidadeString,
         emerimagem = this.emerimagem
         // 'categoria' e 'duracaoEstimada' serão nulos por padrão, como definido na entidade.
+    )
+}*/
+
+fun EmergenciaApiDto.toEntity(): Emergencia {
+    return Emergencia(
+        emercodigo = this.emercodigo,
+        emernome = this.emernome,
+        emerdesc = this.emerdesc,
+        emerimagem = this.emerimagem,
+        // Mapeia o objeto aninhado 'gravicodigo' para os campos da entidade
+        gravidadeNome = this.gravicodigo?.gravnome ?: "Não definida",
+        gravidadeCor = this.gravicodigo?.gravicor,
+        // Mapeia o objeto aninhado 'fontes'
+        fonteNome = this.fontes?.fonnome ?: "Não definida",
+        fonteUrl = this.fontes?.url
+    )
+}
+
+fun PassoApiDto.toEntity(): Passo {
+    return Passo(
+        pascodigo = this.pascodigo,
+        pasnome = this.pasnome,
+        pasimagem = this.pasimagem,
+        pasdescricao = this.pasdescricao,
+        pasordem = this.pasordem,
+        fk_emercodigo = this.fk_emercodigo
     )
 }
 

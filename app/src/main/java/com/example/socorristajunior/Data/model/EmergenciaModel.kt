@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "emergencia")
 data class Emergencia(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "emercodigo")
-    val emercodigo: Int = 0,
+    val emercodigo: Int,
 
     @ColumnInfo(name = "emernome")
     val emernome: String,
@@ -16,15 +16,18 @@ data class Emergencia(
     @ColumnInfo(name = "emerdesc")
     val emerdesc: String,
 
-    @ColumnInfo(name = "emergravidade")
-    val emergravidade: String,
-
     @ColumnInfo(name = "emerimagem")
     val emerimagem: String? = null,
 
-    @ColumnInfo(name = "categoria")
-    val categoria: String? = null,
+    @ColumnInfo(name = "gravidade_nome")
+    val gravidadeNome: String,
 
-    @ColumnInfo(name = "duracaoEstimada")
-    val duracaoEstimada: Int? = null
+    @ColumnInfo(name = "gravidade_cor")
+    val gravidadeCor: String? = null,
+
+    @ColumnInfo(name = "fonte_nome")
+    val fonteNome: String,
+
+    @ColumnInfo(name = "fonte_url")
+    val fonteUrl: String? = null
 )
