@@ -25,6 +25,9 @@ interface UserInteractionDAO {
     @Query("SELECT * FROM user_interaction WHERE userId = :userId")
     fun getAllInteractionsFlow(userId: Int): Flow<List<UserInteraction>>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllInteractions(interactions: List<UserInteraction>)
+
     @Query("DELETE FROM user_interaction")
     suspend fun clearAllInteractions()
 }

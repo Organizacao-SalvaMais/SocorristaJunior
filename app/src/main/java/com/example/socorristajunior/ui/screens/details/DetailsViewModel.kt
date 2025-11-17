@@ -113,9 +113,10 @@ class DetailsViewModel @Inject constructor(
     private fun registrarVisualizacao(emerId: Int) {
         viewModelScope.launch {
             val user = currentUser.value
+            val isFavAtual = _userInteraction.value?.isFavorite ?: false
             // Só marca se tivermos um usuário com ID do Supabase válido
             if (user != null && user.supabaseUserId != null) {
-                emergenciaRepo.markAsViewed(user.supabaseUserId, emerId)
+                emergenciaRepo.markAsViewed(user.supabaseUserId, emerId, isFavAtual)
             }
         }
     }

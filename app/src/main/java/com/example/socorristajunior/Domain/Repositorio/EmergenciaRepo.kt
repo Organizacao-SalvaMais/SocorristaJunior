@@ -169,10 +169,52 @@ class EmergenciaRepo @Inject constructor(
     /*
      * Marca como visualizado ao abrir a tela
      */
-    suspend fun markAsViewed(userId: Int, emergencyId: Int) {
-        // Lógica similar, mas apenas setando isViewed = true
-        // Preserva o estado de favorito atual se existir
-        // ... (implementação similar ao toggleFavorite)
+    suspend fun markAsViewed(userId: Int, emergencyId: Int, isFavoriteAtual: Boolean) {
+
+        val interaction = UserInteraction(
+            userId = userId,
+            emergencyId = emergencyId,
+            isFavorite = isFavoriteAtual,
+            isViewed = true
+        )
+
+        interactionDAO.saveInteraction(interaction)
+
+        try {
+            val dto = UserInteractionDto(userId, emergencyId, isFavoriteAtual, true)
+            supabaseClient.postgrest["usuario_interacao"].upsert(dto)
+        } catch (e: Exception) {
+            Log.e("Repo", "Erro ao salvar favorito na nuvem: ${e.message}")
+        }
+    }
+
+    suspend fun syncUserInteractions(userId: Int) {
+        try {
+            // 1. Busca no Supabase apenas as interações desse usuário
+            val interacoesApi = supabaseClient.postgrest["usuario_interacao"]
+                .select {
+                    filter {
+                        eq("fk_usucodigo", userId)
+                    }
+                }.decodeList<UserInteractionDto>()
+
+            // 2. Mapeia de DTO (API) para Entity (Room)
+            val interacoesLocal = interacoesApi.map { dto ->
+                UserInteraction(
+                    userId = dto.userId,         // fk_usucodigo do DTO
+                    emergencyId = dto.emergencyId, // fk_emercodigo do DTO
+                    isFavorite = dto.isFavorite,
+                    isViewed = dto.isViewed
+                )
+            }
+
+            // 3. Salva no banco local
+            interactionDAO.insertAllInteractions(interacoesLocal)
+            Log.d("SupabaseSync", "Favoritos restaurados: ${interacoesLocal.size}")
+
+        } catch (e: Exception) {
+            Log.e("SupabaseSync", "Erro ao baixar favoritos: ${e.message}")
+        }
     }
 
     fun getInteraction(userId: Int, emerId: Int): Flow<UserInteraction?> {

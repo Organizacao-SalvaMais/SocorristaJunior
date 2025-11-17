@@ -31,7 +31,8 @@ data class EmergenciesUiState(
 
 data class EmergenciaComFavorito(
     val emergencia: Emergencia,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    val isViewed: Boolean
 )
 
 @HiltViewModel
@@ -83,14 +84,26 @@ class EmergenciesViewModel @Inject constructor(
             .map { emergencia ->
                 EmergenciaComFavorito(
                     emergencia = emergencia,
-                    isFavorite = favoritosMap[emergencia.emercodigo] ?: false
+                    isFavorite = favoritosMap[emergencia.emercodigo] ?: false,
+                    isViewed = favoritosMap[emergencia.emercodigo] ?: false
                 )
             }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
-        // Quando o ViewModel for criado, inicie a sincronização
+        // 1. Sincroniza as Emergências (Conteúdo geral)
         syncEmergencias()
+
+        // 2. OBSERVA O USUÁRIO E SINCRONIZA OS FAVORITOS
+        viewModelScope.launch {
+            userDao.getLoggedUser().collect { user ->
+                if (user != null && user.supabaseUserId != null) {
+                    // Se detectou login, vai na nuvem buscar os corações desse usuário
+                    Log.d("Auth", "Usuário detectado. Baixando favoritos...")
+                    emergenciaRepo.syncUserInteractions(user.supabaseUserId)
+                }
+            }
+        }
     }
 
     /*

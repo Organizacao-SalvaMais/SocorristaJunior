@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -86,6 +87,7 @@ fun EmergenciesScreen(
                     items(filteredList) { item ->
                         val emergencia = item.emergencia
                         val isFav = item.isFavorite
+                        val isViewed = item.isViewed
 
                         Card(
                             modifier = Modifier
@@ -104,14 +106,26 @@ fun EmergenciesScreen(
                                 verticalAlignment = Alignment.Top
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = emergencia.emernome,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            text = emergencia.emernome,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (isViewed) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                                    else MaterialTheme.colorScheme.primary
+                                        )
 
+                                        if (isViewed) {
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Icon(
+                                                imageVector = Icons.Filled.CheckCircle,
+                                                contentDescription = "Lido",
+                                                tint = Color(0xFF4CAF50), // Verde
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
                                     // *** ADICIONE ISTO ***
                                     // Exibe a gravidade que veio do Supabase
                                     Text(
