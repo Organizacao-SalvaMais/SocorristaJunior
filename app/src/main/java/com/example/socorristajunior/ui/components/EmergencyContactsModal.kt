@@ -244,3 +244,4 @@ fun EmergencyContactItem(
 fun EmergencyContactsModalPreview() {
     EmergencyContactsModal(onDismiss = {})
 }
+

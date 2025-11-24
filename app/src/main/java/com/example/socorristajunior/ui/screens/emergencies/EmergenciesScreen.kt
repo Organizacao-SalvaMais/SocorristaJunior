@@ -1,9 +1,12 @@
 package com.example.socorristajunior.ui.screens.emergencies
 
+import coil.compose.AsyncImage
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -11,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import com.example.socorristajunior.ui.components.getCorPorNome
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,6 +93,7 @@ fun EmergenciesScreen(
                         val emergencia = item.emergencia
                         val isFav = item.isFavorite
                         val isViewed = item.isViewed
+                        val cor = getCorPorNome(emergencia.gravidadeCor)
 
                         Card(
                             modifier = Modifier
@@ -95,7 +101,7 @@ fun EmergenciesScreen(
                                 .clickable {
                                     navController.navigate("emergency_detail/${emergencia.emercodigo}")
                                 },
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            colors = CardDefaults.cardColors(containerColor = cor, contentColor = MaterialTheme.colorScheme.onSurface),
                             elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
                         ) {
                             Row(
@@ -112,7 +118,7 @@ fun EmergenciesScreen(
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.Bold,
                                             color = if (isViewed) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                                                    else MaterialTheme.colorScheme.primary
+                                                    else MaterialTheme.colorScheme.secondary
                                         )
 
                                         if (isViewed) {
@@ -126,7 +132,6 @@ fun EmergenciesScreen(
                                         }
                                     }
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    // *** ADICIONE ISTO ***
                                     // Exibe a gravidade que veio do Supabase
                                     Text(
                                         text = "Gravidade: ${emergencia.gravidadeNome}",
@@ -134,8 +139,13 @@ fun EmergenciesScreen(
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.secondary
                                     )
-                                    Spacer(modifier = Modifier.height(8.dp)) // Aumentei o espaço
-                                    // ********************
+                                    Text(
+                                        text = "Cor: ${emergencia.gravidadeCor}",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
 
                                     Text(
                                         text = emergencia.emerdesc,
@@ -150,6 +160,17 @@ fun EmergenciesScreen(
                                         modifier = Modifier
                                             .padding(start = 8.dp)
                                             .size(24.dp)
+                                    )
+                                }
+                                if(!emergencia.emerimagem.isNullOrEmpty()){
+                                    AsyncImage(
+                                        model = emergencia.emerimagem,
+                                        contentDescription = "Imagem de ${emergencia.emernome}",
+                                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .height(100.dp)
+                                            .clip(RoundedCornerShape(12.dp))
                                     )
                                 }
                             }

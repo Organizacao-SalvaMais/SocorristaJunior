@@ -3,8 +3,8 @@ package com.example.socorristajunior.ui.screens.details
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite // Importante
-import androidx.compose.material.icons.outlined.FavoriteBorder // Importante
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,7 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.socorristajunior.ui.components.BotaoLigar
 import com.example.socorristajunior.ui.components.EmergencyDetailContent
+import com.example.socorristajunior.ui.components.getCorPorNome
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,15 +34,25 @@ fun EmergencyDetailScreen(
         viewModel.loadSteps(emergencyId)
     }
 
+    val nomeEmergencia = uiState.emergencyName ?: "Detalhes da Emergência"
+    val corGravidade = getCorPorNome(uiState.gravityColorName)
+
     Scaffold(
         topBar = {
             SmallTopAppBar(
                 navController = navController,
-                title = "Detalhes da Emergência", // Passando título dinâmico se quiser
+                title = nomeEmergencia, // Passando título dinâmico se quiser
                 isFavorite = uiState.isFavorite,  // Estado atual (vem do ViewModel)
                 onFavoriteClick = { viewModel.toggleFavorito() } // Ação de clique
             )
-        }
+        },
+        floatingActionButton = {
+            BotaoLigar(
+                numero = "192",
+                cor = corGravidade
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -49,9 +61,12 @@ fun EmergencyDetailScreen(
             contentAlignment = Alignment.Center
         ) {
             if (uiState.isLoading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = corGravidade)
             } else {
-                EmergencyDetailContent(steps = uiState.stepsList)
+                EmergencyDetailContent(
+                    steps = uiState.stepsList,
+                    corGravidade = corGravidade
+                )
             }
         }
     }
@@ -75,7 +90,6 @@ fun SmallTopAppBar(
                 )
             }
         },
-        // AQUI ESTÁ O BOTÃO QUE FALTAVA:
         actions = {
             IconButton(onClick = onFavoriteClick) {
                 Icon(

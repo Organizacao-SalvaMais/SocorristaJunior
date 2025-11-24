@@ -23,13 +23,16 @@ import javax.inject.Inject
 data class DetailsUiState(
     val stepsList: List<EmergencyStep> = emptyList(),
     val isLoading: Boolean = true,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val emergencyName: String? = null,
+    val gravityColorName: String? = null
 )
 
 data class EmergencyStep(
     val stepNumber: Int,
     val totalSteps: Int,
     val title: String,
+    val photo: String?,
     val description: String
 )
 
@@ -62,7 +65,7 @@ class DetailsViewModel @Inject constructor(
             registrarVisualizacao(emergencyId)
 
             try {
-                // Usamos .first() para carregar os passos apenas uma vez.
+                val emergencia = emergenciaRepo.getEmergenciaById(emergencyId)
                 val passosDoBanco = passoRepo.getPassos(emergencyId).first()
                 val totalPassos = passosDoBanco.size
 
@@ -71,7 +74,12 @@ class DetailsViewModel @Inject constructor(
                 }
 
                 _uiState.update {
-                    it.copy(stepsList = emergencySteps, isLoading = false)
+                    it.copy(
+                        stepsList = emergencySteps,
+                        isLoading = false,
+                        emergencyName = emergencia?.emernome ?: "Emergência",
+                        gravityColorName = emergencia?.gravidadeCor
+                        )
                 }
             } catch (e: Exception) {
                 // Tratar o erro, se necessário
@@ -85,6 +93,7 @@ class DetailsViewModel @Inject constructor(
             stepNumber = this.pasordem,
             totalSteps = totalSteps,
             title = this.pasnome,
+            photo = this.pasimagem,
             description = this.pasdescricao
         )
     }
