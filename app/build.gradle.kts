@@ -153,4 +153,6 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     implementation("io.coil-kt:coil-compose:2.0.0")
+
+    implementation("org.slf4j:slf4j-android:1.7.36")
 }

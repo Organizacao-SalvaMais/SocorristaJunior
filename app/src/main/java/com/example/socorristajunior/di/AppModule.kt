@@ -127,13 +127,13 @@ object AppModule {
     fun providePassoRepo(passoDAO: PassoDAO): PassoRepo {
         return PassoRepo(passoDAO)
     }
-
+/*
     @Provides
     @Singleton
     fun provideQuizRepo(quizCategoryDAO: QuizCategoryDAO): QuizRepo {
         return QuizRepo(quizCategoryDAO)
     }
-
+*/
     // --- PROVEDOR DE AUTENTICAÇÃO ---
     @Provides
     @Singleton

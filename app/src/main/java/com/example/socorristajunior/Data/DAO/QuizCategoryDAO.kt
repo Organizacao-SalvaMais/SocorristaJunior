@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 // DAO para a Categoria do Quiz
 @Dao
 interface QuizCategoryDAO {
+    // Permite inserir/atualizar uma única categoria
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(quizCategory: QuizCategory)
 
     // Insere uma lista de categorias. Se já existir, substitui.
     @Insert(onConflict = OnConflictStrategy.REPLACE)

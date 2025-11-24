@@ -1,7 +1,10 @@
 package com.example.socorristajunior.Data.model
 
+import com.example.socorristajunior.Data.DTO.AlternativaDto
 import com.example.socorristajunior.Data.DTO.EmergenciaApiDto
 import com.example.socorristajunior.Data.DTO.PassoApiDto
+import com.example.socorristajunior.Data.DTO.QuestaoDto
+import com.example.socorristajunior.Data.DTO.QuizDto
 
 /*
 fun EmergenciaJson.toEntity(): Emergencia {
@@ -57,13 +60,30 @@ fun QuizCategoriaDto.toEntity(): QuizCategory {
     )
 }
 
-fun QuestaoDto.toEntity(categoriaId: Int): Question {
-    // Converte 'qtcodigo' para 'id', etc., e armazena o ID da categoria pai
+// Converte QuizDto (Supabase) -> QuizCategory (Room)
+fun QuizDto.toEntity(): QuizCategory {
+    return QuizCategory(
+        id = this.id, // ID vindo do Supabase
+        nome = this.nome,
+        descricao = this.descricao ?: "" // Se for nulo, salva string vazia
+    )
+}
+
+fun QuestaoDto.toEntity(): Question {
     return Question(
-        id = this.qtcodigo,
-        enunciado = this.qtenunciado,
-        imagemUrl = this.qtimagem,
-        quizCategoriaId = categoriaId // Salva a chave estrangeira (relação)
+        id = this.id,
+        enunciado = this.enunciado,
+        imagemUrl = null, // Seu SQL não tinha imagem na tabela questaoquizz, ajustamos aqui
+        quizCategoriaId = this.quizId
+    )
+}
+
+fun AlternativaDto.toEntity(): Option {
+    return Option(
+        id = this.id,
+        resposta = this.texto,
+        correta = this.correta,
+        questaoId = this.questaoId
     )
 }
 

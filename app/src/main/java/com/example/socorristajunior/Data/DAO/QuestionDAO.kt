@@ -9,6 +9,10 @@ import com.example.socorristajunior.Data.model.Question
 @Dao
 interface QuestionDAO {
 
+    // Permite inserir/atualizar uma única questão
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(question: Question)
+
     // Insere uma lista de questões. Se já existir, substitui.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuestoes(questoes: List<Question>)
