@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,6 +23,27 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        val propertiesFile = project.rootProject.file("local.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.inputStream().use { input ->
+                properties.load(input)
+            }
+        } else {
+            logger.warn("Arquivo local.properties não encontrado. As chaves SUPABASE_ serao substituidas por valores nulos.")
+        }
+
+        buildConfigField(
+            "String",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "\"${properties.getProperty("SUPABASE_PUBLISHABLE_KEY", "MISSING_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${properties.getProperty("SUPABASE_URL", "MISSING_URL")}\""
+        )
     }
 
     buildTypes {
@@ -40,6 +63,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -82,7 +106,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler) // Note o uso de ksp()
     ksp(libs.androidx.hilt.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     // Swipe
     implementation(libs.saket.swipe)
     // Extras
@@ -100,6 +124,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
 
+    implementation("com.google.firebase:firebase-auth-ktx")
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
     //Supabase
@@ -107,18 +133,26 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:supabase-kt")
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
 
-    // Ktor (CORREÇÃO AQUI)
-    // 1. Defina a versão que o Supabase 3.2.5 espera
+    // Ktor
+    val supabaseVersion = "3.1.4"
     val ktorVersion = "3.3.1"
-    // 2. Adicione a BOM do Ktor com essa versão
-    implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
-    // 3. Adicione os módulos Ktor SEM versão. A BOM vai gerenciá-las.
-    implementation("io.ktor:ktor-client-android")
-    implementation("io.ktor:ktor-client-content-negotiation")
-    implementation("io.ktor:ktor-serialization-kotlinx-json")
-    implementation("io.ktor:ktor-client-logging")
+
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
+    implementation("io.github.jan-tennert.supabase:storage-kt:${supabaseVersion}")
+
+
+    implementation("io.ktor:ktor-client-android:${ktorVersion}")
+    implementation("io.ktor:ktor-client-core:${ktorVersion}")
+    implementation("io.ktor:ktor-utils:${ktorVersion}")
 
     //Retrofit2
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("io.coil-kt:coil-compose:2.0.0")
+
+    implementation("org.slf4j:slf4j-android:1.7.36")
 }

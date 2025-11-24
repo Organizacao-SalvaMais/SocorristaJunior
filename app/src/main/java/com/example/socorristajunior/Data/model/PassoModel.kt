@@ -11,15 +11,15 @@ import androidx.room.PrimaryKey
     foreignKeys = [ForeignKey(
         entity = Emergencia::class,
         parentColumns = ["emercodigo"],
-        childColumns = ["pasemercodigo"],
+        childColumns = ["fk_emercodigo"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index("pasemercodigo")]
+    indices = [Index("fk_emercodigo")]
 )
 data class Passo(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "pascodigo")
-    val pascodigo: Int = 0,
+    val pascodigo: Int,
 
     @ColumnInfo(name = "pasnome")
     val pasnome: String,
@@ -33,6 +33,6 @@ data class Passo(
     @ColumnInfo(name = "pasordem")
     val pasordem: Int,
 
-    @ColumnInfo(name = "pasemercodigo")
-    val pasemercodigo: Int
+    @ColumnInfo(name = "fk_emercodigo")
+    val fk_emercodigo: Int
 )

@@ -10,12 +10,15 @@ import javax.inject.Inject
 import io.github.jan.supabase.postgrest.query.Columns
 import android.util.Log
 import com.example.socorristajunior.Data.DAO.PassoDAO
+import com.example.socorristajunior.Data.DTO.UserInteractionDto
 import com.example.socorristajunior.Data.model.Passo
+import com.example.socorristajunior.Data.model.UserInteraction
 
 class EmergenciaRepo @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val emergenciaDAO: EmergenciaDAO,
-    private val passoDAO: PassoDAO
+    private val passoDAO: PassoDAO,
+    private val interactionDAO: com.example.socorristajunior.Data.DAO.UserInteractionDAO
 ) {
     // --- Funções do Banco de Dados Local (Room) ---
 
@@ -36,12 +39,10 @@ class EmergenciaRepo @Inject constructor(
      */
 
     private suspend fun fetchAllEmergenciasFromApi(): List<EmergenciaApiDto> {
-        val colunas = Columns.raw("*, gravidade(id, gravnome), fontes(*), passos(*)")
+        val colunas = Columns.raw("*, gravidade(*), fontes(*), passos(*)")
 
         return supabaseClient.postgrest["emergencia"]
-            .select(
-                columns = colunas
-            )
+            .select(columns = colunas)
             .decodeList<EmergenciaApiDto>()
     }
 
@@ -53,52 +54,58 @@ class EmergenciaRepo @Inject constructor(
      */
 
     suspend fun syncEmergenciasFromSupabase() {
-        // 1. Buscar dados da API
-        val emergenciasApi = fetchAllEmergenciasFromApi()
+        try {
+            // 1. Buscar dados da API
+            val emergenciasApi = fetchAllEmergenciasFromApi()
+            Log.d("SupabaseSync", "Total de emergências baixadas: ${emergenciasApi.size}")
 
-        Log.d("SupabaseSync", "Total de emergências baixadas do Supabase: ${emergenciasApi.size}")
+            val todasEmergenciasRoom = mutableListOf<Emergencia>()
+            val todosOsPassosRoom = mutableListOf<Passo>()
 
-        val todosOsPassos = mutableListOf<Passo>()
-
-        // 2. Mapear DTO da API para o Modelo local 'Emergencia'
-        val emergencies = emergenciasApi.map { dto ->
-
-            dto.passos.forEach { passoDto ->
-                todosOsPassos.add(
-                    Passo(
-                        // O 'pascodigo' (PK) não vem do DTO, o Room irá gerá-lo ou substituí-lo
-                        // Vamos usar o 'id' do DTO como chave primária para consistência
-                        pascodigo = passoDto.id, // Usa o ID do Supabase como Chave Primária
-                        pasnome = passoDto.pasnome,
-                        pasimagem = passoDto.pasimagem,
-                        pasdescricao = passoDto.pasdescricao,
-                        pasordem = passoDto.pasordem,
-                        pasemercodigo = passoDto.emer_id // Chave estrangeira
+            // 2. Mapear DTOs para Entidades Room
+            for (dto in emergenciasApi) {
+                // Mapeia a Emergencia
+                todasEmergenciasRoom.add(
+                    Emergencia(
+                        emercodigo = dto.emercodigo,
+                        emernome = dto.emernome,
+                        emerdesc = dto.emerdesc,
+                        emerimagem = dto.emerimagem,
+                        gravidadeNome = dto.gravidade?.gravnome ?: "Não definida",
+                        gravidadeCor = dto.gravidade?.gravicor,
+                        fonteNome = dto.fontes?.fonnome ?: "Não definida",
+                        fonteUrl = dto.fontes?.url
                     )
                 )
+
+                // Mapeia os Passos dessa Emergencia
+                dto.passos.forEach { passoDto ->
+                    todosOsPassosRoom.add(
+                        Passo(
+                            pascodigo = passoDto.pascodigo,
+                            pasnome = passoDto.pasnome,
+                            pasimagem = passoDto.pasimagem,
+                            pasdescricao = passoDto.pasdescricao,
+                            pasordem = passoDto.pasordem,
+                            fk_emercodigo = passoDto.fk_emercodigo
+                        )
+                    )
+                }
             }
 
-            Emergencia(
-                emercodigo = dto.id,
-                emernome = dto.emernome,
-                emerdesc = dto.emerdesc,
-                // Agora podemos pegar o nome da gravidade do objeto aninhado!
-                emergravidade = dto.gravidade?.gravnome ?: "Não definida",
-                emerimagem = dto.emerimagem,
-                // Esses campos não estão no seu schema do Supabase,
-                // então continuamos a preenchê-los como nulo ou padrão.
-                categoria = null,
-                duracaoEstimada = null
-            )
+            // 3. Salvar os dados mapeados no banco de dados local
+            // O OnConflictStrategy.REPLACE irá atualizar dados existentes
+            emergenciaDAO.insertAllEmergencias(todasEmergenciasRoom)
+            passoDAO.insertAllPassos(todosOsPassosRoom)
+
+            Log.d("SupabaseSync", "Sincronização concluída. ${todosOsPassosRoom.size} passos salvos.")
+
+        } catch (e: Exception) {
+            // É crucial tratar erros de rede ou de parsing
+            Log.e("SupabaseSync", "Falha ao sincronizar dados: ${e.message}")
+            // Você pode querer re-lançar o erro ou
+            // notificar a UI de alguma forma
         }
-
-        // 3. Salvar os dados mapeados no banco de dados local
-        // (Isso irá sobrescrever os dados antigos com os novos)
-        emergenciaDAO.insertAllEmergencias(emergencies)
-        passoDAO.insertAllPassos(todosOsPassos)
-
-        Log.d("SupabaseSync", "Total de passos baixados do Supabase: ${todosOsPassos.size}")
-
     }
 
     // --- Funções antigas do DAO (mantidas para referência, se necessário) ---
@@ -108,11 +115,8 @@ class EmergenciaRepo @Inject constructor(
     }
 
     fun getEmergenciasPorGravidade(gravidade: String): Flow<List<Emergencia>> {
+        // Note que o DAO já foi atualizado para "gravidade_nome"
         return emergenciaDAO.getEmergenciasPorGravidade(gravidade)
-    }
-
-    fun getEmergenciasPorCategoria(categoria: String): Flow<List<Emergencia>> {
-        return emergenciaDAO.getEmergenciasPorCategoria(categoria)
     }
 
     suspend fun insertEmergencia(emergencia: Emergencia) {
@@ -129,6 +133,92 @@ class EmergenciaRepo @Inject constructor(
 
     suspend fun getTotalEmergencias(): Int {
         return emergenciaDAO.getTotalEmergencias()
+    }
+
+    // --- Gestão de Interações (Favoritos/Visualizados) ---
+
+    /*
+     * Alterna o status de favorito.
+     * 1. Atualiza Localmente (Instantâneo para o usuário)
+     * 2. Envia para o Supabase (Background)
+     */
+    suspend fun toggleFavorite(userId: Int, emergencyId: Int, currentStatus: Boolean) {
+        val newStatus = !currentStatus
+
+        // 1. Recupera ou cria a interação local
+        val interaction = UserInteraction(
+            userId = userId,
+            emergencyId = emergencyId,
+            isFavorite = newStatus,
+            isViewed = true // Se favoritou, assume que visualizou
+        )
+
+        // Salva no Room
+        interactionDAO.saveInteraction(interaction)
+
+        // 2. Envia para o Supabase (Upsert)
+        try {
+            val dto = UserInteractionDto(userId, emergencyId, newStatus, true)
+            supabaseClient.postgrest["usuario_interacao"].upsert(dto)
+        } catch (e: Exception) {
+            Log.e("Repo", "Erro ao salvar favorito na nuvem: ${e.message}")
+            // Em um app real, você agendaria uma sincronização com WorkManager aqui
+        }
+    }
+
+    /*
+     * Marca como visualizado ao abrir a tela
+     */
+    suspend fun markAsViewed(userId: Int, emergencyId: Int, isFavoriteAtual: Boolean) {
+
+        val interaction = UserInteraction(
+            userId = userId,
+            emergencyId = emergencyId,
+            isFavorite = isFavoriteAtual,
+            isViewed = true
+        )
+
+        interactionDAO.saveInteraction(interaction)
+
+        try {
+            val dto = UserInteractionDto(userId, emergencyId, isFavoriteAtual, true)
+            supabaseClient.postgrest["usuario_interacao"].upsert(dto)
+        } catch (e: Exception) {
+            Log.e("Repo", "Erro ao salvar favorito na nuvem: ${e.message}")
+        }
+    }
+
+    suspend fun syncUserInteractions(userId: Int) {
+        try {
+            // 1. Busca no Supabase apenas as interações desse usuário
+            val interacoesApi = supabaseClient.postgrest["usuario_interacao"]
+                .select {
+                    filter {
+                        eq("fk_usucodigo", userId)
+                    }
+                }.decodeList<UserInteractionDto>()
+
+            // 2. Mapeia de DTO (API) para Entity (Room)
+            val interacoesLocal = interacoesApi.map { dto ->
+                UserInteraction(
+                    userId = dto.userId,         // fk_usucodigo do DTO
+                    emergencyId = dto.emergencyId, // fk_emercodigo do DTO
+                    isFavorite = dto.isFavorite,
+                    isViewed = dto.isViewed
+                )
+            }
+
+            // 3. Salva no banco local
+            interactionDAO.insertAllInteractions(interacoesLocal)
+            Log.d("SupabaseSync", "Favoritos restaurados: ${interacoesLocal.size}")
+
+        } catch (e: Exception) {
+            Log.e("SupabaseSync", "Erro ao baixar favoritos: ${e.message}")
+        }
+    }
+
+    fun getInteraction(userId: Int, emerId: Int): Flow<UserInteraction?> {
+        return interactionDAO.getInteractionFlow(userId, emerId)
     }
 
 }

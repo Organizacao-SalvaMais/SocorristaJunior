@@ -39,9 +39,10 @@ class PrepopulateDatabaseCallback(
             // JSON de Emergencias
             // prepopulateEmergencias() // Popula as emergências
             // JSON de Quizzes
-            prepopulateQuizzes()     // Popula os quizzes
+            // prepopulateQuizzes()     // Popula os quizzes
         }
     }
+}
     // Não precisamos mais da função abaixo.
 /*
     private suspend fun prepopulateEmergencias() {
@@ -88,6 +89,7 @@ class PrepopulateDatabaseCallback(
         }
     }
 */
+    /*
     private suspend fun prepopulateQuizzes() {
         try {
             // 1. ABRIR O ARQUIVO JSON
@@ -133,3 +135,4 @@ class PrepopulateDatabaseCallback(
         }
     }
 }
+     */

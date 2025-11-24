@@ -1,5 +1,6 @@
 package com.example.socorristajunior.ui.screens.quiz.home
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Psychology
@@ -59,6 +60,17 @@ class QuizHomeViewModel @Inject constructor(
 
     init {
         loadScreenData()
+        syncWithServer()
+    }
+
+    private fun syncWithServer() {
+        viewModelScope.launch {
+            try {
+                quizRepo.atualizarQuizzesDoServidor()
+            } catch (e: Exception) {
+                Log.e("QuizHomeVM", "Erro ao sincronizar: ${e.message}")
+            }
+        }
     }
 
     private fun loadScreenData() {

@@ -10,7 +10,7 @@ import com.example.socorristajunior.Data.model.Passo
 @Dao
 interface PassoDAO {
     // Buscar passos de uma emergência em ordem
-    @Query("SELECT * FROM passo WHERE pasemercodigo = :emergenciaId ORDER BY pasordem ASC")
+    @Query("SELECT * FROM passo WHERE fk_emercodigo = :emergenciaId ORDER BY pasordem ASC")
     fun getPassosDaEmergencia(emergenciaId: Int): Flow<List<Passo>>
 
     // Buscar um passo específico
@@ -18,7 +18,7 @@ interface PassoDAO {
     suspend fun getPassoById(passoId: Int): Passo?
 
     // Buscar primeiro passo de uma emergência
-    @Query("SELECT * FROM passo WHERE pasemercodigo = :emergenciaId ORDER BY pasordem ASC LIMIT 1")
+    @Query("SELECT * FROM passo WHERE fk_emercodigo = :emergenciaId ORDER BY pasordem ASC LIMIT 1")
     suspend fun getPrimeiroPasso(emergenciaId: Int): Passo?
 
     // Inserir passos
@@ -33,10 +33,10 @@ interface PassoDAO {
     suspend fun atualizarOrdemPasso(passoId: Int, novaOrdem: Int)
 
     // Deletar todos os passos de uma emergência
-    @Query("DELETE FROM passo WHERE pasemercodigo = :emergenciaId")
+    @Query("DELETE FROM passo WHERE fk_emercodigo = :emergenciaId")
     suspend fun deletePassosDaEmergencia(emergenciaId: Int)
 
     // Contar passos de uma emergência
-    @Query("SELECT COUNT(*) FROM passo WHERE pasemercodigo = :emergenciaId")
+    @Query("SELECT COUNT(*) FROM passo WHERE fk_emercodigo = :emergenciaId")
     suspend fun contarPassosDaEmergencia(emergenciaId: Int): Int
 }

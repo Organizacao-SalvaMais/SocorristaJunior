@@ -10,11 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
-/*import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen*/
+import com.example.socorristajunior.ui.screens.profile.ProfileScreen
+import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
+import com.example.socorristajunior.ui.screens.forgotPassorword.ForgotPasswordScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
 import com.example.socorristajunior.ui.screens.login.LoginScreen
 import com.example.socorristajunior.ui.screens.quiz.home.QuizHomeRoute
@@ -117,12 +118,12 @@ fun AppNavigation() {
         composable("edit_profile") {
             EditProfileScreen(navController = navController)
         }
-
-
-
-        /* composable("cadastro") {
+        composable("cadastro") {
             CadastroScreen(navController = navController)
-        }*/
+        }
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController = navController)
+        }
 
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO

@@ -6,18 +6,21 @@ import kotlinx.serialization.Serializable
 // DTO para a tabela 'gravidade'
 @Serializable
 data class GravidadeApiDto(
-    @SerialName("id")
-    val id: Int,
+    @SerialName("gravcodigo")
+    val gravcodigo: Int,
 
     @SerialName("gravnome")
-    val gravnome: String
+    val gravnome: String,
+
+    @SerialName("gravicor")
+    val gravicor: String? = null
 )
 
 // DTO para a tabela 'fontes'
 @Serializable
 data class FontesApiDto(
-    @SerialName("id")
-    val id: Int,
+    @SerialName("foncodigo")
+    val foncodigo: Int,
 
     @SerialName("fonnome")
     val fonnome: String,
@@ -32,8 +35,8 @@ data class FontesApiDto(
 @Serializable // Anotação para serialização (parsing) do JSON
 data class EmergenciaApiDto(
 
-    @SerialName("id") // Mapeia o nome da coluna no Supabase
-    val id: Int,
+    @SerialName("emercodigo") // Mapeia o nome da coluna no Supabase
+    val emercodigo: Int,
 
     @SerialName("emernome") // Mapeia o nome da coluna no Supabase
     val emernome: String,
@@ -51,7 +54,7 @@ data class EmergenciaApiDto(
     val fontes: FontesApiDto? = null,
 
     @SerialName("passos")
-    val passos: List<PassoApiDto> = emptyList(),
+    val passos: List<PassoApiDto> = emptyList(), // Default para lista vazia
 
     @SerialName("created_at") // Mapeia o nome da coluna no Supabase
     val createdAt: String? = null // Timestamps são recebidos como String

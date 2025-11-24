@@ -10,14 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+import com.example.socorristajunior.Domain.Repositorio.UsuarioRepositorio
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
-
-
-//const val LOGIN_ROUTE = "login_route"
-//const val MAIN_SCREEN_ROUTE = "main_screen_route"
 
 data class AuthUiState(
     val isLoggedIn: Boolean = false,
@@ -25,117 +21,151 @@ data class AuthUiState(
     val errorMessage: String? = null
 )
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userDao: UserDAO,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val usuarioRepositorio: UsuarioRepositorio
 ) : ViewModel() {
 
-    // 1. Flow privado para os erros
+    // Flow para controlar loading manual (durante login)
+    private val _manualLoading = MutableStateFlow(false)
+
+    // Flow para erros
     private val _errorFlow = MutableStateFlow<String?>(null)
 
-    // 2. Flow privado para o status do DB (login)
+    // Flow para o status do DB (login)
     private val _dbLoginStatus = userDao.getLoggedUser()
         .map { userEntity ->
-            // Par(isLoggedIn, isLoading)
             Pair(userEntity?.isLoggedIn ?: false, false)
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Pair(false, true) // Valor inicial: (logado=false, carregando=true)
+            initialValue = Pair(false, true)
         )
 
-    // 1. O Estado é derivado do Room Flow
+    // Estado UI derivado
     val uiState: StateFlow<AuthUiState> = combine(
         _dbLoginStatus,
-        _errorFlow
-    ) { dbStatus, error ->
+        _errorFlow,
+        _manualLoading
+    ) { dbStatus, error, manualLoading ->
         AuthUiState(
-            isLoggedIn = dbStatus.first,  // Vem do _dbLoginStatus
-            isLoading = dbStatus.second, // Vem do _dbLoginStatus
-            errorMessage = error         // Vem do _errorFlow
+            isLoggedIn = dbStatus.first,
+            // Loading é true se estiver carregando do DB OU se estiver fazendo login manual
+            isLoading = dbStatus.second || manualLoading,
+            errorMessage = error
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = AuthUiState(isLoading = true) // Estado inicial antes de tudo
+        initialValue = AuthUiState(isLoading = true)
     )
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
-            // Simulação de login
-            if (email == "teste@gmail.com" && password == "123456") {
-                val user = UserEntity(
-                    isLoggedIn = true,
-                    username = "Teste Junior",
-                    email = email,
-                    userToken = "TOKEN-SIMULADO-123"
-                )
-                userDao.saveLoginStatus(user) // Salva no Room, ativando o login
-            } else {
-                _errorFlow.value = "Email ou senha inválidos."
+            try {
+                // Ativa loading e limpa erros
+                _manualLoading.value = true
+                _errorFlow.value = null
+
+                // 1. FASE FIREBASE: Autenticar
+                val authResult = auth.signInWithEmailAndPassword(email, password).await()
+                val firebaseUser = authResult.user
+
+                if (firebaseUser != null) {
+                    val fireCode = firebaseUser.uid
+
+                    // 2. FASE SUPABASE: Buscar o perfil
+                    val supabaseId = usuarioRepositorio.getOrCreateSupabaseUser(
+                        firebaseUid = fireCode,
+                        email = firebaseUser.email ?: "",
+                        nome = firebaseUser.displayName ?: "Usuario"
+                    )
+
+                    if (supabaseId != null) {
+                        // SUCESSO COMPLETO
+                        val user = UserEntity(
+                            isLoggedIn = true,
+                            username = firebaseUser.displayName ?: "Usuario",
+                            email = firebaseUser.email,
+                            userToken = fireCode,
+                            supabaseUserId = supabaseId
+                        )
+                        userDao.saveLoginStatus(user)
+                    } else {
+                        // FALHA: Credencial OK, mas perfil Supabase faltando
+                        auth.signOut()
+                        _errorFlow.value = "Perfil não encontrado no banco de dados."
+                    }
+                } else {
+                    _errorFlow.value = "Falha ao obter usuário do Firebase."
+                }
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                _errorFlow.value = "Credenciais inválidas ou erro de rede: ${e.message}"
+            } finally {
+                // Sempre desativa loading ao finalizar
+                _manualLoading.value = false
             }
         }
     }
 
     fun handleGoogleSignIn(account: GoogleSignInAccount) {
-        // Inicia uma coroutine no escopo do ViewModel
         viewModelScope.launch {
             try {
-                // 1. Pega o idToken da conta Google (precisamos disso para o Firebase)
-                val idToken = account.idToken
+                _manualLoading.value = true
+                _errorFlow.value = null
 
-                // Validação: Se o token for nulo, o login não pode continuar
+                // 1. Pega o idToken da conta Google
+                val idToken = account.idToken
                 if (idToken == null) {
                     _errorFlow.value = "Erro: Token do Google está nulo."
-                    return@launch // Aborta a coroutine
+                    return@launch
                 }
 
-                // 2. Cria a credencial do Firebase usando o token do Google
+                // 2. Cria a credencial do Firebase
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
 
-                // 3. FAZ O LOGIN NO FIREBASE (a parte que faltava)
-                // .await() espera a tarefa do Firebase terminar (requer a dependência 'kotlinx-coroutines-play-services')
+                // 3. FAZ O LOGIN NO FIREBASE
                 val authResult = auth.signInWithCredential(credential).await()
-
-                // 4. Pega o usuário que o Firebase acabou de criar/logar
                 val firebaseUser = authResult.user
 
-                // 5. Se o Firebase retornou um usuário com sucesso...
                 if (firebaseUser != null) {
-                    // Cria a nossa entidade UserEntity local
-                    val user = UserEntity(
-                        isLoggedIn = true,
-                        // Usa o nome e email do usuário do Firebase
-                        username = firebaseUser.displayName ?: "Usuário Google",
-                        email = firebaseUser.email!!,
-                        // MUITO IMPORTANTE: Usa o 'uid' do Firebase como nosso token/ID principal
-                        userToken = firebaseUser.uid
+                    val supabaseId = usuarioRepositorio.getOrCreateSupabaseUser(
+                        firebaseUid = firebaseUser.uid,
+                        email = firebaseUser.email ?: "",
+                        nome = firebaseUser.displayName ?: "Usuário Google"
                     )
 
-                    // 6. AGORA SIM, salvamos o usuário no nosso banco local (Room)
-                    userDao.saveLoginStatus(user)
+                    if (supabaseId != null) {
+                        val user = UserEntity(
+                            isLoggedIn = true,
+                            username = firebaseUser.displayName ?: "Usuário Google",
+                            email = firebaseUser.email!!,
+                            userToken = firebaseUser.uid,
+                            supabaseUserId = supabaseId // Salvando o ID do Supabase
+                        )
+                        userDao.saveLoginStatus(user)
+                    } else {
+                        auth.signOut()
+                        _errorFlow.value = "Falha ao sincronizar usuário Google com o banco."
+                    }
 
                 } else {
-                    // Se o Firebase não retornou um usuário
                     _errorFlow.value = "Falha ao obter usuário do Firebase."
                 }
 
             } catch (e: Exception) {
-                // Captura qualquer erro que possa acontecer (ex: rede, usuário cancelou)
-
-                // Se for um cancelamento da coroutine, relança o erro
                 if (e is CancellationException) throw e
-
-                // Mostra a mensagem de erro para o usuário
-                _errorFlow.value = "Falha no login com Firebase: ${e.message}"
+                _errorFlow.value = "Falha no login com Google: ${e.message}"
+            } finally {
+                _manualLoading.value = false
             }
         }
     }
 
-    // Metodo para limpar o erro
     fun clearError() {
         _errorFlow.value = null
     }
