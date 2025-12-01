@@ -126,7 +126,11 @@ fun AppNavigation() {
             ForgotPasswordScreen(navController = navController)
         }
         composable ("noticias" ){
-            NoticiasScreen()
+            NoticiasScreen(
+                    onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
 
