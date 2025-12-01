@@ -5,22 +5,24 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UsuarioDTO(
-    // 💡 Este é o ID do usuário Supabase. É crucial!
-    @SerialName("user_id") // Deve corresponder ao nome da coluna
-    val userId: String,
+    @SerialName("usucodigo")
+    val usucodigo: Int? = null,
 
     @SerialName("usunome")
-    val usunome: String,
+    val usuNome: String,
 
-    // Assumindo que você terá uma coluna 'telefone'
-    @SerialName("telefone")
-    val telefone: String,
+    @SerialName("usuemail")
+    val usuEmail: String,
 
-    // Assumindo que você terá uma coluna 'genero'
-    @SerialName("genero")
-    val genero: String,
+    // Campo Crucial: O UID fornecido pelo Firebase, usado para vincular Auth ao Perfil.
+    @SerialName("firecodigo")
+    val fireCodigo: String,
 
-    // Assumindo que você terá uma coluna 'data_nascimento'
-    @SerialName("data_nascimento")
-    val dataNascimento: String
+    // Campo criado_at (Ignorado na Inserção, pois o banco deve preencher)
+    @SerialName("created_at")
+    val createdAt: String? = null,
+
+    // O campo 'ususenha' é preenchido pelo Firebase Auth. O Supabase não deve armazenar senhas em texto puro.
+    @SerialName("ususenha")
+    val usuSenha: String? = null
 )

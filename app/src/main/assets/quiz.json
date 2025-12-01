@@ -112,16 +112,6 @@
               "opcodigo": 32,
               "opresposta": "Verificar se a pessoa consegue movimentar os braços e as pernas.",
               "opcorreta": false
-            },
-            {
-              "opcodigo": 36,
-              "opresposta": "Uma pontuação de 15 na GCS significa que o paciente está em coma profundo.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 37,
-              "opresposta": "Quanto menor a pontuação na GCS, mais leve é a lesão cerebral.",
-              "opcorreta": false
             }
           ]
         }
@@ -183,31 +173,6 @@
               "opcodigo": 12,
               "opresposta": "Colocar a pessoa de lado após a crise terminar.",
               "opcorreta": false
-            },
-            {
-              "opcodigo": 38,
-              "opresposta": "I, III e IV.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 39,
-              "opresposta": "II, III e IV.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 40,
-              "opresposta": "I, II e III.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 41,
-              "opresposta": "Todas estão corretas.",
-              "opcorreta": true
-            },
-            {
-              "opcodigo": 42,
-              "opresposta": "Nenhuma está correta.",
-              "opcorreta": false
             }
           ]
         },
@@ -262,59 +227,6 @@
               "opcodigo": 20,
               "opresposta": "Não fazer nada e esperar para ver se a pessoa consegue expelir sozinha.",
               "opcorreta": false
-            },
-            {
-              "opcodigo": 43,
-              "opresposta": "Checar/Verificar, Avaliar, Estimular e Observar.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 44,
-              "opresposta": "Observar, Checar/Verificar, Avaliar e Estimular.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 45,
-              "opresposta": "Estimular, Avaliar, Checar/Verificar e Observar.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 46,
-              "opresposta": "Checar/Verificar, Observar, Estimular e Avaliar.",
-              "opcorreta": true
-            },
-            {
-              "opcodigo": 47,
-              "opresposta": "Avaliar, Observar, Checar/Verificar e Estimular.",
-              "opcorreta": false
-            }
-          ]
-        },
-        {
-          "qtcodigo": 9,
-          "qtenunciado": "A Escala de Coma de Glasgow é aplicada da mesma forma para todas as idades? Assinale a alternativa correta.",
-          "qtimagem": null,
-          "opcoes": []
-        },
-        {
-          "qtcodigo": 10,
-          "qtenunciado": "Além da Escala de Coma de Glasgow, existem outras escalas que podem ser utilizadas para complementar a avaliação neurológica do paciente?",
-          "qtimagem": null,
-          "opcoes": [
-            {
-              "opcodigo": 48,
-              "opresposta": "Sim, a Escala de Braden é frequentemente usada em conjunto para avaliar o risco de lesões neurológicas.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 49,
-              "opresposta": "Não, a GCS é a única escala utilizada, pois as outras são apenas variações dela sem validação clínica.",
-              "opcorreta": false
-            },
-            {
-              "opcodigo": 50,
-              "opresposta": "Sim, a escala FOUR (Full Outline of UnResponsiveness) é uma alternativa que avalia detalhes adicionais, como os reflexos do tronco cerebral.",
-              "opcorreta": true
             }
           ]
         }

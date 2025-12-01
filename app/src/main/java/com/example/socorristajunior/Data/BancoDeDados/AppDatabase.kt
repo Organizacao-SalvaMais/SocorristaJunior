@@ -9,12 +9,14 @@ import com.example.socorristajunior.Data.DAO.PassoDAO
 import com.example.socorristajunior.Data.DAO.QuestionDAO
 import com.example.socorristajunior.Data.DAO.QuizCategoryDAO
 import com.example.socorristajunior.Data.DAO.UserDAO
+import com.example.socorristajunior.Data.DAO.UserInteractionDAO
 import com.example.socorristajunior.Data.model.Emergencia
 import com.example.socorristajunior.Data.model.Option
 import com.example.socorristajunior.Data.model.Passo
 import com.example.socorristajunior.Data.model.Question
 import com.example.socorristajunior.Data.model.QuizCategory
 import com.example.socorristajunior.Data.model.UserEntity
+import com.example.socorristajunior.Data.model.UserInteraction
 
 @TypeConverters(QuizTypeConverters::class)
 @Database(
@@ -24,9 +26,10 @@ import com.example.socorristajunior.Data.model.UserEntity
         UserEntity::class,
         QuizCategory::class,
         Question::class,
-        Option::class
+        Option::class,
+        UserInteraction::class
                ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -42,4 +45,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun questionDAO(): QuestionDAO
     // DAO das Opções
     abstract fun optionDAO(): OptionDAO
+    // DAO de Interação do Usuário
+    abstract fun userInteractionDao(): UserInteractionDAO
 }

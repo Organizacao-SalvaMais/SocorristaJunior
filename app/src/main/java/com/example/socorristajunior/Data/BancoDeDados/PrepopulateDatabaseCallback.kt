@@ -24,10 +24,7 @@ import javax.inject.Provider
 class PrepopulateDatabaseCallback(
     private val context: Context,
     // A proxima linha esta comentada pois não precisamos mais chamar do JSON
-    // private val dbProvider: Provider<AppDatabase>,
-    private val quizCategoryDAO: Provider<QuizCategoryDAO>,
-    private val questionDAO: Provider<QuestionDAO>,
-    private val optionDAO: Provider<OptionDAO>
+    private val dbProvider: Provider<AppDatabase>
 ) : RoomDatabase.Callback() {
 
     // Define um escopo de corrotina para rodar o prepopulate fora da thread principal
@@ -122,9 +119,9 @@ class PrepopulateDatabaseCallback(
 
             // 4. INSERIR NO BANCO DE DADOS
             // Obtém os DAOs que foram injetados no construtor
-            val catDao = quizCategoryDAO.get()
-            val qstDao = questionDAO.get()
-            val optDao = optionDAO.get()
+            val catDao = dbProvider.get().quizCategoryDAO()
+            val qstDao = dbProvider.get().questionDAO()
+            val optDao = dbProvider.get().optionDAO()
 
             // Insere todas as listas no banco
             catDao.insertCategorias(categorias)

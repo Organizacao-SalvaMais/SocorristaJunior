@@ -65,7 +65,11 @@ fun HomeScreen(
                 onClick = { navController.navigate("emergencies") }
             )
 
-            //Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(onClick = { navController.navigate("noticias") }) {
+                Text("Ver Notícias de Saúde")
+            }
 /*
             EmergencyContactsGrid()
 */

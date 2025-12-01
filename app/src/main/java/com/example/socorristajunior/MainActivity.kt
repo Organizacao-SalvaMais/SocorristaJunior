@@ -10,13 +10,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.socorristajunior.ui.screens.Profile.ProfileScreen
-/*import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen*/
+import com.example.socorristajunior.ui.screens.profile.ProfileScreen
+import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
+import com.example.socorristajunior.ui.screens.forgotPassorword.ForgotPasswordScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
 import com.example.socorristajunior.ui.screens.login.LoginScreen
+import com.example.socorristajunior.ui.screens.noticias.NoticiasScreen
 import com.example.socorristajunior.ui.screens.quiz.home.QuizHomeRoute
 import com.example.socorristajunior.ui.screens.quiz.question.QuizQuestionRoute
 import com.example.socorristajunior.ui.screens.quiz.question.QuizResultArgs
@@ -48,11 +50,14 @@ fun AppNavigation() {
         // Rota 1: Tela Inicial do Quiz (Seleção de Dificuldade)
         // (Substituindo seu antigo "quizScreen")
         composable(route = "quiz_home") {
-            // ✅ CORRETO: Chame a função 'publica' QuizHomeRoute.
+            // CORRETO: Chame a função 'publica' QuizHomeRoute.
             // Ela vai lidar com o ViewModel e chamar a 'private' QuizHomeScreen.
             QuizHomeRoute(
                 onNavigateToQuiz = { categoryId ->
                     navController.navigate("quiz_question/$categoryId")
+                },
+                onNavigateBack = { // Define a ação que deve ser executada ao clicar no botão "voltar"
+                    navController.popBackStack() // Informa ao controlador de navegação para voltar à tela anterior na pilha
                 }
             )
         }
@@ -83,7 +88,7 @@ fun AppNavigation() {
         // Rota 3: Tela de Resultados (Results)
         // (Substituindo seu antigo "quiz_result")
         composable(
-            route = "quiz_result/{score}/{totalQuestions}", // ⬅️ Recebe os args
+            route = "quiz_result/{score}/{totalQuestions}", // ️ Recebe os args
             arguments = listOf(
                 navArgument("score") { type = NavType.IntType },
                 navArgument("totalQuestions") { type = NavType.IntType }
@@ -114,12 +119,19 @@ fun AppNavigation() {
         composable("edit_profile") {
             EditProfileScreen(navController = navController)
         }
-
-
-
-        /* composable("cadastro") {
+        composable("cadastro") {
             CadastroScreen(navController = navController)
-        }*/
+        }
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController = navController)
+        }
+        composable ("noticias" ){
+            NoticiasScreen(
+                    onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
 
 
         // ROTA PARA A TELA DE DETALHES COM ARGUMENTO
@@ -136,9 +148,4 @@ fun AppNavigation() {
             )
         }
     }
-}
-
-@Composable
-fun QuizResultRoute(onRestart: () -> Unit) {
-    TODO("Not yet implemented")
 }

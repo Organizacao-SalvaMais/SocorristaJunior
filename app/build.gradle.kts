@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,7 @@ plugins {
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.androidx.room)
     kotlin("plugin.serialization") version "2.1.0"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -20,6 +23,27 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        val propertiesFile = project.rootProject.file("local.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.inputStream().use { input ->
+                properties.load(input)
+            }
+        } else {
+            logger.warn("Arquivo local.properties não encontrado. As chaves SUPABASE_ serao substituidas por valores nulos.")
+        }
+
+        buildConfigField(
+            "String",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "\"${properties.getProperty("SUPABASE_PUBLISHABLE_KEY", "MISSING_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${properties.getProperty("SUPABASE_URL", "MISSING_URL")}\""
+        )
     }
 
     buildTypes {
@@ -39,6 +63,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -67,6 +92,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     // Jetpack Compose Navigation
     implementation(libs.androidx.navigation.compose)
     //ViewModel
@@ -77,15 +103,17 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler) // Note o uso de ksp()
+
     // Dagger - Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler) // Note o uso de ksp()
     ksp(libs.androidx.hilt.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+
     // Swipe
     implementation(libs.saket.swipe)
+
     // Extras
-    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -93,9 +121,13 @@ dependencies {
     // Icones
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
+
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
@@ -104,18 +136,24 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:supabase-kt")
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
 
-    // Ktor (CORREÇÃO AQUI)
-    // 1. Defina a versão que o Supabase 3.2.5 espera
+    // Ktor
+    val supabaseVersion = "3.1.4"
     val ktorVersion = "3.3.1"
-    // 2. Adicione a BOM do Ktor com essa versão
-    implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
-    // 3. Adicione os módulos Ktor SEM versão. A BOM vai gerenciá-las.
-    implementation("io.ktor:ktor-client-android")
-    implementation("io.ktor:ktor-client-content-negotiation")
-    implementation("io.ktor:ktor-serialization-kotlinx-json")
-    implementation("io.ktor:ktor-client-logging")
+
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
+    implementation("io.github.jan-tennert.supabase:storage-kt:${supabaseVersion}")
+
+
+    implementation("io.ktor:ktor-client-android:${ktorVersion}")
+    implementation("io.ktor:ktor-client-core:${ktorVersion}")
+    implementation("io.ktor:ktor-utils:${ktorVersion}")
 
     //Retrofit2
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }

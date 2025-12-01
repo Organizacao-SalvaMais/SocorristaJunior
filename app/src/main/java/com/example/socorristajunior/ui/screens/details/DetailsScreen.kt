@@ -3,16 +3,21 @@ package com.example.socorristajunior.ui.screens.details
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.socorristajunior.ui.components.BotaoLigar
 import com.example.socorristajunior.ui.components.EmergencyDetailContent
+import com.example.socorristajunior.ui.components.getCorPorNome
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,16 +26,33 @@ fun EmergencyDetailScreen(
     navController: NavController,
     viewModel: DetailsViewModel = hiltViewModel()
 ) {
+    // O uiState agora contém o campo 'isFavorite' que vem do banco
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    // Carrega os passos e REGISTRA A VISUALIZAÇÃO (Isso acontece dentro do loadSteps no ViewModel)
     LaunchedEffect(key1 = emergencyId) {
         viewModel.loadSteps(emergencyId)
     }
 
+    val nomeEmergencia = uiState.emergencyName ?: "Detalhes da Emergência"
+    val corGravidade = getCorPorNome(uiState.gravityColorName)
+
     Scaffold(
         topBar = {
-            SmallTopAppBar(navController = navController)
-        }
+            SmallTopAppBar(
+                navController = navController,
+                title = nomeEmergencia, // Passando título dinâmico se quiser
+                isFavorite = uiState.isFavorite,  // Estado atual (vem do ViewModel)
+                onFavoriteClick = { viewModel.toggleFavorito() } // Ação de clique
+            )
+        },
+        floatingActionButton = {
+            BotaoLigar(
+                numero = "192",
+                cor = corGravidade
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -39,33 +61,43 @@ fun EmergencyDetailScreen(
             contentAlignment = Alignment.Center
         ) {
             if (uiState.isLoading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = corGravidade)
             } else {
-                // --- OTIMIZAÇÃO 4: Usando o Componente Estilizado ---
-                // Agora que a lógica está correta, podemos usar seu EmergencyDetailContent.
-                // Ele é mais eficiente que a LazyColumn para esta finalidade, pois
-                // usa uma Column rolável simples, ideal para um número fixo de passos.
-                EmergencyDetailContent(steps = uiState.stepsList)
+                EmergencyDetailContent(
+                    steps = uiState.stepsList,
+                    corGravidade = corGravidade
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class) // Anotação necessária para TopAppBar
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SmallTopAppBar(navController: NavController) { // Assinatura de exemplo, ajuste se necessário
-    // Implementação real da TopAppBar
+fun SmallTopAppBar(
+    navController: NavController,
+    title: String,
+    isFavorite: Boolean,        // Recebe se é favorito
+    onFavoriteClick: () -> Unit // Recebe a função de clicar
+) {
     TopAppBar(
-        // Título que aparecerá na barra
-        title = { Text("Detalhes da Emergência") },
-        // Ícone de navegação para voltar
+        title = { Text(text = title) },
         navigationIcon = {
-            // Botão com ícone clicável
             IconButton(onClick = { navController.popBackStack() }) {
-                // Ícone de seta para a esquerda
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Voltar"
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = onFavoriteClick) {
+                Icon(
+                    // Muda o ícone: Cheio se favorito, Borda se não
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Favoritar",
+                    // Muda a cor: Vermelho se favorito, Cinza se não
+                    tint = if (isFavorite) Color.Red else Color.Gray
                 )
             }
         }

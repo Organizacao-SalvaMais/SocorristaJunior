@@ -1,235 +1,123 @@
 package com.example.socorristajunior.ui.screens.cadastro
 
-/*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.livedata.observeAsState
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import org.w3c.dom.CDATASection
 
-@OptIn(ExperimentalMaterial3Api::class) // Necessário para o ExposedDropdownMenuBox
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CadastroScreen(
     navController: NavController,
+    // Injeta a ViewModel usando Hilt
     viewModel: CadastroViewModel = hiltViewModel()
 ) {
-    // --- Estados para os campos de texto ---
-    var nome by remember { mutableStateOf("") }
+    // 1. Estados da UI para os campos de texto
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var telefone by remember { mutableStateOf("") }
-    var nascimento by remember { mutableStateOf("") }
-    var senha by remember { mutableStateOf("") }
-    var confirmarSenha by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
-    // --- Estado para o Gênero (Spinner) ---
-    val generos = listOf("Selecione", "Feminino", "Masculino", "Outro")
-    var generoSelecionado by remember { mutableStateOf(generos[0]) }
-    var dropdownExpanded by remember { mutableStateOf(false) }
+    // 2. Coleta o estado de cadastro da ViewModel
+    val signUpState by viewModel.signUpState.collectAsState()
 
-    // --- Observa os estados do ViewModel ---
-    val isLoading by viewModel.loading.observeAsState(initial = false)
-    val registerStatus by viewModel.registerStatus.observeAsState()
+    // 3. Efeito colateral para navegar ou mostrar feedback
+    LaunchedEffect(signUpState) {
+        when (signUpState) {
+            is SignUpState.Success -> {
+                println("Cadastro de usuário concluído com sucesso!")
 
-    val context = LocalContext.current
-
-    // Mostra o Toast quando o 'registerStatus' mudar
-    LaunchedEffect(registerStatus) {
-        registerStatus?.let { statusMsg ->
-            Toast.makeText(context, statusMsg, Toast.LENGTH_SHORT).show()
-            if (statusMsg == "Cadastro realizado com sucesso!") {
-                navController.popBackStack() // Volta para a tela anterior
+                navController.navigate("login") {
+                    // Limpa a tela de cadastro da pilha para que o usuário não volte
+                    popUpTo("cadastro") { inclusive = true }
+                }
             }
+            is SignUpState.Error -> {
+                // Lógica para mostrar Snackbar com a mensagem de erro
+                val errorMessage = (signUpState as SignUpState.Error).message
+                println("Erro de Cadastro: $errorMessage")
+                // Você pode usar um Scaffold/SnackbarHost para exibir a mensagem
+            }
+            else -> Unit
         }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Criar Conta") })
+            TopAppBar(title = { Text("Novo Cadastro") })
         }
-    ) { padding ->
-        // O ScrollView é traduzido para um Column com 'verticalScroll'
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding) // Padding do Scaffold
-                .padding(horizontal = 24.dp, vertical = 16.dp) // Padding do seu LinearLayout
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(paddingValues)
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
 
-            // Título (do seu XML)
-            Text(
-                text = "Criar Conta",
-                color = MaterialTheme.colorScheme.onBackground, // Equivalente a @color/black
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            // Nome Completo
+            // Campo Nome
             OutlinedTextField(
-                value = nome,
-                onValueChange = { nome = it },
-                label = { Text("Digite seu nome completo") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Nome Completo") },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
             )
 
-            // Email
+            // Campo Email
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("seu@email.com") },
-                singleLine = true,
+                label = { Text("Email") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
             )
 
-            // Telefone
+            // Campo Senha
             OutlinedTextField(
-                value = telefone,
-                onValueChange = {
-                    // Você pode adicionar sua lógica de máscara aqui
-                    telefone = it
-                },
-                label = { Text("(00) 00000-0000") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-            )
-
-            // Gênero (Substituindo o Spinner)
-            ExposedDropdownMenuBox(
-                expanded = dropdownExpanded,
-                onExpandedChange = { dropdownExpanded = !dropdownExpanded },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-            ) {
-                OutlinedTextField(
-                    value = generoSelecionado,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Gênero") },
-                    trailingIcon = {
-                        Icon(Icons.Default.ArrowDropDown, contentDescription = "Abrir Gêneros")
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor() // Importante para o Dropdown
-                )
-                ExposedDropdownMenu(
-                    expanded = dropdownExpanded,
-                    onDismissRequest = { dropdownExpanded = false }
-                ) {
-                    generos.forEach { genero ->
-                        DropdownMenuItem(
-                            text = { Text(genero) },
-                            onClick = {
-                                generoSelecionado = genero
-                                dropdownExpanded = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            // Data de Nascimento
-            // NOTA: O ideal aqui é usar um DatePickerDialog
-            OutlinedTextField(
-                value = nascimento,
-                onValueChange = { nascimento = it },
-                label = { Text("dd/mm/aaaa") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-            )
-
-            // Senha
-            OutlinedTextField(
-                value = senha,
-                onValueChange = { senha = it },
-                label = { Text("Mínimo 6 caracteres") },
-                singleLine = true,
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Senha (Mínimo 6 caracteres)") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
 
-            // Confirmar Senha
-            OutlinedTextField(
-                value = confirmarSenha,
-                onValueChange = { confirmarSenha = it },
-                label = { Text("Digite a senha novamente") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
-            )
-
-            // Botão de Cadastrar
-            if (isLoading) {
-                CircularProgressIndicator()
-            } else {
-                Button(
-                    onClick = {
-                        viewModel.register(
-                            nomeCompleto = nome,
-                            email = email,
-                            telefone = telefone,
-                            genero = generoSelecionado,
-                            dataNascimento = nascimento,
-                            senha = senha,
-                            confirmarSenha = confirmarSenha
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                ) {
-                    Text("Cadastrar")
-                }
-            }
-
-            // Link para login
-            TextButton(
+            // Botão de Cadastro
+            Button(
                 onClick = {
-                    // TODO: Navegar para a tela de login
-                    // navController.navigate("login_route")
+                    // Chama a função da ViewModel, iniciando o fluxo Firebase -> Supabase
+                    viewModel.signUp(email, name, password)
                 },
-                modifier = Modifier.padding(top = 16.dp)
+                enabled = signUpState !is SignUpState.Loading, // Desabilita durante o Loading
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
-                Text("Já tem uma conta? Fazer login")
+                if (signUpState is SignUpState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text("CADASTRAR")
+                }
+            }
+
+            // Exibe mensagem de erro persistente (se houver)
+            if (signUpState is SignUpState.Error) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = (signUpState as SignUpState.Error).message,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
-}*/
+}
