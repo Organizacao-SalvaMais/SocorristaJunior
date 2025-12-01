@@ -134,11 +134,4 @@ object AppModule {
         return QuizRepo(quizCategoryDAO)
     }
 
-    // --- PROVEDOR DE AUTENTICAÇÃO ---
-    @Provides
-    @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth {
-        // Retorna a instância principal do Firebase Authentication
-        return Firebase.auth
-    }
 }
