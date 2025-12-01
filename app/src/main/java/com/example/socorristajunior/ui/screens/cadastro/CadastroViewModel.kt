@@ -78,7 +78,6 @@ class CadastroViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                // 🚨 CHAMA O METODO DO FIREBASE AUTH:
                 firebaseAuth.sendPasswordResetEmail(email).await()
 
                 _resetPasswordState.value =

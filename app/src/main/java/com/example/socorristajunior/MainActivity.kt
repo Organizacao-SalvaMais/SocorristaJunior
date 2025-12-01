@@ -18,6 +18,7 @@ import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
 import com.example.socorristajunior.ui.screens.forgotPassorword.ForgotPasswordScreen
 import com.example.socorristajunior.ui.screens.home.HomeScreen
 import com.example.socorristajunior.ui.screens.login.LoginScreen
+import com.example.socorristajunior.ui.screens.noticias.NoticiasScreen
 import com.example.socorristajunior.ui.screens.quiz.home.QuizHomeRoute
 import com.example.socorristajunior.ui.screens.quiz.question.QuizQuestionRoute
 import com.example.socorristajunior.ui.screens.quiz.question.QuizResultArgs
@@ -123,6 +124,9 @@ fun AppNavigation() {
         }
         composable("forgot_password") {
             ForgotPasswordScreen(navController = navController)
+        }
+        composable ("noticias" ){
+            NoticiasScreen()
         }
 
 

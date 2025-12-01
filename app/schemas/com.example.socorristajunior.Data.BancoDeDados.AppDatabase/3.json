@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "6097ee663931482d7dd1bde0709411f2",
+    "version": 3,
+    "identityHash": "4fb62985267fbb4daafb53248f187f83",
     "entities": [
       {
         "tableName": "emergencia",
@@ -140,7 +140,7 @@
       },
       {
         "tableName": "logged_user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `userToken` TEXT, `photoUrl` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `userToken` TEXT, `photoUrl` TEXT, `supabaseUserId` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -176,6 +176,12 @@
             "fieldPath": "photoUrl",
             "columnName": "photoUrl",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "supabaseUserId",
+            "columnName": "supabaseUserId",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -339,12 +345,73 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "user_interaction",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER NOT NULL, `emergencyId` INTEGER NOT NULL, `isFavorite` INTEGER NOT NULL, `isViewed` INTEGER NOT NULL, PRIMARY KEY(`userId`, `emergencyId`), FOREIGN KEY(`emergencyId`) REFERENCES `emergencia`(`emercodigo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emergencyId",
+            "columnName": "emergencyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isViewed",
+            "columnName": "isViewed",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "userId",
+            "emergencyId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_user_interaction_emergencyId",
+            "unique": false,
+            "columnNames": [
+              "emergencyId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_interaction_emergencyId` ON `${TABLE_NAME}` (`emergencyId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "emergencia",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "emergencyId"
+            ],
+            "referencedColumns": [
+              "emercodigo"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6097ee663931482d7dd1bde0709411f2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fb62985267fbb4daafb53248f187f83')"
     ]
   }
 }
