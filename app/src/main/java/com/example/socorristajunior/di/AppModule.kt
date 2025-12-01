@@ -5,16 +5,24 @@ import androidx.room.Room
 import com.example.socorristajunior.Data.BancoDeDados.AppDatabase
 import com.example.socorristajunior.Data.BancoDeDados.PrepopulateDatabaseCallback
 import com.example.socorristajunior.Data.DAO.EmergenciaDAO
+import com.example.socorristajunior.Data.DAO.OptionDAO
 import com.example.socorristajunior.Data.DAO.PassoDAO
+import com.example.socorristajunior.Data.DAO.QuestionDAO
+import com.example.socorristajunior.Data.DAO.QuizCategoryDAO
 import com.example.socorristajunior.Data.DAO.UserDAO
-import com.example.socorristajunior.Domain.Repositorio.CadastroRepositorio
+import com.example.socorristajunior.Data.DAO.UserInteractionDAO
 import com.example.socorristajunior.Domain.Repositorio.EmergenciaRepo
 import com.example.socorristajunior.Domain.Repositorio.PassoRepo
+import com.example.socorristajunior.Domain.Repositorio.QuizRepo
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.jan.supabase.SupabaseClient
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -26,66 +34,111 @@ object AppModule {
     @Singleton
     fun providePrepopulateCallback(
         @ApplicationContext context: Context,
+        // (MODIFICAÇÃO) O Callback agora precisará de todos os DAOs para popular o quiz
         dbProvider: Provider<AppDatabase>
     ): PrepopulateDatabaseCallback {
-        return PrepopulateDatabaseCallback(context, dbProvider)
+        // Passa os provedores de DAO para o construtor do callback
+        return PrepopulateDatabaseCallback(
+            context,
+            dbProvider
+        )
     }
 
     @Provides
     @Singleton
     fun provideAppDatabase(
         @ApplicationContext context: Context,
-        callback: PrepopulateDatabaseCallback
+        callback: Provider<PrepopulateDatabaseCallback>
         ): AppDatabase {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
             "socorrista_db"
         )
-            .addCallback(callback)
+            .addCallback(callback.get())
             .fallbackToDestructiveMigration()
             .build()
     }
 
+    // --- PROVEDORES DE DAO ---
+
     @Provides
     @Singleton
     fun provideEmergenciaDao(appDatabase: AppDatabase): EmergenciaDAO {
-        // Retorna a implementação do DAO de Emergência a partir da instância do banco.
         return appDatabase.emergenciaDAO()
     }
 
     @Provides
     @Singleton
     fun providePassoDao(appDatabase: AppDatabase): PassoDAO {
-        // Retorna a implementação do DAO de Passo a partir da instância do banco.
         return appDatabase.passoDAO()
     }
 
     @Provides
-    @Singleton // Use @Singleton para manter o padrão
-    fun provideUserDao(appDatabase: AppDatabase): UserDAO {
-        return appDatabase.userDAO()
+    @Singleton
+    fun provideQuizCategoryDao(appDatabase: AppDatabase): QuizCategoryDAO {
+        return appDatabase.quizCategoryDAO()
     }
 
     @Provides
     @Singleton
-    fun provideEmergenciaRepo(emergenciaDAO: EmergenciaDAO): EmergenciaRepo {
-        // Retorna uma instância do repositório, injetando o DAO.
-        return EmergenciaRepo(emergenciaDAO)
+    fun provideQuestionDao(appDatabase: AppDatabase): QuestionDAO {
+        return appDatabase.questionDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOptionDao(appDatabase: AppDatabase): OptionDAO {
+        return appDatabase.optionDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(appDatabase: AppDatabase): UserDAO {
+        return appDatabase.userDAO() // Assumindo que sua classe AppDatabase tem a função userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserInteractionDao(appDatabase: AppDatabase): UserInteractionDAO {
+        return appDatabase.userInteractionDao()
+    }
+
+    // --- PROVEDORES DE REPOSITÓRIO ---
+
+    @Provides
+    @Singleton
+    fun provideEmergenciaRepo(
+        supabaseClient: SupabaseClient,
+        emergenciaDAO: EmergenciaDAO,
+        passoDAO: PassoDAO,
+        interactionDAO: UserInteractionDAO
+    ): EmergenciaRepo {
+        return EmergenciaRepo(
+            supabaseClient,
+            emergenciaDAO,
+            passoDAO,
+            interactionDAO
+        )
     }
 
     @Provides
     @Singleton
     fun providePassoRepo(passoDAO: PassoDAO): PassoRepo {
-    // Retorna uma instância do repositório, injetando o DAO.
         return PassoRepo(passoDAO)
     }
 
     @Provides
     @Singleton
-    fun provideCadastroRepo(): CadastroRepositorio {
-        // Como o repositório não tem dependências,
-        // podemos simplesmente criar uma nova instância
-        return CadastroRepositorio()
+    fun provideQuizRepo(quizCategoryDAO: QuizCategoryDAO): QuizRepo {
+        return QuizRepo(quizCategoryDAO)
+    }
+
+    // --- PROVEDOR DE AUTENTICAÇÃO ---
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth {
+        // Retorna a instância principal do Firebase Authentication
+        return Firebase.auth
     }
 }

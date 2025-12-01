@@ -11,23 +11,43 @@ C:.
 |   +---BancoDeDados
 |   |       AppDatabase.kt
 |   |       PrepopulateDatabaseCallback.kt
+|   |       QuizTypeConverters.kt
 |   |       UserDatabase.kt
 |   |       
 |   +---DAO
 |   |       EmergenciaDAO.kt
+|   |       OptionDAO.kt
 |   |       PassoDAO.kt
+|   |       QuestionDAO.kt
+|   |       QuizCategoryDAO.kt
+|   |       QuizDAO.kt
 |   |       UserDAO.kt
 |   |       
-|   \---model
-|           EmergenciaModel.kt
-|           JsonEmerModels.kt
-|           Mappers.kt
-|           PassoModel.kt
-|           UserEntity.kt
+|   +---DTO
+|   |       EmergenciaApiDto.kt
+|   |       PassoApiDto.kt
+|   |       UsuarioDTO.kt
+|   |       
+|   +---model
+|   |       EmergenciaModel.kt
+|   |       JsonEmerModels.kt
+|   |       JsonQuizModels.kt
+|   |       Mappers.kt
+|   |       Option.kt
+|   |       PassoModel.kt
+|   |       Question.kt
+|   |       QuizCategory.kt
+|   |       QuizModel.kt
+|   |       QuizRelations.kt
+|   |       UserEntity.kt
+|   |       
+|   \---Services
+|           EmergenciaApiService.kt
 |           
 +---di
 |       AppModule.kt
 |       DatabaseModule.kt
+|       SupabaseModule.kt
 |       
 +---Domain
 |   +---CasosDeUso
@@ -35,8 +55,10 @@ C:.
 |   |       
 |   \---Repositorio
 |           CadastroRepositorio.kt
+|           CadastroRepositoriolmpl.kt
 |           EmergenciaRepo.kt
 |           PassoRepo.kt
+|           QuizRepo.kt
 |           
 \---ui
     +---components

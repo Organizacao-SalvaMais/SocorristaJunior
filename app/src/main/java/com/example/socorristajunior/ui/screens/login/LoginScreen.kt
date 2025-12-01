@@ -1,5 +1,10 @@
 package com.example.socorristajunior.ui.screens.login
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.socorristajunior.ui.components.BottomNavigationBar
+import com.example.socorristajunior.ui.components.GoogleSignInButton
 import kotlinx.coroutines.launch
-
 
 // Define as rotas do aplicativo.
 const val LOGIN_ROUTE = "login"
@@ -151,6 +156,58 @@ fun LoginScreen(
                 }
             }
 
+            TextButton(
+                onClick = {
+                    // Navega para a nova tela de redefinição
+                    navController.navigate("forgot_password")
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Esqueci minha senha")
+            }
+
+
+            // --- Botão de LOGIN SOCIAL ---
+
+            // Divisor visual
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Divider(modifier = Modifier.weight(1f))
+                Text(
+                    text = "OU",
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Divider(modifier = Modifier.weight(1f))
+            }
+
+            // Botão de Login com Google
+            GoogleSignInButton(
+                // Passa o seu Web Client ID
+                webClientId = "426536441799-aha830v7o118g7bqheg1s1el8ngesn93.apps.googleusercontent.com",
+
+                // O que fazer em caso de SUCESSO:
+                onTokenReceived = { googleAccount ->
+                    // Chama o ViewModel, exatamente como você fazia antes
+                    viewModel.handleGoogleSignIn(googleAccount)
+                },
+
+                // O que fazer em caso de FALHA:
+                onSignInFailed = { errorMessage ->
+                    // Mostra o Snackbar, exatamente como você fazia antes
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = errorMessage)
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 onClick = {
                     // É ASSIM QUE VOCÊ CHAMA A TELA:
@@ -161,8 +218,4 @@ fun LoginScreen(
             }
         }
     }
-}
-
-private fun LoginViewModel.clearError() {
-    TODO("Not yet implemented")
 }

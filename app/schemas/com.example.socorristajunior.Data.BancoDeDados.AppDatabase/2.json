@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "fccb7d3509a7d473c8827dfd11a9f5e9",
+    "identityHash": "6097ee663931482d7dd1bde0709411f2",
     "entities": [
       {
         "tableName": "emergencia",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`emercodigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `emernome` TEXT NOT NULL, `emerdesc` TEXT NOT NULL, `emergravidade` TEXT NOT NULL, `emerimagem` TEXT, `categoria` TEXT, `duracaoEstimada` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`emercodigo` INTEGER NOT NULL, `emernome` TEXT NOT NULL, `emerdesc` TEXT NOT NULL, `emerimagem` TEXT, `gravidade_nome` TEXT NOT NULL, `gravidade_cor` TEXT, `fonte_nome` TEXT NOT NULL, `fonte_url` TEXT, PRIMARY KEY(`emercodigo`))",
         "fields": [
           {
             "fieldPath": "emercodigo",
@@ -27,32 +27,38 @@
             "notNull": true
           },
           {
-            "fieldPath": "emergravidade",
-            "columnName": "emergravidade",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "emerimagem",
             "columnName": "emerimagem",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "categoria",
-            "columnName": "categoria",
+            "fieldPath": "gravidadeNome",
+            "columnName": "gravidade_nome",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "duracaoEstimada",
-            "columnName": "duracaoEstimada",
-            "affinity": "INTEGER",
+            "fieldPath": "gravidadeCor",
+            "columnName": "gravidade_cor",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fonteNome",
+            "columnName": "fonte_nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fonteUrl",
+            "columnName": "fonte_url",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "emercodigo"
           ]
@@ -62,7 +68,8 @@
       },
       {
         "tableName": "passo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pascodigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pasnome` TEXT NOT NULL, `pasimagem` TEXT, `pasdescricao` TEXT NOT NULL, `pasordem` INTEGER NOT NULL, `pasemercodigo` INTEGER NOT NULL, FOREIGN KEY(`pasemercodigo`) REFERENCES `emergencia`(`emercodigo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pascodigo` INTEGER NOT NULL, `pasnome` TEXT NOT NULL, `pasimagem` TEXT, `pasdescricao` TEXT NOT NULL, `pasordem` INTEGER NOT NULL, `fk_emercodigo` INTEGER NOT NULL, PRIMARY KEY(`pascodigo`), FOREIGN KEY(`fk_emercodigo`) REFERENCES `emergencia`(`emercodigo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+
         "fields": [
           {
             "fieldPath": "pascodigo",
@@ -95,27 +102,27 @@
             "notNull": true
           },
           {
-            "fieldPath": "pasemercodigo",
-            "columnName": "pasemercodigo",
+            "fieldPath": "fk_emercodigo",
+            "columnName": "fk_emercodigo",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "pascodigo"
           ]
         },
         "indices": [
           {
-            "name": "index_passo_pasemercodigo",
+            "name": "index_passo_fk_emercodigo",
             "unique": false,
             "columnNames": [
-              "pasemercodigo"
+              "fk_emercodigo"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_passo_pasemercodigo` ON `${TABLE_NAME}` (`pasemercodigo`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_passo_fk_emercodigo` ON `${TABLE_NAME}` (`fk_emercodigo`)"
           }
         ],
         "foreignKeys": [
@@ -124,7 +131,7 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "pasemercodigo"
+              "fk_emercodigo"
             ],
             "referencedColumns": [
               "emercodigo"
@@ -134,7 +141,8 @@
       },
       {
         "tableName": "logged_user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `phone` TEXT, `gender` TEXT, `dateOfBirth` TEXT, `userToken` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `userToken` TEXT, `photoUrl` TEXT, PRIMARY KEY(`id`))",
+
         "fields": [
           {
             "fieldPath": "id",
@@ -161,26 +169,14 @@
             "notNull": false
           },
           {
-            "fieldPath": "phone",
-            "columnName": "phone",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "gender",
-            "columnName": "gender",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "dateOfBirth",
-            "columnName": "dateOfBirth",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "userToken",
             "columnName": "userToken",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "photoUrl",
+            "columnName": "photoUrl",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -193,12 +189,164 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "quiz_categoria_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nome` TEXT NOT NULL, `descricao` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descricao",
+            "columnName": "descricao",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "questao_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `enunciado` TEXT NOT NULL, `imagemUrl` TEXT, `quizCategoriaId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`quizCategoriaId`) REFERENCES `quiz_categoria_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enunciado",
+            "columnName": "enunciado",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imagemUrl",
+            "columnName": "imagemUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quizCategoriaId",
+            "columnName": "quizCategoriaId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_questao_table_quizCategoriaId",
+            "unique": false,
+            "columnNames": [
+              "quizCategoriaId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_questao_table_quizCategoriaId` ON `${TABLE_NAME}` (`quizCategoriaId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "quiz_categoria_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "quizCategoriaId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "opcao_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `resposta` TEXT NOT NULL, `correta` INTEGER NOT NULL, `questaoId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`questaoId`) REFERENCES `questao_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resposta",
+            "columnName": "resposta",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "correta",
+            "columnName": "correta",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questaoId",
+            "columnName": "questaoId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_opcao_table_questaoId",
+            "unique": false,
+            "columnNames": [
+              "questaoId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_opcao_table_questaoId` ON `${TABLE_NAME}` (`questaoId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "questao_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "questaoId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fccb7d3509a7d473c8827dfd11a9f5e9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6097ee663931482d7dd1bde0709411f2')"
     ]
   }
 }

@@ -95,7 +95,10 @@ dependencies {
 
     // Jetpack Compose Navigation
     implementation(libs.androidx.navigation.compose)
-
+    //ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.6")
     // Room components
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -129,15 +132,28 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
     //Supabase
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.2.5"))
+    implementation("io.github.jan-tennert.supabase:supabase-kt")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+
+    // Ktor
     val supabaseVersion = "3.1.4"
-    val ktorVersion = "3.1.3" // Versão compatível com Supabase 3.x
+    val ktorVersion = "3.3.1"
 
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:$supabaseVersion") // Banco de Dados
-    implementation("io.github.jan-tennert.supabase:storage-kt:$supabaseVersion") // Storage de Imagens
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
+    implementation("io.github.jan-tennert.supabase:storage-kt:${supabaseVersion}")
 
 
-    implementation("io.ktor:ktor-client-android:$ktorVersion") // Motor HTTP Ktor
-    implementation("io.ktor:ktor-client-core:$ktorVersion") // Core do Ktor
+    implementation("io.ktor:ktor-client-android:${ktorVersion}")
+    implementation("io.ktor:ktor-client-core:${ktorVersion}")
     implementation("io.ktor:ktor-utils:${ktorVersion}")
 
+    //Retrofit2
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }

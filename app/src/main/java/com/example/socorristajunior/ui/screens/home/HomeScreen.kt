@@ -49,7 +49,7 @@ fun HomeScreen(
                 buttonText = "Começar",
                 buttonTextColor= Color(0xFF0E141B),
                 buttonColor = Color(0xFFF2D16A),
-                onClick = { navController.navigate("quiz") }
+                onClick = { navController.navigate("quiz_home") }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -65,7 +65,11 @@ fun HomeScreen(
                 onClick = { navController.navigate("emergencies") }
             )
 
-            //Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(onClick = { navController.navigate("noticias") }) {
+                Text("Ver Notícias de Saúde")
+            }
 /*
             EmergencyContactsGrid()
 */

@@ -23,13 +23,8 @@ interface EmergenciaDAO {
     @Query("SELECT * FROM emergencia WHERE emernome LIKE '%' || :nome || '%'")
     fun searchEmergencias(nome: String): Flow<List<Emergencia>>
 
-    // Buscar por gravidade
-    @Query("SELECT * FROM emergencia WHERE emergravidade = :gravidade")
-    fun getEmergenciasPorGravidade(gravidade: String): Flow<List<Emergencia>>
-
-    // Buscar por categoria
-    @Query("SELECT * FROM emergencia WHERE categoria = :categoria")
-    fun getEmergenciasPorCategoria(categoria: String): Flow<List<Emergencia>>
+    @Query("SELECT * FROM emergencia WHERE gravidade_nome = :gravidadeNome")
+    fun getEmergenciasPorGravidade(gravidadeNome: String): Flow<List<Emergencia>>
 
     // Inserir emergência
     @Insert(onConflict = OnConflictStrategy.REPLACE)
