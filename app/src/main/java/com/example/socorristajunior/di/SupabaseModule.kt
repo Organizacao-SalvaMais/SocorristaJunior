@@ -30,6 +30,7 @@ object SupabaseModule {
             install(Postgrest)
             install(Storage)
             install(Auth)
+
         }
     }
 

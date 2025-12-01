@@ -7,7 +7,6 @@ interface UsuarioRepositorio {
     suspend fun insertUser(usuario: Usuario): Boolean
     // Busca o perfil pelo UID
     suspend fun getUserByFirebaseId(fireCodigo: String): Usuario?
-
     // Deleta Conta
     suspend fun deleteUser(fireCodigo: String): Boolean
 
@@ -16,4 +15,5 @@ interface UsuarioRepositorio {
     suspend fun getOrCreateSupabaseUser(firebaseUid: String, email: String, nome: String): Int?
 
     suspend fun logout()
+
 }

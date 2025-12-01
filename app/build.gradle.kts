@@ -92,6 +92,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     // Jetpack Compose Navigation
     implementation(libs.androidx.navigation.compose)
     //ViewModel
@@ -102,15 +103,17 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler) // Note o uso de ksp()
+
     // Dagger - Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler) // Note o uso de ksp()
     ksp(libs.androidx.hilt.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+
     // Swipe
     implementation(libs.saket.swipe)
+
     // Extras
-    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.code.gson:gson:2.10.1")

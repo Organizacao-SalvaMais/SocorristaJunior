@@ -36,7 +36,7 @@
             "fieldPath": "gravidadeNome",
             "columnName": "gravidade_nome",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "gravidadeCor",
@@ -69,6 +69,7 @@
       {
         "tableName": "passo",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pascodigo` INTEGER NOT NULL, `pasnome` TEXT NOT NULL, `pasimagem` TEXT, `pasdescricao` TEXT NOT NULL, `pasordem` INTEGER NOT NULL, `fk_emercodigo` INTEGER NOT NULL, PRIMARY KEY(`pascodigo`), FOREIGN KEY(`fk_emercodigo`) REFERENCES `emergencia`(`emercodigo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+
         "fields": [
           {
             "fieldPath": "pascodigo",
@@ -141,6 +142,7 @@
       {
         "tableName": "logged_user",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `isLoggedIn` INTEGER NOT NULL, `username` TEXT, `email` TEXT, `userToken` TEXT, `photoUrl` TEXT, PRIMARY KEY(`id`))",
+
         "fields": [
           {
             "fieldPath": "id",
