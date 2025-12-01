@@ -11,26 +11,15 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    // Obtenha a rota atual para destacar o item selecionado
+    // CORREÇÃO: Use a sintaxe correta para currentBackStackEntryAsState
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    // Estado para controlar a exibição do modal de contatos
-    var showEmergencyContacts by remember { mutableStateOf(false) }
-
-    // Se o modal estiver aberto, mostre-o
-    if (showEmergencyContacts) {
-        EmergencyContactsModal(onDismiss = { showEmergencyContacts = false })
-    }
 
     NavigationBar {
         NavigationBarItem(
@@ -39,12 +28,11 @@ fun BottomNavigationBar(navController: NavController) {
             selected = currentRoute == "home",
             onClick = {
                 navController.navigate("home") {
-                    // Evita duplicar a tela inicial no back stack
                     popUpTo(navController.graph.findStartDestination().id) {
-                        // saveState = true // foi comentado pois o causava uma estranhesa na navegação
+                        saveState = true
                     }
                     launchSingleTop = true
-                    // restoreState = true // foi comentado pois o causava uma estranhesa na navegação
+                    restoreState = true
                 }
             }
         )
@@ -64,14 +52,18 @@ fun BottomNavigationBar(navController: NavController) {
             }
         )
 
-        // NOVO ITEM: Contatos de Emergência
         NavigationBarItem(
             icon = { Icon(Icons.Filled.ContactEmergency, contentDescription = "Contatos") },
             label = { Text("Contatos") },
-            selected = false, // Sempre falso pois não é uma tela de navegação
+            selected = currentRoute == "emergency_contacts",
             onClick = {
-                // Abre o modal em vez de navegar para uma tela
-                showEmergencyContacts = true
+                navController.navigate("emergency_contacts") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
             }
         )
 

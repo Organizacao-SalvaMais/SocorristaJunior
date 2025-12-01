@@ -23,6 +23,7 @@ import com.example.socorristajunior.ui.screens.quiz.question.QuizResultArgs
 import com.example.socorristajunior.ui.screens.quiz.result.QuizResultRoute
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import com.example.socorristajunior.ui.screens.contacts.EmergencyContactsScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -57,6 +58,7 @@ fun AppNavigation() {
                 onNavigateBack = { // Define a ação que deve ser executada ao clicar no botão "voltar"
                     navController.popBackStack() // Informa ao controlador de navegação para voltar à tela anterior na pilha
                 }
+
             )
         }
 
@@ -138,5 +140,15 @@ fun AppNavigation() {
                 navController = navController
             )
         }
+        composable("emergency_contacts") {
+            EmergencyContactsScreen(navController = navController)
+        }
+
+        /*composable("emergency_units_map") {
+            // Tela de mapa com unidades de emergência
+            EmergencyUnitsMapScreen(navController = navController)
+        }
+
+         */
     }
 }

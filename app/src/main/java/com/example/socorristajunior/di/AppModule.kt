@@ -33,10 +33,8 @@ object AppModule {
     @Singleton
     fun providePrepopulateCallback(
         @ApplicationContext context: Context,
-        // (MODIFICAÇÃO) O Callback agora precisará de todos os DAOs para popular o quiz
         dbProvider: Provider<AppDatabase>
     ): PrepopulateDatabaseCallback {
-        // Passa os provedores de DAO para o construtor do callback
         return PrepopulateDatabaseCallback(
             context,
             dbProvider
@@ -48,7 +46,7 @@ object AppModule {
     fun provideAppDatabase(
         @ApplicationContext context: Context,
         callback: Provider<PrepopulateDatabaseCallback>
-        ): AppDatabase {
+    ): AppDatabase {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
@@ -94,7 +92,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideUserDao(appDatabase: AppDatabase): UserDAO {
-        return appDatabase.userDAO() // Assumindo que sua classe AppDatabase tem a função userDao()
+        return appDatabase.userDAO()
     }
 
     // --- PROVEDORES DE REPOSITÓRIO ---
@@ -129,7 +127,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
-        // Retorna a instância principal do Firebase Authentication
         return Firebase.auth
     }
+
+   /* @Provides
+    @Singleton
+    fun provideEmergencyContactsViewModel(): EmergencyContactsViewModel {
+        return EmergencyContactsViewModel()
+    }
+    */
 }
