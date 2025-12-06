@@ -1,6 +1,7 @@
 package com.example.socorristajunior.ui.screens.quiz.home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,16 +35,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.filled.ArrowBack
 
 
-// Você precisa definir o que é "BottomRight"
+
 private val Offset.Companion.BottomRight: Offset
-    get() = Offset(1f, 1f) // Exemplo: se for (1, 1)
+    get() = Offset(1f, 1f)
 
-// Você precisa definir o que é "TopLeft"
 private val Offset.Companion.TopLeft: Offset
-    get() = Offset(0f, 0f) // Exemplo: se for (0, 0)
+    get() = Offset(0f, 0f)
 
-// --- 1. A ROTA "INTELIGENTE" (Conecta o ViewModel à View) ---
-// (Esta é a função que você chama no seu NavGraph em MainActivity.kt)
+
 @Composable
 fun QuizHomeRoute(
     viewModel: QuizHomeViewModel = hiltViewModel(),
@@ -63,17 +64,15 @@ fun QuizHomeRoute(
             CircularProgressIndicator()
         }
     } else {
-        // Chama a tela "burra"
         QuizHomeScreen(
             uiState = uiState,
-            onStartQuiz = viewModel::onCategorySelected, // Passa a referência da função
+            onStartQuiz = viewModel::onCategorySelected,
             onNavigateBack = onNavigateBack
         )
     }
 }
 
 
-// --- 2. A TELA "BURRA" (Apenas desenha a UI) ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun QuizHomeScreen(
@@ -82,105 +81,60 @@ private fun QuizHomeScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    /*val backgroundBrush = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.background,
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-            MaterialTheme.colorScheme.background
-        ),
-        start = Offset.TopLeft,
-        end = Offset.BottomRight
-    )*/
     Scaffold(
-        modifier = modifier.fillMaxSize(), // Aplica o modifier ao Scaffold
-        // 4. Adicione a TopAppBar que você queria
+        modifier = modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                // Define o título da barra
-                title = { Text("Quiz de Primeiros Socorros") },
-                // Define o ícone de navegação (seta de voltar)
-                navigationIcon = {
-                    // Cria um botão clicável para o ícone
-                    IconButton(onClick = onNavigateBack) { // 5. Chame o callback ao clicar
-                        // Adiciona o ícone de seta
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar")
-                    }
-                }
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(Color(0xFF1E93AB), Color(0xFF156579))
+                        )
+                    )
+            ) {
+                TopAppBar(
+                    title = { Text("Quiz de Primeiros Socorros", color = Color.White) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                Icons.Default.ArrowBack,
+                                contentDescription = "Voltar",
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        navigationIconContentColor = Color.White,
+                        titleContentColor = Color.White
+                    )
+                )
+            }
         }
     ) { innerPadding ->
         // Container principal
         Box(
             modifier = modifier
                 .fillMaxSize()
-                /*.background(backgroundBrush)*/
+                .background(Color(0xFFF3F2EC))
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .widthIn(max = 800.dp) // Limita a largura máxima
+                    .widthIn(max = 800.dp)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                // --- Cabeçalho ---
-                val headerGradient = Brush.linearGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.secondary,
-                        MaterialTheme.colorScheme.primary
-                    )
-                )
-                /*
-                // Ícone do cabeçalho
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(headerGradient)
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Favorite,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))*/
-
-                /*// Título
-                Text(
-                    text = "Quiz de Primeiros Socorros",
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        brush = headerGradient, // Aplica o gradiente ao texto
-                        textAlign = TextAlign.Center,
-                        lineHeight = 44.sp
-                    ),
-                )*/
-
                 Spacer(modifier = Modifier.height(16.dp))
 
-                /* // Descrição
-                Text(
-                    text = "Teste seus conhecimentos sobre situações de emergência e aprenda a salvar vidas",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )*/
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // --- Grid de Dificuldades (Responsivo) ---
+                // --- Grid de Cards (Responsivo) ---
                 BoxWithConstraints(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
                     val isWide = this.maxWidth > 600.dp
                     if (isWide) {
@@ -207,38 +161,12 @@ private fun QuizHomeScreen(
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // --- Card de Rodapé (Estatísticas) ---
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        uiState.stats.forEach { stat ->
-                            StatItem(
-                                label = stat.label,
-                                value = stat.value,
-                                color = stat.color
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp)) // Espaço extra no final
             }
         }
     }
 }
 
-// --- 3. COMPOSABLES AUXILIARES  ---
+// --- COMPOSABLES AUXILIARES ---
 
 @Composable
 fun DifficultyCard(
@@ -246,68 +174,93 @@ fun DifficultyCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val gradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFF1E93AB), Color(0xFF156579))
+    )
+
     Card(
         modifier = modifier.clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        border = BorderStroke(2.dp, item.color)
+        border = BorderStroke(3.dp, gradient),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1B8FA3)
+        ),
+        shape = MaterialTheme.shapes.large
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Ícone do Card
+            // IMAGEM NO TOPO DO CARD
             Box(
                 modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .background(item.color.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .background(Color(0xFF156579)) // Cor de fundo caso a imagem não preencha tudo
             ) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = null,
-                    tint = Color.Red,
-                    modifier = Modifier.size(32.dp),
+                Image(
+                    painter = painterResource(id = item.imageRes),
+                    contentDescription = item.title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit, // Não corta nada
+                    alignment = Alignment.Center
+                )
 
+                // Overlay escuro
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
                 )
             }
 
-            // Textos
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // CONTEÚDO DO CARD
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 Text(
                     text = item.title,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
                     text = item.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
+                    color = Color.White.copy(alpha = 0.95f),
+                    textAlign = TextAlign.Center,
+                    lineHeight = 20.sp
                 )
-            }
 
-            // Botão
-            Button(
-                onClick = { onClick() },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = item.color,
-                    contentColor = if (item.color == Color(0xFFFFC107)) // Cor 'Warning'
-                        MaterialTheme.colorScheme.onSurface // Texto escuro
-                    else
-                        Color.White // Texto claro
-                )
-            ) {
-                Text("Começar")
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Button(
+                    onClick = onClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF156579),
+                        contentColor = Color.White
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
+                ) {
+                    Text(
+                        text = "Começar",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun StatItem(
