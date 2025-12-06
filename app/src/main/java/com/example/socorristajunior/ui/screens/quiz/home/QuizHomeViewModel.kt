@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socorristajunior.Data.model.QuizCategory
 import com.example.socorristajunior.Domain.Repositorio.QuizRepo
+import com.example.socorristajunior.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,42 +21,43 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// Estado da UI (O que a View vai desenhar)
+
 data class QuizHomeUiState(
     val isLoading: Boolean = true,
     val categories: List<QuizHomeItem> = emptyList(),
-    val stats: List<StatItem> = emptyList(), // Stats do rodapé
+    val stats: List<StatItem> = emptyList(),
     val error: String? = null
 )
 
-// Modelo de UI (Traduzido do seu Model do DB)
+
 data class QuizHomeItem(
-    val categoryId: Int, // ID para navegação
+    val categoryId: Int,
     val title: String,
     val description: String,
     val icon: ImageVector,
-    val color: Color
+    val color: Color,
+    val imageRes: Int
 )
 
-// Modelo de UI para as estatísticas
+
 data class StatItem(val label: String, val value: String, val color: Color)
 
 @HiltViewModel
 class QuizHomeViewModel @Inject constructor(
-    private val quizRepo: QuizRepo // Injetando SEU Repositório
+    private val quizRepo: QuizRepo
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuizHomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _navigationEvent = MutableSharedFlow<Int>() // Emite o categoryId
+    private val _navigationEvent = MutableSharedFlow<Int>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
-    // Cores (Mover para o Theme se possível)
+    // Cores
     private val successColor = Color(0xFF4CAF50)
     private val warningColor = Color(0xFFFFC107)
-    private val primaryColor = Color(0xFF6200EE) // Exemplo, use seu Theme
-    private val secondaryColor = Color(0xFF03DAC6) // Exemplo, use seu Theme
+    private val primaryColor = Color(0xFF6200EE)
+    private val secondaryColor = Color(0xFF03DAC6)
 
     init {
         loadScreenData()
@@ -63,16 +65,13 @@ class QuizHomeViewModel @Inject constructor(
 
     private fun loadScreenData() {
         viewModelScope.launch {
-            // 1. Busca as categorias do SEU repo
             quizRepo.getCategorias()
                 .catch { e ->
                     _uiState.update { it.copy(isLoading = false, error = e.message) }
                 }
                 .collect { categoriesFromDb ->
-                    // 2. Mapeia os dados do DB para dados de UI
                     val uiItems = categoriesFromDb.map { mapCategoryToUiItem(it) }
 
-                    // 3. Adiciona as estatísticas (estáticas, como no React)
                     val stats = listOf(
                         StatItem("Perguntas", "15+", primaryColor),
                         StatItem("Opções", "4", secondaryColor),
@@ -86,25 +85,38 @@ class QuizHomeViewModel @Inject constructor(
         }
     }
 
-    // Ação do Usuário: Clicou em um card
     fun onCategorySelected(categoryId: Int) {
         viewModelScope.launch {
             _navigationEvent.emit(categoryId)
         }
     }
 
-    // Lógica de "Tradução" (Mapper)
     private fun mapCategoryToUiItem(category: QuizCategory): QuizHomeItem {
-        // Usa os campos exatos do seu model: 'nome' e 'descricao'
         val title = category.nome
         val description = category.descricao
 
-        // Mapeia o nome para o ícone e cor
-        val (icon, color) = when (category.nome.uppercase()) {
-            "FÁCIL" -> Icons.Filled.Favorite to successColor
-            "MÉDIO" -> Icons.Filled.Warning to warningColor
-            "DIFÍCIL" -> Icons.Filled.Psychology to primaryColor
-            else -> Icons.Filled.Favorite to Color.Gray // Padrão
+        // MAPEIA USANDO O ID DA CATEGORIA
+        val (icon, color, imageRes) = when (category.id) {
+            1 -> Triple(
+                Icons.Filled.Favorite,
+                successColor,
+                R.drawable.trauma_image
+            )
+            2 -> Triple(
+                Icons.Filled.Warning,
+                warningColor,
+                R.drawable.emergency_image
+            )
+            3 -> Triple(
+                Icons.Filled.Psychology,
+                primaryColor,
+                R.drawable.trauma_image // ou outra imagem para a terceira categoria
+            )
+            else -> Triple(
+                Icons.Filled.Favorite,
+                Color.Gray,
+                R.drawable.trauma_image
+            )
         }
 
         return QuizHomeItem(
@@ -112,7 +124,8 @@ class QuizHomeViewModel @Inject constructor(
             title = title,
             description = description,
             icon = icon,
-            color = color
+            color = color,
+            imageRes = imageRes
         )
     }
 }

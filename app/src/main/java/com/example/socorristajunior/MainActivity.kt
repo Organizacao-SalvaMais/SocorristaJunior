@@ -49,7 +49,6 @@ fun AppNavigation() {
             HomeScreen(navController = navController)
         }
         // Rota 1: Tela Inicial do Quiz (Seleção de Dificuldade)
-        // (Substituindo seu antigo "quizScreen")
         composable(route = "quiz_home") {
             // CORRETO: Chame a função 'publica' QuizHomeRoute.
             // Ela vai lidar com o ViewModel e chamar a 'private' QuizHomeScreen.
@@ -60,13 +59,14 @@ fun AppNavigation() {
                 onNavigateBack = { // Define a ação que deve ser executada ao clicar no botão "voltar"
                     navController.popBackStack() // Informa ao controlador de navegação para voltar à tela anterior na pilha
                 }
+
             )
         }
 
         // Rota 2: Tela de Pergunta (Question)
         // (Substituindo seu antigo "questionScreen")
         composable(
-            route = "quiz_question/{categoryId}", // ⬅️ Recebe o ID
+            route = "quiz_question/{categoryId}", // ⬅ Recebe o ID
             arguments = listOf(
                 navArgument("categoryId") { type = NavType.IntType }
             )
@@ -89,7 +89,7 @@ fun AppNavigation() {
         // Rota 3: Tela de Resultados (Results)
         // (Substituindo seu antigo "quiz_result")
         composable(
-            route = "quiz_result/{score}/{totalQuestions}", // ️ Recebe os args
+            route = "quiz_result/{score}/{totalQuestions}", //  Recebe os args
             arguments = listOf(
                 navArgument("score") { type = NavType.IntType },
                 navArgument("totalQuestions") { type = NavType.IntType }
