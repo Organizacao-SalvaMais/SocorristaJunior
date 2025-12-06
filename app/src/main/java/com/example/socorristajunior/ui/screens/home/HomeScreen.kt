@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -107,10 +108,13 @@ fun HomeScreen(
                 newsState = newsState,
                 onNewsClick = { newsUrl ->
                     viewModel.openNewsUrl(newsUrl, context)
+                },
+                onViewMoreClick = {
+                    navController.navigate("noticias")
                 }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
@@ -166,7 +170,6 @@ fun FeaturesCarousel(navController: NavController) {
         )
     )
 
-    // Rolagem infinita - cria uma lista muito grande que simula infinito
     val infiniteFeatures = remember { generateInfiniteList(features) }
     val pageCount = infiniteFeatures.size
 
@@ -255,7 +258,6 @@ fun FeaturesCarousel(navController: NavController) {
             }
         }
 
-        // Indicadores de página
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -290,7 +292,6 @@ fun FeaturesCarousel(navController: NavController) {
     }
 }
 
-// Função auxiliar para criar lista infinita
 private fun generateInfiniteList(originalList: List<FeatureItem>): List<FeatureItem> {
     return List(1000) { index ->
         originalList[index % originalList.size]
@@ -301,7 +302,8 @@ private fun generateInfiniteList(originalList: List<FeatureItem>): List<FeatureI
 @Composable
 fun NewsCarousel(
     newsState: NewsState,
-    onNewsClick: (String) -> Unit
+    onNewsClick: (String) -> Unit,
+    onViewMoreClick: () -> Unit
 ) {
     val newsList = newsState.news
 
@@ -326,9 +328,7 @@ fun NewsCarousel(
                         .height(200.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(color = Color(0xFFE62727))
                         Spacer(modifier = Modifier.height(16.dp))
                         Text("Carregando notícias...", color = Color.Gray)
@@ -352,84 +352,122 @@ fun NewsCarousel(
             }
 
             else -> {
-                val pagerState = rememberPagerState(pageCount = { newsList.size })
+                // Configura o pager para ter 1 página a mais para o card "Ver Mais"
+                val pagerState = rememberPagerState(pageCount = { newsList.size + 1 })
 
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.height(300.dp)
+                    modifier = Modifier.height(300.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    pageSpacing = 16.dp
                 ) { page ->
-                    val news = newsList[page]
+
                     val elevation by animateDpAsState(
                         targetValue = if (pagerState.currentPage == page) 8.dp else 2.dp,
                         animationSpec = tween(durationMillis = 300)
                     )
 
-                    Card(
-                        onClick = { onNewsClick(news.url) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = elevation),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
+                    if (page < newsList.size) {
+                        // --- CARD DE NOTÍCIA NORMAL ---
+                        val news = newsList[page]
+                        Card(
+                            onClick = { onNewsClick(news.url) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = elevation),
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
                         ) {
-                            // Imagem real com Coil
-                            AsyncImage(
-                                model = news.imageUrl,
-                                contentDescription = "Imagem da notícia: ${news.title}",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(180.dp)
-                                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                                contentScale = ContentScale.Crop,
-                                placeholder = rememberAsyncImagePainter(
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                AsyncImage(
                                     model = news.imageUrl,
-                                    error = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_report_image)
-                                )
-                            )
-
-                            // Conteúdo da notícia
-                            Column(
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                Text(
-                                    text = news.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color.Black,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                // Fonte e data
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        text = news.source,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = Color.Gray
+                                    contentDescription = "Imagem: ${news.title}",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(180.dp)
+                                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                    contentScale = ContentScale.Crop,
+                                    placeholder = rememberAsyncImagePainter(
+                                        model = news.imageUrl,
+                                        error = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_report_image)
                                     )
+                                )
+
+                                Column(modifier = Modifier.padding(16.dp)) {
                                     Text(
-                                        text = news.publishedAt,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = Color.Gray
+                                        text = news.title,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = Color.Black,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(news.source, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                        Text(news.publishedAt, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // --- CARD EXTRA: FIQUE POR DENTRO ---
+                        Card(
+                            onClick = onViewMoreClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                                .height(300.dp), // Garante a mesma altura
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = elevation),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F9F9))
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(24.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFE62727).copy(alpha = 0.1f)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = "Mais conteúdos",
+                                        tint = Color(0xFFE62727),
+                                        modifier = Modifier.size(32.dp)
                                     )
                                 }
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "Fique por dentro de mais conteúdos",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFE62727),
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Toque para ver todas as atualizações de saúde",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.Gray,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }
                 }
 
-                // Indicadores de página para notícias
+                // Indicadores de página (com bolinha extra)
                 if (newsList.isNotEmpty()) {
                     Row(
                         modifier = Modifier
@@ -437,7 +475,8 @@ fun NewsCarousel(
                             .padding(top = 16.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        newsList.forEachIndexed { index, _ ->
+                        val totalPages = newsList.size + 1
+                        repeat(totalPages) { index ->
                             val color = if (index == pagerState.currentPage) {
                                 Color(0xFFE62727)
                             } else {
@@ -456,7 +495,7 @@ fun NewsCarousel(
                                     .padding(4.dp)
                             )
 
-                            if (index < newsList.size - 1) {
+                            if (index < totalPages - 1) {
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
                         }

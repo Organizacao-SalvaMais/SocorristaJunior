@@ -24,6 +24,7 @@ import com.example.socorristajunior.ui.screens.quiz.result.QuizResultRoute
 import com.example.socorristajunior.ui.theme.SocorristaJuniorTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.socorristajunior.ui.screens.contacts.EmergencyContactsScreen
+import com.example.socorristajunior.ui.screens.noticias.NoticiasScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -118,6 +119,13 @@ fun AppNavigation() {
         }
         composable("edit_profile") {
             EditProfileScreen(navController = navController)
+        }
+        composable ("noticias" ) {
+            NoticiasScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
 
