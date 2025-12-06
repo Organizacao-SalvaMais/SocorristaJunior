@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.socorristajunior.ui.screens.profile.ProfileScreen
 import com.example.socorristajunior.ui.screens.cadastro.CadastroScreen
+import com.example.socorristajunior.ui.screens.contacts.EmergencyContactsScreen
 import com.example.socorristajunior.ui.screens.details.EmergencyDetailScreen
 import com.example.socorristajunior.ui.screens.editProfile.EditProfileScreen
 import com.example.socorristajunior.ui.screens.emergencies.EmergenciesScreen
@@ -131,6 +132,9 @@ fun AppNavigation() {
                     navController.popBackStack()
                 }
             )
+        }
+        composable("emergency_contacts") {
+            EmergencyContactsScreen(navController = navController)
         }
 
 

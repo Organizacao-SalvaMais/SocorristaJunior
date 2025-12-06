@@ -15,7 +15,7 @@ object NetworkModule {
 
     //Aqui está utilizando o IP da minha máquina
     //Vai ser substituído por "https://api.salvarmais.cloud/" ao fazer o deploy
-    private const val BASE_URL = "http://192.168.15.5:8000/"
+    private const val BASE_URL = "http://192.168.15.7:8000/"
 
     @Provides
     @Singleton
